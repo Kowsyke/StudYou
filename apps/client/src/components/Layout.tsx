@@ -1,5 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { BarChart3, BookOpen, Command, LayoutDashboard, LogOut, Map as MapIcon } from 'lucide-react'
+import {
+  BarChart3,
+  BookOpen,
+  Command,
+  LayoutDashboard,
+  LogOut,
+  Map as MapIcon,
+  SlidersHorizontal,
+} from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '../lib/utils'
@@ -10,6 +18,7 @@ const studentNav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/journey', label: 'My journey', icon: MapIcon },
   { to: '/resources', label: 'Resources', icon: BookOpen },
+  { to: '/settings', label: 'Settings', icon: SlidersHorizontal },
 ]
 
 const adminNav = [

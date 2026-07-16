@@ -42,6 +42,24 @@ export function useCreateJourney() {
   })
 }
 
+export interface UpdateSettingsInput {
+  intakeDate?: string
+  budgetPence?: number
+  originCountryCode?: string | null
+}
+
+export function useUpdateSettings() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: UpdateSettingsInput) => {
+      const { data } = await api.patch<ApiResponse<JourneyOverview>>('/journey/settings', input)
+      if (!data.data) throw new Error(data.error ?? 'Failed to save settings')
+      return data.data
+    },
+    onSuccess: (overview) => queryClient.setQueryData(journeyKey, overview),
+  })
+}
+
 export function useToggleTask() {
   const queryClient = useQueryClient()
   return useMutation({

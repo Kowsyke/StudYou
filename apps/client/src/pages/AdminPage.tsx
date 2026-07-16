@@ -2,14 +2,17 @@ import type { CategoryKey, Resource } from '@studyou/types'
 import { Pencil, Trash2 } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Input, Label, Select, Textarea } from '../components/ui/input'
+import { CardSkeleton } from '../components/ui/skeleton'
 import { useAnalytics, useCategories } from '../hooks/useMeta'
 import { useDeleteResource, useResources, useSaveResource } from '../hooks/useResources'
 import { apiErrorMessage } from '../lib/api'
 import { formatGbp } from '../lib/format'
+import { toast } from '../store/toastStore'
 
 const chartInk = '#898781'
 const chartGrid = '#e1e0d9'
@@ -25,7 +28,7 @@ const tooltipStyle = {
 }
 
 export function AdminPage() {
-  const { data: analytics, isPending } = useAnalytics(true)
+  const { data: analytics, isPending, error, refetch, isRefetching } = useAnalytics(true)
 
   return (
     <div>
@@ -36,8 +39,24 @@ export function AdminPage() {
         </p>
       </header>
 
-      {isPending || !analytics ? (
-        <p className="text-sm text-ink-muted py-16 text-center">Loading analytics...</p>
+      {isPending ? (
+        <div className="space-y-4 mb-8">
+          <div className="grid grid-cols-3 gap-4">
+            <CardSkeleton lines={1} />
+            <CardSkeleton lines={1} />
+            <CardSkeleton lines={1} />
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <CardSkeleton lines={6} />
+            <CardSkeleton lines={6} />
+          </div>
+        </div>
+      ) : error || !analytics ? (
+        <QueryError
+          message="Analytics could not be loaded. Check your connection and try again."
+          onRetry={() => refetch()}
+          retrying={isRefetching}
+        />
       ) : (
         <>
           <div className="grid grid-cols-3 gap-4 mb-5">
@@ -197,10 +216,23 @@ function KnowledgeBaseManager() {
         sourceUrl: form.sourceUrl,
       },
       {
-        onSuccess: () => setForm(emptyForm),
-        onError: (err) => setError(apiErrorMessage(err, 'Could not save the resource')),
+        onSuccess: () => {
+          setForm(emptyForm)
+          toast.success('Resource saved.')
+        },
+        onError: (err) => {
+          setError(apiErrorMessage(err, 'Could not save the resource'))
+          toast.error('Something went wrong. Try again.')
+        },
       },
     )
+  }
+
+  const onDelete = (id: string) => {
+    deleteResource.mutate(id, {
+      onSuccess: () => toast.success('Resource removed.'),
+      onError: () => toast.error('Something went wrong. Try again.'),
+    })
   }
 
   return (
@@ -237,8 +269,9 @@ function KnowledgeBaseManager() {
                         <Pencil size={14} />
                       </button>
                       <button
-                        onClick={() => deleteResource.mutate(resource.id)}
-                        className="p-1.5 rounded-lg text-ink-muted hover:text-danger hover:bg-danger-soft transition-colors"
+                        onClick={() => onDelete(resource.id)}
+                        disabled={deleteResource.isPending}
+                        className="p-1.5 rounded-lg text-ink-muted hover:text-danger hover:bg-danger-soft transition-colors disabled:opacity-50"
                         aria-label={`Delete ${resource.title}`}
                       >
                         <Trash2 size={14} />

@@ -3,15 +3,18 @@ import { motion } from 'framer-motion'
 import { Check, ExternalLink } from 'lucide-react'
 import { useEffect } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
+import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { ProgressBar } from '../components/ui/progress'
+import { CardSkeleton, Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney, useToggleTask } from '../hooks/useJourney'
 import { formatDate, formatGbp } from '../lib/format'
 import { cn } from '../lib/utils'
+import { toast } from '../store/toastStore'
 
 export function JourneyPage() {
-  const { data: overview, isPending, error } = useJourney()
+  const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
   const location = useLocation()
 
   useEffect(() => {
@@ -28,11 +31,27 @@ export function JourneyPage() {
   if (error && hasNoJourney(error)) return <Navigate to="/onboarding" replace />
 
   if (isPending) {
-    return <p className="text-sm text-ink-muted py-16 text-center">Loading your journey...</p>
+    return (
+      <div>
+        <Skeleton className="h-8 w-48 mb-2" />
+        <Skeleton className="h-4 w-96 mb-6" />
+        <div className="space-y-5">
+          <CardSkeleton lines={5} />
+          <CardSkeleton lines={5} />
+          <CardSkeleton lines={4} />
+        </div>
+      </div>
+    )
   }
 
-  if (!overview) {
-    return <p className="text-sm text-danger py-16 text-center">Could not load your journey.</p>
+  if (error || !overview) {
+    return (
+      <QueryError
+        message="Your journey could not be loaded. Check your connection and try again."
+        onRetry={() => refetch()}
+        retrying={isRefetching}
+      />
+    )
   }
 
   return (
@@ -95,7 +114,16 @@ function TaskRow({ task }: { task: JourneyTask }) {
   return (
     <li id={`task-${task.id}`} className="flex items-start gap-3 py-3 rounded-lg transition-shadow">
       <button
-        onClick={() => toggleTask.mutate({ taskId: task.id, status: done ? 'pending' : 'done' })}
+        onClick={() =>
+          toggleTask.mutate(
+            { taskId: task.id, status: done ? 'pending' : 'done' },
+            {
+              onSuccess: () =>
+                toast.success(done ? 'Task marked as pending.' : 'Task marked as complete.'),
+              onError: () => toast.error('Something went wrong. Try again.'),
+            },
+          )
+        }
         disabled={toggleTask.isPending}
         aria-label={done ? `Mark ${task.title} as pending` : `Mark ${task.title} as done`}
         className={cn(

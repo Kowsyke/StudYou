@@ -1,24 +1,45 @@
-import { CalendarClock, Wallet } from 'lucide-react'
+import { CalendarClock, CheckCircle2, Wallet } from 'lucide-react'
 import { Navigate } from 'react-router-dom'
+import { EmptyState } from '../components/EmptyState'
+import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { ProgressBar, ProgressRing } from '../components/ui/progress'
+import { CardSkeleton, Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney } from '../hooks/useJourney'
 import { daysLeftLabel, formatDate, formatGbp, formatHome } from '../lib/format'
 import { useAuthStore } from '../store/authStore'
 
 export function DashboardPage() {
   const user = useAuthStore((s) => s.user)
-  const { data: overview, isPending, error } = useJourney()
+  const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
 
   if (error && hasNoJourney(error)) return <Navigate to="/onboarding" replace />
 
   if (isPending) {
-    return <p className="text-sm text-ink-muted py-16 text-center">Loading your dashboard...</p>
+    return (
+      <div>
+        <Skeleton className="h-8 w-56 mb-2" />
+        <Skeleton className="h-4 w-80 mb-6" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardSkeleton lines={6} />
+          <div className="md:col-span-2 space-y-4">
+            <CardSkeleton lines={3} />
+            <CardSkeleton lines={4} />
+          </div>
+        </div>
+      </div>
+    )
   }
 
-  if (!overview) {
-    return <p className="text-sm text-danger py-16 text-center">Could not load your journey.</p>
+  if (error || !overview) {
+    return (
+      <QueryError
+        message="Your dashboard could not be loaded. Check your connection and try again."
+        onRetry={() => refetch()}
+        retrying={isRefetching}
+      />
+    )
   }
 
   const { budget, upcomingDeadlines, stages, percentComplete, journey } = overview
@@ -120,7 +141,11 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent>
             {upcomingDeadlines.length === 0 ? (
-              <p className="text-sm text-ink-muted">All caught up. Nothing pending.</p>
+              <EmptyState
+                icon={CheckCircle2}
+                title="No upcoming tasks"
+                body="You do not have any deadlines approaching, so you are fully caught up for now."
+              />
             ) : (
               <ul className="divide-y divide-black/5">
                 {upcomingDeadlines.map((d) => (

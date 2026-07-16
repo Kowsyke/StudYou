@@ -1,24 +1,27 @@
-import { ArrowDownUp, ExternalLink, Search } from 'lucide-react'
+import { ArrowDownUp, ExternalLink, Search, SearchX } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { EmptyState } from '../components/EmptyState'
+import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import { Card, CardContent } from '../components/ui/card'
 import { Input, Select } from '../components/ui/input'
+import { CardSkeleton } from '../components/ui/skeleton'
 import { useCategories } from '../hooks/useMeta'
 import { type ResourceFilters, useResources } from '../hooks/useResources'
 import { formatDate, formatGbp } from '../lib/format'
 
+const defaultFilters: ResourceFilters = { search: '', category: '', sort: 'title', order: 'asc' }
+
 export function ResourcesPage() {
   const [searchParams] = useSearchParams()
   const [filters, setFilters] = useState<ResourceFilters>({
+    ...defaultFilters,
     search: searchParams.get('search') ?? '',
-    category: '',
-    sort: 'title',
-    order: 'asc',
   })
   const { data: categories } = useCategories()
-  const { data: resources, isPending } = useResources(filters)
+  const { data: resources, isPending, error, refetch, isRefetching } = useResources(filters)
 
   useEffect(() => {
     const fromPalette = searchParams.get('search')
@@ -86,9 +89,29 @@ export function ResourcesPage() {
       </div>
 
       {isPending ? (
-        <p className="text-sm text-ink-muted py-16 text-center">Loading resources...</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <CardSkeleton lines={3} />
+          <CardSkeleton lines={3} />
+          <CardSkeleton lines={3} />
+          <CardSkeleton lines={3} />
+        </div>
+      ) : error ? (
+        <QueryError
+          message="The resource library could not be loaded. Check your connection and try again."
+          onRetry={() => refetch()}
+          retrying={isRefetching}
+        />
       ) : (resources ?? []).length === 0 ? (
-        <p className="text-sm text-ink-muted py-16 text-center">No resources match your filters.</p>
+        <EmptyState
+          icon={SearchX}
+          title="No resources found"
+          body="Try clearing your filters or changing your search term to see more results."
+          action={
+            <Button variant="secondary" onClick={() => setFilters(defaultFilters)}>
+              Clear filters
+            </Button>
+          }
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {(resources ?? []).map((resource) => (

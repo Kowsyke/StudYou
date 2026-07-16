@@ -8,6 +8,7 @@ import {
   Circle,
   LayoutDashboard,
   Map as MapIcon,
+  SlidersHorizontal,
 } from 'lucide-react'
 import { type ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -69,6 +70,9 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
               </PaletteItem>
               <PaletteItem onSelect={() => go('/journey')} icon={<MapIcon size={15} />}>
                 My journey
+              </PaletteItem>
+              <PaletteItem onSelect={() => go('/settings')} icon={<SlidersHorizontal size={15} />}>
+                Settings
               </PaletteItem>
             </>
           )}
