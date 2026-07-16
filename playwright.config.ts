@@ -12,6 +12,15 @@ export default defineConfig({
     trace: 'retain-on-failure',
     launchOptions: {
       timeout: 600_000,
+      // Chrome throttles timers and rAF in occluded windows, which on a
+      // loaded machine can freeze React updates mid test while the DOM
+      // polling keeps seeing stale content. These are the standard CI
+      // flags that disable background throttling entirely.
+      args: [
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+      ],
     },
   },
   webServer: [
