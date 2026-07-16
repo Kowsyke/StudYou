@@ -1,10 +1,10 @@
-import { zValidator } from '@hono/zod-validator'
 import { categories, countries, resources } from '@studyou/db'
 import type { ApiResponse, CategoryKey, Resource } from '@studyou/types'
 import { type SQL, and, eq, ilike, or, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'
+import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
 import { requireRole } from '../middleware/rbac'
 import type { AppEnv } from '../types'
@@ -21,10 +21,14 @@ const resourceBodySchema = z.object({
   categoryKey: z.enum(['visa', 'health', 'finance', 'housing', 'documents', 'arrival']),
   title: z.string().min(1).max(200),
   summary: z.string().min(1).max(2000),
-  costPence: z.number().int().min(0).nullable(),
-  deadlineDaysBeforeIntake: z.number().int().nullable(),
+  costPence: z.number().int().min(0).max(100_000_000).nullable(),
+  deadlineDaysBeforeIntake: z.number().int().min(-365).max(1095).nullable(),
   sourceUrl: z.string().url(),
   country: z.string().length(2).default('GB'),
+})
+
+const idParamSchema = z.object({
+  id: z.string().uuid('Invalid resource id'),
 })
 
 const sortColumns = {
@@ -53,7 +57,7 @@ export const resourceRoutes = new Hono<AppEnv>()
 
 resourceRoutes.use('*', authMiddleware)
 
-resourceRoutes.get('/', zValidator('query', listQuerySchema), async (c) => {
+resourceRoutes.get('/', validate('query', listQuerySchema), async (c) => {
   const query = c.req.valid('query')
 
   const conditions: SQL[] = [eq(countries.code, query.country.toUpperCase())]
@@ -93,44 +97,40 @@ resourceRoutes.get('/', zValidator('query', listQuerySchema), async (c) => {
   return c.json(response)
 })
 
-resourceRoutes.post(
-  '/',
-  requireRole('admin'),
-  zValidator('json', resourceBodySchema),
-  async (c) => {
-    const body = c.req.valid('json')
-    const refs = await lookupRefs(body.country, body.categoryKey)
-    if (!refs) return c.json({ success: false, error: 'Unknown country or category' }, 400)
+resourceRoutes.post('/', requireRole('admin'), validate('json', resourceBodySchema), async (c) => {
+  const body = c.req.valid('json')
+  const refs = await lookupRefs(body.country, body.categoryKey)
+  if (!refs) return c.json({ success: false, error: 'Unknown country or category' }, 400)
 
-    const [created] = await db
-      .insert(resources)
-      .values({
-        countryId: refs.countryId,
-        categoryId: refs.categoryId,
-        title: body.title,
-        summary: body.summary,
-        costPence: body.costPence,
-        deadlineDaysBeforeIntake: body.deadlineDaysBeforeIntake,
-        sourceUrl: body.sourceUrl,
-        lastUpdated: new Date(),
-      })
-      .returning()
+  const [created] = await db
+    .insert(resources)
+    .values({
+      countryId: refs.countryId,
+      categoryId: refs.categoryId,
+      title: body.title,
+      summary: body.summary,
+      costPence: body.costPence,
+      deadlineDaysBeforeIntake: body.deadlineDaysBeforeIntake,
+      sourceUrl: body.sourceUrl,
+      lastUpdated: new Date(),
+    })
+    .returning()
 
-    const response: ApiResponse<Resource> = {
-      success: true,
-      data: toResource({ ...created, categoryKey: body.categoryKey }),
-    }
-    return c.json(response, 201)
-  },
-)
+  const response: ApiResponse<Resource> = {
+    success: true,
+    data: toResource({ ...created, categoryKey: body.categoryKey }),
+  }
+  return c.json(response, 201)
+})
 
 resourceRoutes.put(
   '/:id',
   requireRole('admin'),
-  zValidator('json', resourceBodySchema),
+  validate('param', idParamSchema),
+  validate('json', resourceBodySchema),
   async (c) => {
     const body = c.req.valid('json')
-    const id = c.req.param('id')
+    const { id } = c.req.valid('param')
     const refs = await lookupRefs(body.country, body.categoryKey)
     if (!refs) return c.json({ success: false, error: 'Unknown country or category' }, 400)
 
@@ -158,10 +158,10 @@ resourceRoutes.put(
   },
 )
 
-resourceRoutes.delete('/:id', requireRole('admin'), async (c) => {
+resourceRoutes.delete('/:id', requireRole('admin'), validate('param', idParamSchema), async (c) => {
   const [deleted] = await db
     .delete(resources)
-    .where(eq(resources.id, c.req.param('id')))
+    .where(eq(resources.id, c.req.valid('param').id))
     .returning({ id: resources.id })
   if (!deleted) return c.json({ success: false, error: 'Resource not found' }, 404)
   return c.json({ success: true, message: 'Resource deleted' })

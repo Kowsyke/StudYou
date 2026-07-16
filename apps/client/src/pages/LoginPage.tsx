@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { type FormEvent, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Input, Label } from '../components/ui/input'
@@ -10,6 +10,8 @@ import { apiErrorMessage } from '../lib/api'
 export function LoginPage() {
   const navigate = useNavigate()
   const login = useLogin()
+  const [searchParams] = useSearchParams()
+  const sessionExpired = searchParams.get('expired') === '1'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -48,6 +50,11 @@ export function LoginPage() {
             <CardTitle>Sign in</CardTitle>
           </CardHeader>
           <CardContent>
+            {sessionExpired && !error && (
+              <p className="text-sm text-ink-secondary bg-accent-soft rounded-lg px-3 py-2 mb-4">
+                Your session has expired. Please sign in again.
+              </p>
+            )}
             <form onSubmit={onSubmit} className="space-y-4">
               <div>
                 <Label htmlFor="email">Email</Label>

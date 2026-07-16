@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Check, X } from 'lucide-react'
 import { type FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/button'
@@ -7,6 +8,14 @@ import { Input, Label, Select } from '../components/ui/input'
 import { useRegister } from '../hooks/useAuth'
 import { useCountries } from '../hooks/useMeta'
 import { apiErrorMessage } from '../lib/api'
+
+// Mirrors the server side zod password policy so feedback is instant
+// while the API remains the authority.
+const passwordRules = [
+  { label: 'At least 8 characters', test: (value: string) => value.length >= 8 },
+  { label: 'Includes a letter', test: (value: string) => /[A-Za-z]/.test(value) },
+  { label: 'Includes a number', test: (value: string) => /[0-9]/.test(value) },
+]
 
 export function RegisterPage() {
   const navigate = useNavigate()
@@ -19,6 +28,7 @@ export function RegisterPage() {
   const [error, setError] = useState<string | null>(null)
 
   const originCountries = (countries ?? []).filter((c) => !c.isDestination)
+  const passwordValid = passwordRules.every((rule) => rule.test(password))
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -90,6 +100,24 @@ export function RegisterPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="At least 8 characters"
                 />
+                {password.length > 0 && !passwordValid && (
+                  <ul className="mt-2 space-y-1">
+                    {passwordRules.map((rule) => {
+                      const passed = rule.test(password)
+                      return (
+                        <li
+                          key={rule.label}
+                          className={`flex items-center gap-1.5 text-xs ${
+                            passed ? 'text-positive' : 'text-ink-muted'
+                          }`}
+                        >
+                          {passed ? <Check size={12} /> : <X size={12} />}
+                          {rule.label}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                )}
               </div>
               <div>
                 <Label htmlFor="origin">Where are you applying from?</Label>
@@ -110,7 +138,11 @@ export function RegisterPage() {
                 </p>
               </div>
               {error && <p className="text-sm text-danger">{error}</p>}
-              <Button type="submit" className="w-full" disabled={register.isPending}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={register.isPending || (password.length > 0 && !passwordValid)}
+              >
                 {register.isPending ? 'Creating account...' : 'Continue'}
               </Button>
             </form>

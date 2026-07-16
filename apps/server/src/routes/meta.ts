@@ -2,8 +2,17 @@ import { categories, countries, stages } from '@studyou/db'
 import type { ApiResponse, Category, CategoryKey, Country, Stage, StageKey } from '@studyou/types'
 import { asc, eq } from 'drizzle-orm'
 import { Hono } from 'hono'
+import { z } from 'zod'
 import { db } from '../lib/db'
+import { validate } from '../lib/validate'
 import type { AppEnv } from '../types'
+
+const stagesQuerySchema = z.object({
+  country: z
+    .string()
+    .regex(/^[A-Za-z]{2}$/, 'Country must be a two letter code')
+    .default('GB'),
+})
 
 export const metaRoutes = new Hono<AppEnv>()
 
@@ -35,8 +44,8 @@ metaRoutes.get('/categories', async (c) => {
   return c.json(response)
 })
 
-metaRoutes.get('/stages', async (c) => {
-  const code = (c.req.query('country') ?? 'GB').toUpperCase()
+metaRoutes.get('/stages', validate('query', stagesQuerySchema), async (c) => {
+  const code = c.req.valid('query').country.toUpperCase()
   const rows = await db
     .select({
       id: stages.id,

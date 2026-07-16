@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
+import { HTTPException } from 'hono/http-exception'
 import { logger } from 'hono/logger'
+import { secureHeaders } from 'hono/secure-headers'
 import { env } from './lib/env'
 import { adminRoutes, authRoutes, journeyRoutes, metaRoutes, resourceRoutes } from './routes'
 import type { AppEnv } from './types'
@@ -8,6 +10,7 @@ import type { AppEnv } from './types'
 const app = new Hono<AppEnv>()
 
 app.use('*', logger())
+app.use('*', secureHeaders())
 app.use(
   '*',
   cors({
@@ -31,9 +34,16 @@ app.route('/api/v1', api)
 
 app.notFound((c) => c.json({ success: false, error: 'Not found' }, 404))
 
+// Central error handler. Full details go to the server log only; the
+// client always receives the ApiResponse envelope with a safe message,
+// never a stack trace, SQL fragment or file path.
 app.onError((err, c) => {
-  console.error(err)
-  return c.json({ success: false, error: 'Internal server error' }, 500)
+  if (err instanceof HTTPException) {
+    console.error(`HTTP ${err.status} on ${c.req.method} ${c.req.path}: ${err.message}`)
+    return c.json({ success: false, error: err.message || 'Request failed' }, err.status)
+  }
+  console.error(`Unhandled error on ${c.req.method} ${c.req.path}:`, err)
+  return c.json({ success: false, error: 'Something went wrong on our side' }, 500)
 })
 
 export default {

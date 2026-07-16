@@ -1,4 +1,3 @@
-import { zValidator } from '@hono/zod-validator'
 import { countries, users } from '@studyou/db'
 import type { ApiResponse, AuthPayload, User } from '@studyou/types'
 import bcrypt from 'bcryptjs'
@@ -7,20 +6,37 @@ import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'
 import { signToken } from '../lib/jwt'
+import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
+import { rateLimit } from '../middleware/rateLimit'
 import type { AppEnv } from '../types'
 
+// bcrypt only reads the first 72 bytes of a password, so longer input
+// would silently truncate. The complexity floor is a letter plus a digit
+// on top of the length minimum.
+export const passwordSchema = z
+  .string()
+  .min(8, 'Password must be at least 8 characters')
+  .max(72, 'Password must be at most 72 characters')
+  .regex(/[A-Za-z]/, 'Password must include a letter')
+  .regex(/[0-9]/, 'Password must include a number')
+
 const registerSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email('Enter a valid email address'),
+  password: passwordSchema,
   fullName: z.string().min(1).max(120),
   originCountryCode: z.string().length(2).optional(),
 })
 
 const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1),
+  email: z.string().email('Enter a valid email address'),
+  password: z.string().min(1, 'Enter your password'),
 })
+
+// Fixed windows sized to stay invisible to a real person and the e2e
+// suite while making credential stuffing impractical.
+const loginLimiter = rateLimit({ windowMs: 60_000, max: 20 })
+const registerLimiter = rateLimit({ windowMs: 300_000, max: 10 })
 
 function toUser(row: typeof users.$inferSelect): User {
   return {
@@ -35,7 +51,7 @@ function toUser(row: typeof users.$inferSelect): User {
 
 export const authRoutes = new Hono<AppEnv>()
 
-authRoutes.post('/register', zValidator('json', registerSchema), async (c) => {
+authRoutes.post('/register', registerLimiter, validate('json', registerSchema), async (c) => {
   const body = c.req.valid('json')
   const email = body.email.toLowerCase()
 
@@ -70,7 +86,7 @@ authRoutes.post('/register', zValidator('json', registerSchema), async (c) => {
   return c.json(response, 201)
 })
 
-authRoutes.post('/login', zValidator('json', loginSchema), async (c) => {
+authRoutes.post('/login', loginLimiter, validate('json', loginSchema), async (c) => {
   const body = c.req.valid('json')
   const [row] = await db.select().from(users).where(eq(users.email, body.email.toLowerCase()))
 

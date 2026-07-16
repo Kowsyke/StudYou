@@ -542,6 +542,9 @@ async function seed() {
     },
   ])
 
+  // Development only demo accounts. Never seed these in production;
+  // they exist so the app and the e2e suite can be driven immediately
+  // after a fresh bootstrap.
   const adminHash = bcrypt.hashSync('AdminPass123', 10)
   const studentHash = bcrypt.hashSync('StudentPass123', 10)
 

@@ -17,6 +17,9 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// An expired or invalid token anywhere in the app clears the session and
+// lands on the login page with a friendly explanation instead of failing
+// silently or spamming the console.
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -24,7 +27,7 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !onAuthPage) {
       localStorage.removeItem(TOKEN_KEY)
       localStorage.removeItem('studyou_user')
-      window.location.href = '/login'
+      window.location.href = '/login?expired=1'
     }
     return Promise.reject(error)
   },
