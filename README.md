@@ -44,8 +44,9 @@ StudYou is built on three pillars.
 - Student dashboard: percent complete, live budget tracker in GBP and home currency, upcoming deadlines with overdue flags
 - Admin dashboard: completion rates and drop off analytics across stages
 - Command palette: press Ctrl K (or Cmd K on Mac) to jump to any task, stage, resource or page
+- Settings: students can change their budget, intake date and home country at any time; an intake date change recalculates every target date through the deadline engine after an explicit confirmation
 
-Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API layer with middleware, not just hidden in the UI.
+Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API layer with middleware, not just hidden in the UI. The API is hardened with rate limited auth routes, security headers on every response, a central error handler that never leaks internals, and zod validation on every body, parameter and query string.
 
 ## Tech stack
 
@@ -83,7 +84,7 @@ Prerequisites: [Bun](https://bun.sh), [pnpm](https://pnpm.io) and [Docker](https
    pnpm dev
    ```
 
-   The API runs on http://localhost:3000 and the client on http://localhost:5173.
+   The API runs on http://localhost:3005 and the client on http://localhost:5173.
 
 Seeded demo accounts (development only):
 
@@ -92,8 +93,8 @@ Seeded demo accounts (development only):
 
 Other commands:
 
-- `pnpm test` runs the engine unit tests
-- `pnpm test:e2e` runs the Playwright vertical slice (needs the seeded database)
+- `pnpm test` runs the engine unit tests (Vitest) and the server unit tests (bun test)
+- `pnpm test:e2e` runs the Playwright suite (needs the seeded database)
 - `pnpm lint` runs Biome across the workspace
 - `pnpm db:studio` opens Drizzle Studio
 - `pnpm build` builds every package
@@ -143,6 +144,7 @@ Journey:
 - GET /api/v1/journey (student, returns the full overview: stages, tasks, percent complete, budget, upcoming deadlines)
 - POST /api/v1/journey (student, generates the roadmap from the intake date)
 - PATCH /api/v1/journey/tasks/:id (student, own tasks only, returns the recomputed overview)
+- PATCH /api/v1/journey/settings (student, own journey only; updates budget, intake date or home country and, when the intake date changes, replans every target date through the deadline engine in one transaction, returning the recomputed overview)
 
 Knowledge base:
 
@@ -158,6 +160,13 @@ Analytics and reference data:
 
 RBAC is enforced with server middleware (verify the JWT, then require the role). A student calling an admin route receives 403 regardless of what the UI shows.
 
+Hardening on every route:
+
+- Login and register are rate limited per client IP (fixed window, in memory) and answer 429 with a Retry-After header when exceeded
+- Every response carries security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy, Strict-Transport-Security and friends) via Hono secure headers
+- A central error handler logs full details server side and returns only a safe ApiResponse envelope, never a stack trace, SQL or file path
+- Passwords must be 8 to 72 characters with at least one letter and one number, validated with zod on the server and mirrored live on the register form
+
 ## The two engines
 
 The real logic lives in packages/engine as pure, framework free modules.
@@ -169,8 +178,13 @@ Because both are pure functions they are unit tested in isolation and reused by 
 
 ## Testing
 
-- Unit: Vitest covers the budget and deadline engines
-- End to end: Playwright drives the vertical slice through the real stack: a seeded student signs in, sees the journey, ticks a task and the dashboard percent and budget update live
+- Unit (Vitest): the budget and deadline engines, including the settings recompute behaviour of the deadline planner
+- Unit (bun test): server helpers, covering the password policy schema and the rate limiter (limits, per IP and per path isolation, window reset, Retry-After)
+- End to end (Playwright), four specs against the real stack and seeded database:
+  - Vertical slice: a student signs in, ticks a task and the dashboard updates live
+  - Admin flow: an admin creates a resource, sees it in the library, edits it and deletes it
+  - RBAC: no token gets 401, a student token on an admin route gets 403, a garbled token gets 401
+  - Resource library: search narrows results, the category filter isolates a category, sorting by cost orders correctly both ways
 
 ## Roadmap
 

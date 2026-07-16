@@ -29,6 +29,37 @@ describe('planDeadlines', () => {
     expect(plan.get('a')).toBe('2025-11-25')
     expect(plan.get('b')).toBe('2026-10-12')
   })
+
+  // The settings recompute replans the same tasks against a new intake
+  // date, so a shifted intake must shift every target date by the same
+  // number of days, regardless of sign or size of daysBeforeIntake.
+  it('recomputes all target dates by the intake shift when replanned', () => {
+    const tasks = [
+      { id: 'a', daysBeforeIntake: 300 },
+      { id: 'b', daysBeforeIntake: 75 },
+      { id: 'c', daysBeforeIntake: 0 },
+      { id: 'd', daysBeforeIntake: -14 },
+    ]
+    const original = planDeadlines('2026-09-21', tasks)
+    const replanned = planDeadlines('2026-10-21', tasks)
+
+    const dayMs = 86_400_000
+    for (const task of tasks) {
+      const before = new Date(`${original.get(task.id)}T00:00:00Z`).getTime()
+      const after = new Date(`${replanned.get(task.id)}T00:00:00Z`).getTime()
+      expect((after - before) / dayMs).toBe(30)
+    }
+  })
+
+  it('replanning to the same intake date is a no op', () => {
+    const tasks = [
+      { id: 'a', daysBeforeIntake: 120 },
+      { id: 'b', daysBeforeIntake: -7 },
+    ]
+    const first = planDeadlines('2026-09-21', tasks)
+    const second = planDeadlines('2026-09-21', tasks)
+    expect([...second.entries()]).toEqual([...first.entries()])
+  })
 })
 
 describe('upcomingDeadlines', () => {

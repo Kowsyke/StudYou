@@ -7,7 +7,7 @@
     "build": "pnpm -r build",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "test": "pnpm --filter @studyou/engine test",
+    "test": "pnpm --filter @studyou/engine test && pnpm --filter @studyou/server test",
     "test:e2e": "playwright test",
     "db:generate": "pnpm --filter @studyou/db generate",
     "db:migrate": "pnpm --filter @studyou/db migrate",

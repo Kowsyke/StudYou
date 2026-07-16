@@ -6,20 +6,11 @@ import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'
 import { signToken } from '../lib/jwt'
+import { passwordSchema } from '../lib/password'
 import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
 import { rateLimit } from '../middleware/rateLimit'
 import type { AppEnv } from '../types'
-
-// bcrypt only reads the first 72 bytes of a password, so longer input
-// would silently truncate. The complexity floor is a letter plus a digit
-// on top of the length minimum.
-export const passwordSchema = z
-  .string()
-  .min(8, 'Password must be at least 8 characters')
-  .max(72, 'Password must be at most 72 characters')
-  .regex(/[A-Za-z]/, 'Password must include a letter')
-  .regex(/[0-9]/, 'Password must include a number')
 
 const registerSchema = z.object({
   email: z.string().email('Enter a valid email address'),
