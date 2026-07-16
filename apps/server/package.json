@@ -1,0 +1,27 @@
+{
+  "name": "@studyou/server",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/index.ts",
+    "build": "bun build src/index.ts --target bun --outdir dist"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
+    "@studyou/db": "workspace:*",
+    "@studyou/engine": "workspace:*",
+    "@studyou/types": "workspace:*",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^16.5.0",
+    "drizzle-orm": "^0.43.1",
+    "hono": "^4.7.11",
+    "jsonwebtoken": "^9.0.2",
+    "postgres": "^3.4.5",
+    "zod": "^3.25.42"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9",
+    "bun-types": "latest"
+  }
+}

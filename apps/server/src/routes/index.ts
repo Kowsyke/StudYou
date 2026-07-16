@@ -1,0 +1,5 @@
+export { adminRoutes } from './admin'
+export { authRoutes } from './auth'
+export { journeyRoutes } from './journey'
+export { metaRoutes } from './meta'
+export { resourceRoutes } from './resources'
