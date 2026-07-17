@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs'
 import { config } from 'dotenv'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
+import universityData from './data/universities.json'
 import {
   categories,
   countries,
@@ -12,6 +13,7 @@ import {
   resources,
   stages,
   taskTemplates,
+  universities,
   users,
 } from './schema'
 
@@ -51,11 +53,45 @@ async function ensureEnvAdmin() {
   }
 }
 
+// Loads the verified top 100 UK universities dataset (researched from
+// official university domains, every domain liveness checked before
+// commit). Idempotent: does nothing once the table has rows.
+async function ensureUniversities() {
+  const [row] = await db.select({ id: universities.id }).from(universities).limit(1)
+  if (row) {
+    console.log('Universities already seeded.')
+    return
+  }
+  const { eq } = await import('drizzle-orm')
+  const [uk] = await db.select({ id: countries.id }).from(countries).where(eq(countries.code, 'GB'))
+  if (!uk) {
+    console.log('UK country row missing, run the full seed first.')
+    return
+  }
+  await db.insert(universities).values(
+    universityData.map((u) => ({
+      countryId: uk.id,
+      rank: u.rank,
+      name: u.name,
+      city: u.city,
+      region: u.region,
+      website: u.website,
+      internationalUrl: u.internationalUrl,
+      ugAdmissionsUrl: u.ugAdmissionsUrl,
+      russellGroup: u.russellGroup,
+      notes: u.notes,
+      lastUpdated: DATA_STAMP,
+    })),
+  )
+  console.log(`Seeded ${universityData.length} universities.`)
+}
+
 async function seed() {
   const existing = await db.select({ id: countries.id }).from(countries).limit(1)
   if (existing.length > 0) {
-    console.log('Database already seeded, refreshing the env admin only.')
+    console.log('Database already seeded, applying additive steps only.')
     await ensureEnvAdmin()
+    await ensureUniversities()
     await client.end()
     return
   }
@@ -618,6 +654,7 @@ async function seed() {
   )
 
   await ensureEnvAdmin()
+  await ensureUniversities()
 
   console.log('Seed complete.')
   console.log('Demo accounts (development only):')

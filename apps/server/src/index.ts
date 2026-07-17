@@ -4,7 +4,14 @@ import { HTTPException } from 'hono/http-exception'
 import { logger } from 'hono/logger'
 import { secureHeaders } from 'hono/secure-headers'
 import { env } from './lib/env'
-import { adminRoutes, authRoutes, journeyRoutes, metaRoutes, resourceRoutes } from './routes'
+import {
+  adminRoutes,
+  authRoutes,
+  journeyRoutes,
+  metaRoutes,
+  resourceRoutes,
+  universityRoutes,
+} from './routes'
 import type { AppEnv } from './types'
 
 const app = new Hono<AppEnv>()
@@ -27,6 +34,7 @@ const api = new Hono<AppEnv>()
 api.route('/auth', authRoutes)
 api.route('/journey', journeyRoutes)
 api.route('/resources', resourceRoutes)
+api.route('/universities', universityRoutes)
 api.route('/admin', adminRoutes)
 api.route('/meta', metaRoutes)
 

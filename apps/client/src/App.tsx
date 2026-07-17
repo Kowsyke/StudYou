@@ -14,6 +14,7 @@ import { OnboardingPage } from './pages/OnboardingPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { ResourcesPage } from './pages/ResourcesPage'
 import { SettingsPage } from './pages/SettingsPage'
+import { UniversitiesPage } from './pages/UniversitiesPage'
 import { useAuthStore } from './store/authStore'
 
 const queryClient = new QueryClient({
@@ -71,6 +72,7 @@ function App() {
                 <Route path="/" element={<HomeRedirect />} />
                 <Route path="/journey" element={<JourneyPage />} />
                 <Route path="/resources" element={<ResourcesPage />} />
+                <Route path="/universities" element={<UniversitiesPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route
                   path="/admin"

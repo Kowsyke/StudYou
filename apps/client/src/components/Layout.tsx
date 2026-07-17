@@ -3,6 +3,7 @@ import {
   BarChart3,
   BookOpen,
   Command,
+  GraduationCap,
   LayoutDashboard,
   LogOut,
   Map as MapIcon,
@@ -19,6 +20,7 @@ const swift = [0.16, 1, 0.3, 1] as const
 const studentNav = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/journey', label: 'My journey', icon: MapIcon },
+  { to: '/universities', label: 'Universities', icon: GraduationCap },
   { to: '/resources', label: 'Resources', icon: BookOpen },
   { to: '/settings', label: 'Settings', icon: SlidersHorizontal },
 ]

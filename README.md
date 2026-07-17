@@ -46,6 +46,7 @@ StudYou is built on three pillars.
 - Command palette: press Ctrl K (or Cmd K on Mac) to jump to any task, stage, resource or page
 - Settings: students can change their budget, intake date and home country at any time; an intake date change recalculates every target date through the deadline engine after an explicit confirmation
 - Appearance: a light and a dark theme, switched in Settings and remembered per device; the whole interface is built on semantic design tokens so the theme swap is a single class change
+- University finder: the top 100 UK universities, researched from official university domains only, filterable by any combination of the twelve UK regions, searchable, sortable, with a Russell Group filter; browse as tiles or swipe through a deck, shortlist any number, and open every official website, international admissions and application page directly, for international and home students alike
 
 Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API layer with middleware, not just hidden in the UI. The API is hardened with rate limited auth routes, security headers on every response, a central error handler that never leaks internals, and zod validation on every body, parameter and query string.
 
@@ -150,6 +151,7 @@ Journey:
 Knowledge base:
 
 - GET /api/v1/resources?search=&category=&sort=&order= (authenticated)
+- GET /api/v1/universities?search=&regions=&russellGroup=&sort= (authenticated; regions is a comma separated list of UK regions)
 - POST /api/v1/resources (admin only)
 - PUT /api/v1/resources/:id (admin only)
 - DELETE /api/v1/resources/:id (admin only)

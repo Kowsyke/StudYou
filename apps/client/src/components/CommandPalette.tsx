@@ -6,6 +6,7 @@ import {
   BookOpen,
   CheckCircle2,
   Circle,
+  GraduationCap,
   LayoutDashboard,
   Map as MapIcon,
   Search as SearchIcon,
@@ -74,6 +75,9 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
               </PaletteItem>
               <PaletteItem onSelect={() => go('/journey')} icon={<MapIcon size={15} />}>
                 My journey
+              </PaletteItem>
+              <PaletteItem onSelect={() => go('/universities')} icon={<GraduationCap size={15} />}>
+                Universities
               </PaletteItem>
               <PaletteItem onSelect={() => go('/settings')} icon={<SlidersHorizontal size={15} />}>
                 Settings

@@ -8,6 +8,13 @@
       "when": 1784214237470,
       "tag": "0000_elite_black_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1784300172762,
+      "tag": "0001_brown_bromley",
+      "breakpoints": true
     }
   ]
 }

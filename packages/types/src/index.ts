@@ -178,3 +178,35 @@ export interface AdminAnalytics {
   stageBreakdown: StageAnalytics[]
   dropOff: { stageKey: StageKey; stageTitle: string; studentsReached: number }[]
 }
+
+export const UK_REGIONS = [
+  'Scotland',
+  'North East',
+  'North West',
+  'Yorkshire and the Humber',
+  'Northern Ireland',
+  'Wales',
+  'West Midlands',
+  'East Midlands',
+  'East of England',
+  'London',
+  'South East',
+  'South West',
+] as const
+
+export type UkRegion = (typeof UK_REGIONS)[number]
+
+export interface University {
+  id: string
+  countryId: string
+  rank: number
+  name: string
+  city: string
+  region: string
+  website: string
+  internationalUrl: string
+  ugAdmissionsUrl: string
+  russellGroup: boolean
+  notes: string
+  lastUpdated: string
+}
