@@ -31,15 +31,14 @@ test('search narrows the results', async ({ page }) => {
 })
 
 test('category filter shows only that category', async ({ page }) => {
-  await page.getByLabel('Filter by category').selectOption('visa')
+  await page.getByRole('button', { name: 'Visa and immigration' }).click()
 
   await expect(page.getByRole('heading', { name: 'Student visa application fee' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'UCAS application fee' })).not.toBeVisible()
 
-  // Every visible card must carry the Visa category badge.
-  const badges = page.locator('main').getByText('Visa', { exact: true })
+  // Only the two seeded visa resources remain visible.
   const cards = page.getByRole('heading', { level: 3 })
-  expect(await badges.count()).toBe(await cards.count())
+  expect(await cards.count()).toBe(2)
 })
 
 test('sort by cost orders results by price', async ({ page }) => {

@@ -5,7 +5,14 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardKicker,
+  CardTitle,
+} from '../components/ui/card'
 import { Input, Label, Select, Textarea } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useChartTokens } from '../hooks/useChartTokens'
@@ -31,8 +38,8 @@ export function AdminPage() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Insights</h1>
-        <p className="text-sm text-ink-secondary mt-1">
+        <h1 className="text-title3 text-ink">Insights</h1>
+        <p className="text-xs text-ink-secondary mt-1">
           How students are progressing, and where they drop off.
         </p>
       </header>
@@ -66,7 +73,7 @@ export function AdminPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
             <Card>
               <CardHeader>
-                <CardTitle>Completion rate by stage</CardTitle>
+                <CardKicker>Completion rate by stage</CardKicker>
                 <CardDescription>Share of tasks completed in each stage</CardDescription>
               </CardHeader>
               <CardContent>
@@ -108,7 +115,7 @@ export function AdminPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Drop off by stage</CardTitle>
+                <CardKicker>Drop off by stage</CardKicker>
                 <CardDescription>Journeys with at least one task done per stage</CardDescription>
               </CardHeader>
               <CardContent>
@@ -154,11 +161,11 @@ export function AdminPage() {
 
 function StatTile({ label, value }: { label: string; value: string | number }) {
   return (
-    <Card>
-      <CardContent className="pt-5">
-        <p className="text-xs text-ink-muted">{label}</p>
-        <p className="text-2xl font-semibold tracking-tight mt-1">{value}</p>
-      </CardContent>
+    <Card className="p-4 flex flex-col gap-1">
+      <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
+        {label}
+      </p>
+      <p className="text-[22px] leading-tight font-bold text-ink">{value}</p>
     </Card>
   )
 }
@@ -235,45 +242,50 @@ function KnowledgeBaseManager() {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold tracking-tight mb-4">Knowledge base</h2>
+      <h2 className="text-body-lg font-semibold tracking-tight mb-4">Knowledge base</h2>
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-        <Card className="lg:col-span-3">
-          <CardContent className="pt-5">
-            <table className="w-full text-sm">
+        <Card className="lg:col-span-3 overflow-hidden">
+          <CardContent className="p-0">
+            <table className="w-full text-body">
               <thead>
-                <tr className="text-left text-xs text-ink-muted border-b border-hairline">
-                  <th className="pb-2 font-medium">Title</th>
-                  <th className="pb-2 font-medium">Category</th>
-                  <th className="pb-2 font-medium text-right">Cost</th>
-                  <th className="pb-2" />
+                <tr className="text-left text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary bg-surface-secondary">
+                  <th className="py-3 px-5 font-semibold">Title</th>
+                  <th className="py-3 pr-3 font-semibold">Category</th>
+                  <th className="py-3 pr-3 font-semibold text-right">Cost</th>
+                  <th className="py-3 pr-5" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-black/5">
+              <tbody className="divide-y divide-(--border)">
                 {(resources ?? []).map((resource) => (
-                  <tr key={resource.id}>
-                    <td className="py-2.5 pr-3 font-medium">{resource.title}</td>
+                  <tr
+                    key={resource.id}
+                    className="hover:bg-canvas transition-colors duration-[120ms]"
+                  >
+                    <td className="py-2.5 px-5 pr-3 font-semibold text-ink">{resource.title}</td>
                     <td className="py-2.5 pr-3">
                       <Badge category={resource.categoryKey} />
                     </td>
-                    <td className="py-2.5 text-right tabular-nums text-ink-secondary">
-                      {resource.costPence === null ? '-' : formatGbp(resource.costPence)}
+                    <td className="py-2.5 pr-3 text-right tabular-nums text-ink-secondary">
+                      {resource.costPence === null ? 'None' : formatGbp(resource.costPence)}
                     </td>
-                    <td className="py-2.5 pl-3 text-right whitespace-nowrap">
-                      <button
-                        onClick={() => startEdit(resource)}
-                        className="p-1.5 rounded-lg text-ink-muted hover:text-accent hover:bg-accent-soft transition-colors"
-                        aria-label={`Edit ${resource.title}`}
-                      >
-                        <Pencil size={14} />
-                      </button>
-                      <button
-                        onClick={() => onDelete(resource.id)}
-                        disabled={deleteResource.isPending}
-                        className="p-1.5 rounded-lg text-ink-muted hover:text-danger hover:bg-danger-soft transition-colors disabled:opacity-50"
-                        aria-label={`Delete ${resource.title}`}
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                    <td className="py-2.5 pr-5 pl-3 text-right whitespace-nowrap">
+                      <span className="inline-flex gap-1.5">
+                        <button
+                          onClick={() => startEdit(resource)}
+                          className="h-6 w-6 flex items-center justify-center rounded-xs border border-hairline text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors duration-[120ms]"
+                          aria-label={`Edit ${resource.title}`}
+                        >
+                          <Pencil size={12} />
+                        </button>
+                        <button
+                          onClick={() => onDelete(resource.id)}
+                          disabled={deleteResource.isPending}
+                          className="h-6 w-6 flex items-center justify-center rounded-xs border border-hairline text-ink-secondary hover:bg-danger-soft hover:text-danger hover:border-danger transition-colors duration-[120ms] disabled:opacity-50"
+                          aria-label={`Delete ${resource.title}`}
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </span>
                     </td>
                   </tr>
                 ))}

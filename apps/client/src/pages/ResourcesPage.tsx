@@ -3,14 +3,13 @@ import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
-import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
-import { Card, CardContent } from '../components/ui/card'
 import { Input, Select } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useCategories } from '../hooks/useMeta'
 import { type ResourceFilters, useResources } from '../hooks/useResources'
 import { formatDate, formatGbp } from '../lib/format'
+import { cn } from '../lib/utils'
 
 const defaultFilters: ResourceFilters = { search: '', category: '', sort: 'title', order: 'asc' }
 
@@ -33,67 +32,77 @@ export function ResourcesPage() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Resource library</h1>
-        <p className="text-sm text-ink-secondary mt-1">
+        <h1 className="text-title3 text-ink">Resource library</h1>
+        <p className="text-xs text-ink-secondary mt-1">
           Every rule, cost and requirement, sourced from official pages. No agency needed.
         </p>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2 mb-5">
-        <div className="relative flex-1 min-w-56">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-muted" />
+      <div className="flex flex-wrap items-center gap-3 mb-5">
+        <div className="relative flex-1 min-w-52 max-w-80">
+          <Search
+            size={14}
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
+          />
           <Input
-            className="pl-9"
+            className="pl-8"
             placeholder="Search resources..."
             value={filters.search}
             onChange={(e) => setFilters({ ...filters, search: e.target.value })}
           />
         </div>
-        <Select
-          className="w-44"
-          value={filters.category}
-          onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+
+        <fieldset
+          className="flex flex-wrap items-center gap-1.5 border-0"
           aria-label="Filter by category"
         >
-          <option value="">All categories</option>
+          <CategoryPill
+            label="All"
+            active={filters.category === ''}
+            onClick={() => setFilters({ ...filters, category: '' })}
+          />
           {(categories ?? []).map((c) => (
-            <option key={c.id} value={c.key}>
-              {c.label}
-            </option>
+            <CategoryPill
+              key={c.id}
+              label={c.label}
+              active={filters.category === c.key}
+              onClick={() => setFilters({ ...filters, category: c.key })}
+            />
           ))}
-        </Select>
-        <Select
-          className="w-40"
-          value={filters.sort}
-          onChange={(e) =>
-            setFilters({ ...filters, sort: e.target.value as ResourceFilters['sort'] })
-          }
-          aria-label="Sort by"
-        >
-          <option value="title">Sort by title</option>
-          <option value="cost">Sort by cost</option>
-          <option value="deadline">Sort by deadline</option>
-          <option value="updated">Sort by last updated</option>
-        </Select>
-        <Button
-          variant="secondary"
-          size="md"
-          onClick={() =>
-            setFilters({ ...filters, order: filters.order === 'asc' ? 'desc' : 'asc' })
-          }
-          aria-label={`Order ${filters.order === 'asc' ? 'ascending' : 'descending'}`}
-        >
-          <ArrowDownUp size={14} />
-          {filters.order === 'asc' ? 'Asc' : 'Desc'}
-        </Button>
+        </fieldset>
+
+        <div className="flex items-center gap-2 ml-auto">
+          <Select
+            className="w-40 h-8 text-xs"
+            value={filters.sort}
+            onChange={(e) =>
+              setFilters({ ...filters, sort: e.target.value as ResourceFilters['sort'] })
+            }
+            aria-label="Sort by"
+          >
+            <option value="title">Sort by title</option>
+            <option value="cost">Sort by cost</option>
+            <option value="deadline">Sort by deadline</option>
+            <option value="updated">Sort by last updated</option>
+          </Select>
+          <button
+            onClick={() =>
+              setFilters({ ...filters, order: filters.order === 'asc' ? 'desc' : 'asc' })
+            }
+            aria-label={`Order ${filters.order === 'asc' ? 'ascending' : 'descending'}`}
+            title="Toggle order"
+            className="h-8 w-8 flex items-center justify-center rounded-sm border border-hairline-strong bg-surface text-ink-secondary hover:bg-surface-secondary transition-colors duration-[120ms]"
+          >
+            <ArrowDownUp size={14} />
+          </button>
+        </div>
       </div>
 
       {isPending ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <CardSkeleton lines={3} />
-          <CardSkeleton lines={3} />
-          <CardSkeleton lines={3} />
-          <CardSkeleton lines={3} />
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
+          {['a', 'b', 'c', 'd', 'e', 'f'].map((key) => (
+            <CardSkeleton key={key} lines={3} />
+          ))}
         </div>
       ) : error ? (
         <QueryError
@@ -106,46 +115,64 @@ export function ResourcesPage() {
           icon={SearchX}
           title="No resources found"
           body="Try clearing your filters or changing your search term to see more results."
-          action={
-            <Button variant="secondary" onClick={() => setFilters(defaultFilters)}>
-              Clear filters
-            </Button>
-          }
+          action={<Button onClick={() => setFilters(defaultFilters)}>Clear filters</Button>}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4">
           {(resources ?? []).map((resource) => (
-            <Card key={resource.id}>
-              <CardContent className="pt-5">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-sm font-semibold leading-snug">{resource.title}</h3>
-                  <Badge category={resource.categoryKey} />
-                </div>
-                <p className="text-sm text-ink-secondary mt-2 leading-relaxed">
-                  {resource.summary}
-                </p>
-                <div className="flex items-center gap-3 mt-3 text-xs text-ink-muted flex-wrap">
-                  {resource.costPence !== null && (
-                    <span className="font-medium text-ink-secondary tabular-nums">
-                      {formatGbp(resource.costPence)}
-                    </span>
-                  )}
-                  <span>Updated {formatDate(resource.lastUpdated)}</span>
-                  <a
-                    href={resource.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-accent hover:underline ml-auto"
-                  >
-                    Official source
-                    <ExternalLink size={11} />
-                  </a>
-                </div>
-              </CardContent>
-            </Card>
+            <article
+              key={resource.id}
+              className="bg-surface border border-hairline rounded-md shadow-sm p-4 flex flex-col gap-3"
+            >
+              <div className="flex justify-between items-center text-caption text-ink-tertiary">
+                <span className="capitalize">{resource.categoryKey}</span>
+                <span>Updated {formatDate(resource.lastUpdated)}</span>
+              </div>
+              <h3 className="text-sm font-semibold text-ink leading-normal">{resource.title}</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed grow">{resource.summary}</p>
+              <div className="flex items-center justify-between border-t border-hairline pt-2.5 text-xs">
+                <span className="font-semibold text-ink tabular-nums">
+                  {resource.costPence !== null ? formatGbp(resource.costPence) : 'No fee'}
+                </span>
+                <a
+                  href={resource.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-accent font-medium hover:underline rounded-xs"
+                >
+                  Official source
+                  <ExternalLink size={10} />
+                </a>
+              </div>
+            </article>
           ))}
         </div>
       )}
     </div>
+  )
+}
+
+function CategoryPill({
+  label,
+  active,
+  onClick,
+}: {
+  label: string
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms]',
+        active
+          ? 'bg-accent border-accent text-white'
+          : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
+      )}
+    >
+      {label}
+    </button>
   )
 }

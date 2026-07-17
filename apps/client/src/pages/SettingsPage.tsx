@@ -143,8 +143,8 @@ export function SettingsPage() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-        <p className="text-sm text-ink-secondary mt-1">
+        <h1 className="text-title3 text-ink">Settings</h1>
+        <p className="text-xs text-ink-secondary mt-1">
           Adjust your plan. Your roadmap and budget update everywhere, instantly.
         </p>
       </header>
@@ -222,25 +222,25 @@ export function SettingsPage() {
       </Card>
 
       {confirming && (
-        <div className="fixed inset-0 z-50 bg-black/25 backdrop-blur-[2px] flex items-center justify-center px-4">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px] flex items-center justify-center px-4">
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.25, ease: [0.65, 0, 0.35, 1] }}
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="confirm-title"
-            className="bg-surface rounded-card border border-hairline shadow-card px-6 py-5 max-w-sm w-full"
+            className="bg-surface rounded-lg border border-hairline shadow-overlay p-6 w-[400px] max-w-full flex flex-col gap-4"
           >
-            <h2 id="confirm-title" className="text-base font-semibold">
+            <h2 id="confirm-title" className="text-body-lg font-bold text-ink">
               Recalculate your roadmap?
             </h2>
-            <p className="text-sm text-ink-secondary mt-1.5">
+            <p className="text-body text-ink-secondary leading-relaxed">
               Changing your intake date will automatically recalculate every target date in your
               roadmap.
             </p>
-            <div className="flex justify-end gap-2 mt-5">
-              <Button variant="ghost" onClick={() => setConfirming(false)}>
+            <div className="flex justify-end gap-2.5 mt-2">
+              <Button variant="secondary" onClick={() => setConfirming(false)}>
                 Cancel
               </Button>
               <Button onClick={submit}>Recalculate and save</Button>

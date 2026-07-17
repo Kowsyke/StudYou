@@ -10,7 +10,7 @@ interface ErrorBoundaryState {
 }
 
 // Catches render errors anywhere below it so a broken component shows a
-// calm recovery card instead of a white screen.
+// calm recovery screen instead of a white page.
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { hasError: false }
 
@@ -25,16 +25,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center px-4">
-          <div className="bg-surface rounded-card border border-hairline shadow-card px-8 py-10 text-center max-w-sm">
-            <h1 className="text-base font-semibold">Something went wrong</h1>
-            <p className="text-sm text-ink-muted mt-1.5">
-              An unexpected error stopped this page. Reloading usually fixes it.
-            </p>
-            <Button className="mt-5" onClick={() => window.location.reload()}>
-              Reload the app
-            </Button>
-          </div>
+        <div className="min-h-screen bg-canvas flex flex-col items-center justify-center text-center px-8 gap-4">
+          <h1 className="text-lg font-bold text-ink">Something went wrong</h1>
+          <p className="text-body text-ink-secondary max-w-sm leading-relaxed">
+            An unexpected application error occurred. Reloading the interface usually fixes it.
+          </p>
+          <span className="font-mono text-caption text-ink-secondary bg-surface-secondary border border-hairline rounded-xs px-3 py-1.5">
+            Reference: render error caught at the application root
+          </span>
+          <Button onClick={() => window.location.reload()}>Reload application</Button>
         </div>
       )
     }

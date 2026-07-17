@@ -169,6 +169,22 @@ body {
   color: var(--ink-tertiary);
 }
 
+/* Command palette drop in, 300ms swift per the motion spec. */
+.palette-in {
+  animation: palette-in 300ms var(--ease-swift);
+}
+
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
 /* Skeleton shimmer sweep from the design reference. */
 .shimmer-host {
   position: relative;

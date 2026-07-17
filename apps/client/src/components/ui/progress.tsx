@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
 
+const swift = [0.16, 1, 0.3, 1] as const
+
 interface ProgressBarProps {
   value: number
   className?: string
@@ -9,12 +11,12 @@ interface ProgressBarProps {
 export function ProgressBar({ value, className }: ProgressBarProps) {
   const clamped = Math.min(100, Math.max(0, value))
   return (
-    <div className={cn('h-1.5 w-full rounded-full bg-black/6 overflow-hidden', className)}>
+    <div className={cn('h-1 w-full rounded-full bg-surface-secondary overflow-hidden', className)}>
       <motion.div
         className="h-full rounded-full bg-accent"
         initial={false}
         animate={{ width: `${clamped}%` }}
-        transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+        transition={{ duration: 0.3, ease: swift }}
       />
     </div>
   )
@@ -26,21 +28,20 @@ interface ProgressRingProps {
   label?: string
 }
 
-export function ProgressRing({ value, size = 148, label }: ProgressRingProps) {
+/* Ring on the left, large percent and description beside it, matching
+   the journey completion card in the design reference. */
+export function ProgressRing({ value, size = 90, label }: ProgressRingProps) {
   const clamped = Math.min(100, Math.max(0, value))
   const stroke = 10
   const radius = (size - stroke) / 2
   const circumference = 2 * Math.PI * radius
 
   return (
-    <div
-      className="relative inline-flex items-center justify-center"
-      style={{ width: size, height: size }}
-    >
+    <div className="flex items-center gap-6">
       <svg
         width={size}
         height={size}
-        className="-rotate-90"
+        className="-rotate-90 shrink-0"
         role="img"
         aria-label={`${clamped} percent complete`}
       >
@@ -49,7 +50,7 @@ export function ProgressRing({ value, size = 148, label }: ProgressRingProps) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgb(0 0 0 / 0.06)"
+          stroke="var(--surface-secondary)"
           strokeWidth={stroke}
         />
         <motion.circle
@@ -57,20 +58,23 @@ export function ProgressRing({ value, size = 148, label }: ProgressRingProps) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="var(--color-accent)"
+          stroke="var(--accent)"
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
           initial={false}
           animate={{ strokeDashoffset: circumference * (1 - clamped / 100) }}
-          transition={{ type: 'spring', stiffness: 60, damping: 18 }}
+          transition={{ duration: 0.3, ease: swift }}
         />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span data-testid="percent-complete" className="text-3xl font-semibold tracking-tight">
+      <div className="flex flex-col">
+        <span
+          data-testid="percent-complete"
+          className="text-[28px] leading-tight font-bold text-ink"
+        >
           {clamped}%
         </span>
-        {label && <span className="text-xs text-ink-muted mt-0.5">{label}</span>}
+        {label && <span className="text-xs text-ink-secondary mt-0.5">{label}</span>}
       </div>
     </div>
   )

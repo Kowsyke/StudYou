@@ -8,6 +8,7 @@ import {
   Circle,
   LayoutDashboard,
   Map as MapIcon,
+  Search as SearchIcon,
   SlidersHorizontal,
 } from 'lucide-react'
 import { type ReactNode, useEffect } from 'react'
@@ -50,15 +51,18 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
       open={open}
       onOpenChange={setOpen}
       label="Global search"
-      contentClassName="fixed top-[18vh] left-1/2 -translate-x-1/2 w-[min(560px,90vw)] z-50 bg-surface rounded-2xl border border-hairline shadow-2xl overflow-hidden"
-      overlayClassName="fixed inset-0 bg-black/25 backdrop-blur-[2px] z-40"
+      contentClassName="palette-in fixed top-[18vh] left-1/2 w-[min(480px,90vw)] z-50 bg-surface rounded-lg border border-hairline-strong shadow-overlay overflow-hidden"
+      overlayClassName="fixed inset-0 bg-black/40 backdrop-blur-[4px] z-40"
     >
-      <Command.Input
-        placeholder="Jump to a task, resource or page..."
-        className="w-full h-12 px-4 text-sm bg-transparent border-b border-hairline focus:outline-none placeholder:text-ink-muted"
-      />
-      <Command.List className="max-h-[50vh] overflow-y-auto p-2">
-        <Command.Empty className="py-8 text-center text-sm text-ink-muted">
+      <div className="flex items-center gap-3 px-4 border-b border-hairline">
+        <SearchIcon size={16} className="text-ink-tertiary shrink-0" />
+        <Command.Input
+          placeholder="Jump to a task, resource or page..."
+          className="w-full h-12 text-sm bg-transparent focus:outline-none placeholder:text-ink-tertiary text-ink"
+        />
+      </div>
+      <Command.List className="max-h-[50vh] overflow-y-auto py-2">
+        <Command.Empty className="py-8 text-center text-body text-ink-tertiary">
           No results found.
         </Command.Empty>
 
@@ -155,7 +159,7 @@ function PaletteItem({
   return (
     <Command.Item
       onSelect={onSelect}
-      className="flex items-center gap-2.5 px-3 h-10 rounded-lg text-sm cursor-pointer data-[selected=true]:bg-accent-soft data-[selected=true]:text-accent-deep"
+      className="flex items-center gap-3 px-4 h-9 text-body text-ink-secondary cursor-pointer transition-colors duration-[120ms] data-[selected=true]:bg-surface-secondary data-[selected=true]:text-ink"
     >
       {icon}
       {children}
