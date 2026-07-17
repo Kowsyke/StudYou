@@ -168,7 +168,7 @@ function CategoryPill({
       className={cn(
         'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms]',
         active
-          ? 'bg-accent border-accent text-white'
+          ? 'bg-accent-solid border-accent-solid text-white'
           : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
       )}
     >

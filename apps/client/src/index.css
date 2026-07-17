@@ -10,7 +10,10 @@
 
   Two values are darkened from the reference sheet for WCAG AA text
   contrast, measured ratios recorded in MASTERGUIDE.md:
-  ink-tertiary light #8E8E93 to #6E6E73, dark #636366 to #98989E.
+  ink-tertiary light #8E8E93 to #6E6E73, dark #636366 to #98989E,
+  light positive to #1F7D36, light warning to #A85800, dark accent to
+  #3B9EFF, plus accent-solid and danger-solid fills that carry white
+  text in both themes.
 */
 :root {
   --canvas: #faf9f6;
@@ -23,14 +26,18 @@
   --accent-hover: #0055aa;
   --accent-pressed: #004488;
   --accent-soft: rgba(0, 102, 204, 0.08);
+  --accent-solid: #0066cc;
+  --accent-solid-hover: #0055aa;
+  --accent-solid-pressed: #004488;
+  --danger-solid: #c93b2b;
   --border: rgba(0, 0, 0, 0.06);
   --border-strong: rgba(0, 0, 0, 0.12);
-  --positive: #248a3d;
-  --positive-soft: rgba(36, 138, 61, 0.08);
+  --positive: #1f7d36;
+  --positive-soft: rgba(31, 125, 54, 0.08);
   --danger: #c93b2b;
   --danger-soft: rgba(201, 59, 43, 0.08);
-  --warning: #b25e00;
-  --warning-soft: rgba(178, 94, 0, 0.08);
+  --warning: #a85800;
+  --warning-soft: rgba(168, 88, 0, 0.08);
   --category-housing: #5b51c9;
   --category-housing-soft: rgba(91, 81, 201, 0.08);
   --category-arrival: #0b7285;
@@ -49,10 +56,14 @@
   --ink: #f2f2f7;
   --ink-secondary: #aeaeb2;
   --ink-tertiary: #98989e;
-  --accent: #0a84ff;
-  --accent-hover: #3399ff;
-  --accent-pressed: #0066cc;
-  --accent-soft: rgba(10, 132, 255, 0.12);
+  --accent: #3b9eff;
+  --accent-hover: #66b3ff;
+  --accent-pressed: #0a84ff;
+  --accent-soft: rgba(59, 158, 255, 0.12);
+  --accent-solid: #0066cc;
+  --accent-solid-hover: #0055aa;
+  --accent-solid-pressed: #004488;
+  --danger-solid: #c93b2b;
   --border: rgba(255, 255, 255, 0.08);
   --border-strong: rgba(255, 255, 255, 0.15);
   --positive: #30d158;
@@ -88,6 +99,10 @@
   --color-accent-pressed: var(--accent-pressed);
   --color-accent-deep: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-solid: var(--accent-solid);
+  --color-accent-solid-hover: var(--accent-solid-hover);
+  --color-accent-solid-pressed: var(--accent-solid-pressed);
+  --color-danger-solid: var(--danger-solid);
   --color-hairline: var(--border);
   --color-hairline-strong: var(--border-strong);
   --color-gridline: var(--border);

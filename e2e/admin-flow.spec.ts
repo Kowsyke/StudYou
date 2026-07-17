@@ -14,6 +14,11 @@ test('admin creates, sees, edits and deletes a resource', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign in' }).click()
 
   await expect(page.getByRole('heading', { name: 'Insights' })).toBeVisible()
+  // Let the page settle before interacting: driving the UI within the
+  // first few hundred milliseconds of a mount can race React StrictMode's
+  // dev only effect churn and drop a state update (dev server only).
+  await expect(page.getByRole('heading', { name: 'Knowledge base' })).toBeVisible()
+  await page.waitForTimeout(500)
 
   // Create
   await page.fill('#kb-title', CREATED_TITLE)
@@ -33,7 +38,10 @@ test('admin creates, sees, edits and deletes a resource', async ({ page }) => {
 
   // Edit
   await page.getByRole('link', { name: 'Insights' }).click()
+  await expect(page.getByRole('heading', { name: 'Knowledge base' })).toBeVisible()
+  await page.waitForTimeout(500)
   await page.getByRole('button', { name: `Edit ${CREATED_TITLE}` }).click()
+  await expect(page.getByRole('button', { name: 'Save changes' })).toBeVisible()
   await page.fill('#kb-title', EDITED_TITLE)
   await page.getByRole('button', { name: 'Save changes' }).click()
 

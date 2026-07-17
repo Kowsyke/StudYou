@@ -129,7 +129,9 @@ function TaskCard({ task }: { task: JourneyTask }) {
           aria-label={done ? `Mark ${task.title} as pending` : `Mark ${task.title} as done`}
           className={cn(
             'mt-px h-4 w-4 shrink-0 rounded-xs border-[1.5px] flex items-center justify-center transition-colors duration-[120ms]',
-            done ? 'bg-accent border-accent' : 'border-ink-tertiary hover:border-accent bg-surface',
+            done
+              ? 'bg-accent-solid border-accent-solid'
+              : 'border-ink-tertiary hover:border-accent bg-surface',
           )}
         >
           <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" aria-hidden="true">

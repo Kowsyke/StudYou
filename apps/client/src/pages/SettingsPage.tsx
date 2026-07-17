@@ -222,7 +222,12 @@ export function SettingsPage() {
       </Card>
 
       {confirming && (
-        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px] flex items-center justify-center px-4">
+        <div
+          className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px] flex items-center justify-center px-4"
+          onKeyDown={(event) => {
+            if (event.key === 'Escape') setConfirming(false)
+          }}
+        >
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -240,7 +245,8 @@ export function SettingsPage() {
               roadmap.
             </p>
             <div className="flex justify-end gap-2.5 mt-2">
-              <Button variant="secondary" onClick={() => setConfirming(false)}>
+              {/* autoFocus moves keyboard focus into the dialog on open. */}
+              <Button variant="secondary" autoFocus onClick={() => setConfirming(false)}>
                 Cancel
               </Button>
               <Button onClick={submit}>Recalculate and save</Button>

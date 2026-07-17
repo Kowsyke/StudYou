@@ -42,7 +42,7 @@ export function Layout() {
       <aside className="w-[260px] shrink-0 border-r border-hairline bg-surface flex flex-col fixed inset-y-0 select-none transition-colors duration-200">
         <div className="px-5 pt-6 pb-4">
           <span className="flex items-center gap-2 text-body-lg font-bold tracking-[-0.01em]">
-            <span className="w-5 h-5 rounded-xs bg-accent text-white text-caption font-extrabold flex items-center justify-center">
+            <span className="w-5 h-5 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center">
               SY
             </span>
             StudYou

@@ -39,7 +39,7 @@ export function LoginPage() {
       >
         <div className="bg-surface border border-hairline rounded-lg shadow-overlay p-8 flex flex-col gap-5">
           <div className="flex flex-col items-center gap-2 text-center">
-            <span className="w-8 h-8 rounded-sm bg-accent text-white text-body-lg font-extrabold flex items-center justify-center">
+            <span className="w-8 h-8 rounded-sm bg-accent-solid text-white text-body-lg font-extrabold flex items-center justify-center">
               SY
             </span>
             <h1 className="text-title3 text-ink">StudYou</h1>
