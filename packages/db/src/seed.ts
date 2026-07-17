@@ -25,10 +25,37 @@ const db = drizzle(client)
 
 const DATA_STAMP = new Date('2026-07-01T00:00:00Z')
 
+// Upserts the operator admin account from environment variables so the
+// credential never lives in the repository. Runs even when the main seed
+// has already been applied, and does nothing when the variables are unset.
+async function ensureEnvAdmin() {
+  const email = process.env.ADMIN_EMAIL?.toLowerCase()
+  const password = process.env.ADMIN_PASSWORD
+  if (!email || !password) return
+
+  const { eq } = await import('drizzle-orm')
+  const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.email, email))
+  const passwordHash = bcrypt.hashSync(password, 10)
+
+  if (existing) {
+    await db.update(users).set({ passwordHash, role: 'admin' }).where(eq(users.id, existing.id))
+    console.log(`Admin account refreshed: ${email}`)
+  } else {
+    await db.insert(users).values({
+      email,
+      passwordHash,
+      fullName: 'StudYou Admin',
+      role: 'admin',
+    })
+    console.log(`Admin account created: ${email}`)
+  }
+}
+
 async function seed() {
   const existing = await db.select({ id: countries.id }).from(countries).limit(1)
   if (existing.length > 0) {
-    console.log('Database already seeded, nothing to do.')
+    console.log('Database already seeded, refreshing the env admin only.')
+    await ensureEnvAdmin()
     await client.end()
     return
   }
@@ -589,6 +616,8 @@ async function seed() {
       targetDate: computeTargetDate(intakeDate, template.daysBeforeIntake),
     })),
   )
+
+  await ensureEnvAdmin()
 
   console.log('Seed complete.')
   console.log('Demo accounts (development only):')

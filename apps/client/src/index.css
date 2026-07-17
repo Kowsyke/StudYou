@@ -190,6 +190,56 @@ body {
   color: var(--ink-tertiary);
 }
 
+/* Landing page ambience: slow drifting gradient blobs and an infinite
+   marquee. Both collapse under prefers-reduced-motion via the global
+   media query below. */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.blob-a {
+  background: var(--accent-gradient);
+  animation: blob-drift 18s ease-in-out infinite alternate;
+}
+
+.blob-b {
+  background: linear-gradient(135deg, var(--category-arrival) 0%, var(--accent) 100%);
+  animation: blob-drift 22s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes blob-drift {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(60px, 40px) scale(1.15);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  animation: marquee-scroll 28s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Command palette drop in, 300ms swift per the motion spec. */
 .palette-in {
   animation: palette-in 300ms var(--ease-swift);
