@@ -208,5 +208,10 @@ export interface University {
   ugAdmissionsUrl: string
   russellGroup: boolean
   notes: string
+  tuitionIntlMinGbp: number | null
+  tuitionIntlMaxGbp: number | null
+  tuitionHomeGbp: number | null
+  scholarshipsUrl: string | null
+  accommodationUrl: string | null
   lastUpdated: string
 }

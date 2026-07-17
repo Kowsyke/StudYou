@@ -1,0 +1,802 @@
+[
+  {
+    "name": "University of Oxford",
+    "tuitionIntlMinGbp": 33050,
+    "tuitionIntlMaxGbp": 48620,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ox.ac.uk/admissions/undergraduate/fees-and-funding/oxford-support",
+    "accommodationUrl": "https://www.ox.ac.uk/admissions/undergraduate/student-life/accommodation"
+  },
+  {
+    "name": "University of Cambridge",
+    "tuitionIntlMinGbp": 25740,
+    "tuitionIntlMaxGbp": 39160,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.cam.ac.uk/admissions/undergraduate/fees-and-finance",
+    "accommodationUrl": "https://www.cam.ac.uk/admissions/undergraduate/student-life/accommodation"
+  },
+  {
+    "name": "University of St Andrews",
+    "tuitionIntlMinGbp": 28190,
+    "tuitionIntlMaxGbp": 33960,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.st-andrews.ac.uk/study/fees-and-funding/undergraduate/scholarships",
+    "accommodationUrl": "https://www.st-andrews.ac.uk/study/accommodation"
+  },
+  {
+    "name": "London School of Economics and Political Science",
+    "tuitionIntlMinGbp": 26136,
+    "tuitionIntlMaxGbp": 28180,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lse.ac.uk/study-at-lse/Undergraduate/fees-and-funding",
+    "accommodationUrl": "https://www.lse.ac.uk/student-life/accommodation"
+  },
+  {
+    "name": "Durham University",
+    "tuitionIntlMinGbp": 24500,
+    "tuitionIntlMaxGbp": 31250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.durham.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.durham.ac.uk/colleges-accommodation/"
+  },
+  {
+    "name": "Imperial College London",
+    "tuitionIntlMinGbp": 36700,
+    "tuitionIntlMaxGbp": 42200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.imperial.ac.uk/study/fees-and-funding/undergraduate/",
+    "accommodationUrl": "https://www.imperial.ac.uk/study/campus-life/accommodation/"
+  },
+  {
+    "name": "University of Bath",
+    "tuitionIntlMinGbp": 24200,
+    "tuitionIntlMaxGbp": 30500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bath.ac.uk/topics/scholarships-bursaries-and-other-funding/",
+    "accommodationUrl": "https://www.bath.ac.uk/topics/student-accommodation/"
+  },
+  {
+    "name": "University of Warwick",
+    "tuitionIntlMinGbp": 24800,
+    "tuitionIntlMaxGbp": 31620,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://warwick.ac.uk/services/academicoffice/funding/",
+    "accommodationUrl": "https://warwick.ac.uk/services/accommodation/"
+  },
+  {
+    "name": "Loughborough University",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 28600,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lboro.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.lboro.ac.uk/accommodation/"
+  },
+  {
+    "name": "University College London",
+    "tuitionIntlMinGbp": 26200,
+    "tuitionIntlMaxGbp": 37900,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ucl.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.ucl.ac.uk/accommodation/"
+  },
+  {
+    "name": "Lancaster University",
+    "tuitionIntlMinGbp": 22650,
+    "tuitionIntlMaxGbp": 28500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lancaster.ac.uk/study/undergraduate/fees-and-funding/",
+    "accommodationUrl": "https://www.lancaster.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Bristol",
+    "tuitionIntlMinGbp": 23900,
+    "tuitionIntlMaxGbp": 31300,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bristol.ac.uk/fees-funding/",
+    "accommodationUrl": "https://www.bristol.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Exeter",
+    "tuitionIntlMinGbp": 22500,
+    "tuitionIntlMaxGbp": 28500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.exeter.ac.uk/study/funding/",
+    "accommodationUrl": "https://www.exeter.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Sheffield",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.sheffield.ac.uk/undergraduate/fees-funding/scholarships",
+    "accommodationUrl": "https://www.sheffield.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Southampton",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.southampton.ac.uk/study/fees-funding/scholarships",
+    "accommodationUrl": "https://www.southampton.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Edinburgh",
+    "tuitionIntlMinGbp": 24500,
+    "tuitionIntlMaxGbp": 34000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ed.ac.uk/student-funding/undergraduate",
+    "accommodationUrl": "https://www.ed.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Birmingham",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.birmingham.ac.uk/undergraduate/fees/funding",
+    "accommodationUrl": "https://www.birmingham.ac.uk/accommodation"
+  },
+  {
+    "name": "King's College London",
+    "tuitionIntlMinGbp": 25600,
+    "tuitionIntlMaxGbp": 33500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.kcl.ac.uk/study/undergraduate/fees-and-funding",
+    "accommodationUrl": "https://www.kcl.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Liverpool",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.liverpool.ac.uk/study/undergraduate/finance/scholarships/",
+    "accommodationUrl": "https://www.liverpool.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Strathclyde",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.strath.ac.uk/studywithus/scholarships/",
+    "accommodationUrl": "https://www.strath.ac.uk/studywithus/accommodation/"
+  },
+  {
+    "name": "University of York",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.york.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.york.ac.uk/study/accommodation/"
+  },
+  {
+    "name": "University of Aberdeen",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.abdn.ac.uk/study/funding/",
+    "accommodationUrl": "https://www.abdn.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Surrey",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 26000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.surrey.ac.uk/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.surrey.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Leeds",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 30000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.leeds.ac.uk/undergraduate-fees/doc/scholarships",
+    "accommodationUrl": "https://www.leeds.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Glasgow",
+    "tuitionIntlMinGbp": 23000,
+    "tuitionIntlMaxGbp": 32000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.gla.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.gla.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Essex",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.essex.ac.uk/undergraduate/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.essex.ac.uk/accommodation"
+  },
+  {
+    "name": "Cardiff University",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 27000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.cardiff.ac.uk/study/undergraduate/funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.cardiff.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Dundee",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.dundee.ac.uk/scholarships",
+    "accommodationUrl": "https://www.dundee.ac.uk/accommodation"
+  },
+  {
+    "name": "Queen's University Belfast",
+    "tuitionIntlMinGbp": 18800,
+    "tuitionIntlMaxGbp": 24600,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.qub.ac.uk/Study/Undergraduate/Fees-and-scholarships/",
+    "accommodationUrl": "https://www.qub.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Manchester",
+    "tuitionIntlMinGbp": 23000,
+    "tuitionIntlMaxGbp": 33000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.manchester.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.manchester.ac.uk/study/accommodation/"
+  },
+  {
+    "name": "Heriot-Watt University",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 23500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.hw.ac.uk/study/fees/scholarships.htm",
+    "accommodationUrl": "https://www.hw.ac.uk/study/accommodation.htm"
+  },
+  {
+    "name": "University of the Arts London",
+    "tuitionIntlMinGbp": 25970,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.arts.ac.uk/study-at-ual/fees-and-funding/scholarships-search",
+    "accommodationUrl": "https://www.arts.ac.uk/study-at-ual/accommodation"
+  },
+  {
+    "name": "University of Leicester",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://le.ac.uk/study/undergrad/fees-funding/scholarships",
+    "accommodationUrl": "https://le.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Nottingham",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.nottingham.ac.uk/studywithus/funding/",
+    "accommodationUrl": "https://www.nottingham.ac.uk/accommodation/"
+  },
+  {
+    "name": "Swansea University",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.swansea.ac.uk/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.swansea.ac.uk/accommodation/"
+  },
+  {
+    "name": "Nottingham Trent University",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 18250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ntu.ac.uk/international/scholarships-and-fees/scholarships",
+    "accommodationUrl": "https://www.ntu.ac.uk/accommodation"
+  },
+  {
+    "name": "Manchester Metropolitan University",
+    "tuitionIntlMinGbp": 17000,
+    "tuitionIntlMaxGbp": 20000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.mmu.ac.uk/study/undergraduate/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.mmu.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Portsmouth",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.port.ac.uk/study/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.port.ac.uk/student-life/accommodation"
+  },
+  {
+    "name": "Northumbria University",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 20500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.northumbria.ac.uk/study-at-northumbria/fees-funding/",
+    "accommodationUrl": "https://www.northumbria.ac.uk/study-at-northumbria/accommodation/"
+  },
+  {
+    "name": "Aston University",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 22500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.aston.ac.uk/funding",
+    "accommodationUrl": "https://www.aston.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Reading",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.reading.ac.uk/ready-to-study/study/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.reading.ac.uk/ready-to-study/accommodation"
+  },
+  {
+    "name": "University of Sussex",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.sussex.ac.uk/study/fees-funding/undergraduate-scholarships",
+    "accommodationUrl": "https://www.sussex.ac.uk/study/accommodation"
+  },
+  {
+    "name": "University of East Anglia",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uea.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.uea.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Chichester",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.chi.ac.uk/study/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.chi.ac.uk/student-life/accommodation/"
+  },
+  {
+    "name": "Royal Holloway, University of London",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 26000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.royalholloway.ac.uk/studying-here/fees-and-funding/undergraduate/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.royalholloway.ac.uk/studying-here/accommodation/"
+  },
+  {
+    "name": "Newcastle University",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ncl.ac.uk/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.ncl.ac.uk/accommodation/"
+  },
+  {
+    "name": "Queen Mary University of London",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.qmul.ac.uk/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.qmul.ac.uk/accommodation/"
+  },
+  {
+    "name": "Aberystwyth University",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.aber.ac.uk/en/undergrad/fees-finance/scholarships/",
+    "accommodationUrl": "https://www.aber.ac.uk/en/accommodation/"
+  },
+  {
+    "name": "Keele University",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 22500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.keele.ac.uk/study/undergraduatestudy/feesandfunding/",
+    "accommodationUrl": "https://www.keele.ac.uk/accommodation/"
+  },
+  {
+    "name": "Ulster University",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ulster.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.ulster.ac.uk/accommodation"
+  },
+  {
+    "name": "University of the West of England",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 18000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uwe.ac.uk/courses/funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.uwe.ac.uk/accommodation"
+  },
+  {
+    "name": "Edge Hill University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.edgehill.ac.uk/study/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.edgehill.ac.uk/accommodation/"
+  },
+  {
+    "name": "Oxford Brookes University",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.brookes.ac.uk/studying-at-brookes/finance/undergraduate-finance-funding/",
+    "accommodationUrl": "https://www.brookes.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of West London",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uwl.ac.uk/study/undergraduate/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.uwl.ac.uk/accommodation"
+  },
+  {
+    "name": "Bangor University",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bangor.ac.uk/student-funding/scholarships",
+    "accommodationUrl": "https://www.bangor.ac.uk/accommodation"
+  },
+  {
+    "name": "Liverpool John Moores University",
+    "tuitionIntlMinGbp": 17750,
+    "tuitionIntlMaxGbp": 18250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ljmu.ac.uk/study/undergraduate-students/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.ljmu.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Lincoln",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 18200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lincoln.ac.uk/studywithus/scholarshipsandfunding/",
+    "accommodationUrl": "https://www.lincoln.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Kent",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 22000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.kent.ac.uk/scholarships",
+    "accommodationUrl": "https://www.kent.ac.uk/accommodation"
+  },
+  {
+    "name": "City St George's, University of London",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.city.ac.uk/study/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.city.ac.uk/accommodation"
+  },
+  {
+    "name": "Harper Adams University",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.harper-adams.ac.uk/general/finance/scholarships/",
+    "accommodationUrl": "https://www.harper-adams.ac.uk/accommodation/"
+  },
+  {
+    "name": "Arts University Bournemouth",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://aub.ac.uk/study/fees-funding/scholarships-bursaries",
+    "accommodationUrl": "https://aub.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Hertfordshire",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 17250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.herts.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.herts.ac.uk/accommodation"
+  },
+  {
+    "name": "University of South Wales",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.southwales.ac.uk/study/fees-and-funding/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.southwales.ac.uk/accommodation/"
+  },
+  {
+    "name": "Abertay University",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 17250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.abertay.ac.uk/study/scholarships/",
+    "accommodationUrl": "https://www.abertay.ac.uk/life/accommodation/"
+  },
+  {
+    "name": "Coventry University",
+    "tuitionIntlMinGbp": 14800,
+    "tuitionIntlMaxGbp": 19850,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.coventry.ac.uk/study-at-coventry/finance/scholarships/",
+    "accommodationUrl": "https://www.coventry.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Stirling",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 21500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.stir.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.stir.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Sunderland",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.sunderland.ac.uk/study/fees-and-finance/scholarships-bursaries/",
+    "accommodationUrl": "https://www.sunderland.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Plymouth",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.plymouth.ac.uk/study/fees/scholarships",
+    "accommodationUrl": "https://www.plymouth.ac.uk/student-life/accommodation"
+  },
+  {
+    "name": "Cardiff Metropolitan University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.cardiffmet.ac.uk/study/finance/scholarships/",
+    "accommodationUrl": "https://www.cardiffmet.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Gloucestershire",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.glos.ac.uk/finance/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.glos.ac.uk/accommodation/"
+  },
+  {
+    "name": "Goldsmiths, University of London",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.gold.ac.uk/ug/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.gold.ac.uk/accommodation/"
+  },
+  {
+    "name": "Glasgow Caledonian University",
+    "tuitionIntlMinGbp": 15200,
+    "tuitionIntlMaxGbp": 18200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.gcu.ac.uk/study/scholarships/",
+    "accommodationUrl": "https://www.gcu.ac.uk/accommodation/"
+  },
+  {
+    "name": "Norwich University of the Arts",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://norwichuni.ac.uk/study-here/fees-and-funding/scholarships-and-bursaries/",
+    "accommodationUrl": "https://norwichuni.ac.uk/accommodation/"
+  },
+  {
+    "name": "Robert Gordon University",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.rgu.ac.uk/study/finance-funding/scholarships",
+    "accommodationUrl": "https://www.rgu.ac.uk/accommodation"
+  },
+  {
+    "name": "Bath Spa University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bathspa.ac.uk/students/student-finance/scholarships/",
+    "accommodationUrl": "https://www.bathspa.ac.uk/accommodation/"
+  },
+  {
+    "name": "St Mary's University, Twickenham",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.stmarys.ac.uk/study/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.stmarys.ac.uk/accommodation/"
+  },
+  {
+    "name": "Teesside University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.tees.ac.uk/undergraduate/fees.cfm",
+    "accommodationUrl": "https://www.tees.ac.uk/accommodation/"
+  },
+  {
+    "name": "Falmouth University",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.falmouth.ac.uk/study/tuition-fees/scholarships/",
+    "accommodationUrl": "https://www.falmouth.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Derby",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 17250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.derby.ac.uk/study/fees-finance/scholarships/",
+    "accommodationUrl": "https://www.derby.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Salford",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.salford.ac.uk/undergraduate/fees-and-funding",
+    "accommodationUrl": "https://www.salford.ac.uk/accommodation"
+  },
+  {
+    "name": "Kingston University",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.kingston.ac.uk/undergraduate/fees-and-funding/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.kingston.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Hull",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.hull.ac.uk/study/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.hull.ac.uk/accommodation/"
+  },
+  {
+    "name": "Solent University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.solent.ac.uk/finance/scholarships-bursaries",
+    "accommodationUrl": "https://www.solent.ac.uk/accommodation"
+  },
+  {
+    "name": "Edinburgh Napier University",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.napier.ac.uk/study-with-us/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.napier.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Suffolk",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uos.ac.uk/study/fees-and-funding/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.uos.ac.uk/accommodation/"
+  },
+  {
+    "name": "SOAS University of London",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.soas.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.soas.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Chester",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.chester.ac.uk/study/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.chester.ac.uk/accommodation/"
+  },
+  {
+    "name": "Plymouth Marjon University",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.marjon.ac.uk/fees-and-funding/scholarships-and-funding/",
+    "accommodationUrl": "https://www.marjon.ac.uk/accommodation/"
+  },
+  {
+    "name": "Liverpool Hope University",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.hope.ac.uk/undergraduate/feesandfunding/scholarships/",
+    "accommodationUrl": "https://www.hope.ac.uk/accommodation/"
+  },
+  {
+    "name": "Leeds Beckett University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.leedsbeckett.ac.uk/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.leedsbeckett.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Bradford",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 22000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bradford.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.bradford.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Huddersfield",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.hud.ac.uk/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.hud.ac.uk/accommodation/"
+  },
+  {
+    "name": "Bournemouth University",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bournemouth.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.bournemouth.ac.uk/accommodation/"
+  },
+  {
+    "name": "Staffordshire University",
+    "tuitionIntlMinGbp": 15200,
+    "tuitionIntlMaxGbp": 17200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.staffs.ac.uk/study/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.staffs.ac.uk/accommodation/"
+  },
+  {
+    "name": "Sheffield Hallam University",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.shu.ac.uk/study-here/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.shu.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of East London",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uel.ac.uk/study/fees-funding/scholarships",
+    "accommodationUrl": "https://www.uel.ac.uk/accommodation"
+  },
+  {
+    "name": "Queen Margaret University",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.qmu.ac.uk/study-here/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.qmu.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Central Lancashire",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uclan.ac.uk/study/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.uclan.ac.uk/accommodation/"
+  },
+  {
+    "name": "University of Greater Manchester",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bolton.ac.uk/study/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.bolton.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Wales Trinity Saint David",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uwtsd.ac.uk/study/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.uwtsd.ac.uk/accommodation/"
+  }
+]

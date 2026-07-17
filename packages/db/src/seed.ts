@@ -57,33 +57,56 @@ async function ensureEnvAdmin() {
 // official university domains, every domain liveness checked before
 // commit). Idempotent: does nothing once the table has rows.
 async function ensureUniversities() {
-  const [row] = await db.select({ id: universities.id }).from(universities).limit(1)
-  if (row) {
-    console.log('Universities already seeded.')
-    return
-  }
-  const { eq } = await import('drizzle-orm')
+  const { eq, sql } = await import('drizzle-orm')
   const [uk] = await db.select({ id: countries.id }).from(countries).where(eq(countries.code, 'GB'))
   if (!uk) {
     console.log('UK country row missing, run the full seed first.')
     return
   }
-  await db.insert(universities).values(
-    universityData.map((u) => ({
-      countryId: uk.id,
-      rank: u.rank,
-      name: u.name,
-      city: u.city,
-      region: u.region,
-      website: u.website,
-      internationalUrl: u.internationalUrl,
-      ugAdmissionsUrl: u.ugAdmissionsUrl,
-      russellGroup: u.russellGroup,
-      notes: u.notes,
-      lastUpdated: DATA_STAMP,
-    })),
-  )
-  console.log(`Seeded ${universityData.length} universities.`)
+  // Upsert by (country, name) so research sprint refreshes flow into an
+  // already seeded database on the next seed run.
+  await db
+    .insert(universities)
+    .values(
+      universityData.map((u) => ({
+        countryId: uk.id,
+        rank: u.rank,
+        name: u.name,
+        city: u.city,
+        region: u.region,
+        website: u.website,
+        internationalUrl: u.internationalUrl,
+        ugAdmissionsUrl: u.ugAdmissionsUrl,
+        russellGroup: u.russellGroup,
+        notes: u.notes,
+        tuitionIntlMinGbp: u.tuitionIntlMinGbp ?? null,
+        tuitionIntlMaxGbp: u.tuitionIntlMaxGbp ?? null,
+        tuitionHomeGbp: u.tuitionHomeGbp ?? null,
+        scholarshipsUrl: u.scholarshipsUrl ?? null,
+        accommodationUrl: u.accommodationUrl ?? null,
+        lastUpdated: DATA_STAMP,
+      })),
+    )
+    .onConflictDoUpdate({
+      target: [universities.countryId, universities.name],
+      set: {
+        rank: sql`excluded.rank`,
+        city: sql`excluded.city`,
+        region: sql`excluded.region`,
+        website: sql`excluded.website`,
+        internationalUrl: sql`excluded.international_url`,
+        ugAdmissionsUrl: sql`excluded.ug_admissions_url`,
+        russellGroup: sql`excluded.russell_group`,
+        notes: sql`excluded.notes`,
+        tuitionIntlMinGbp: sql`excluded.tuition_intl_min_gbp`,
+        tuitionIntlMaxGbp: sql`excluded.tuition_intl_max_gbp`,
+        tuitionHomeGbp: sql`excluded.tuition_home_gbp`,
+        scholarshipsUrl: sql`excluded.scholarships_url`,
+        accommodationUrl: sql`excluded.accommodation_url`,
+        lastUpdated: sql`excluded.last_updated`,
+      },
+    })
+  console.log(`Upserted ${universityData.length} universities.`)
 }
 
 async function seed() {

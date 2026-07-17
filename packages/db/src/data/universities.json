@@ -8,7 +8,12 @@
     "internationalUrl": "https://www.ox.ac.uk/admissions/undergraduate/international-students",
     "ugAdmissionsUrl": "https://www.ox.ac.uk/admissions/undergraduate",
     "russellGroup": true,
-    "notes": "It is the oldest university in the English speaking world and consistently ranks among the top universities globally."
+    "notes": "It is the oldest university in the English speaking world and consistently ranks among the top universities globally.",
+    "tuitionIntlMinGbp": 33050,
+    "tuitionIntlMaxGbp": 48620,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ox.ac.uk/admissions/undergraduate/fees-and-funding/oxford-support",
+    "accommodationUrl": "https://www.ox.ac.uk/admissions/undergraduate/student-life/accommodation"
   },
   {
     "rank": 2,
@@ -19,7 +24,12 @@
     "internationalUrl": "https://www.undergraduate.study.cam.ac.uk/international-students",
     "ugAdmissionsUrl": "https://www.undergraduate.study.cam.ac.uk/applying",
     "russellGroup": true,
-    "notes": "It is renowned for its academic excellence, historic collegiate system, and contribution to science and technology."
+    "notes": "It is renowned for its academic excellence, historic collegiate system, and contribution to science and technology.",
+    "tuitionIntlMinGbp": 25740,
+    "tuitionIntlMaxGbp": 39160,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.cam.ac.uk/admissions/undergraduate/fees-and-finance",
+    "accommodationUrl": "https://www.cam.ac.uk/admissions/undergraduate/student-life/accommodation"
   },
   {
     "rank": 3,
@@ -30,7 +40,12 @@
     "internationalUrl": "https://www.st-andrews.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.st-andrews.ac.uk/study/apply/ug",
     "russellGroup": false,
-    "notes": "It is the oldest university in Scotland and is known for its high student satisfaction and royal connections."
+    "notes": "It is the oldest university in Scotland and is known for its high student satisfaction and royal connections.",
+    "tuitionIntlMinGbp": 28190,
+    "tuitionIntlMaxGbp": 33960,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.st-andrews.ac.uk/study/fees-and-funding/undergraduate/scholarships",
+    "accommodationUrl": null
   },
   {
     "rank": 4,
@@ -41,7 +56,12 @@
     "internationalUrl": "https://www.lse.ac.uk/study-at-lse/international-students",
     "ugAdmissionsUrl": "https://www.lse.ac.uk/study-at-lse/Undergraduate",
     "russellGroup": true,
-    "notes": "It is a world leading social science institution renowned for economics, politics, and sociology."
+    "notes": "It is a world leading social science institution renowned for economics, politics, and sociology.",
+    "tuitionIntlMinGbp": 26136,
+    "tuitionIntlMaxGbp": 28180,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lse.ac.uk/study-at-lse/Undergraduate/fees-and-funding",
+    "accommodationUrl": "https://www.lse.ac.uk/student-life/accommodation"
   },
   {
     "rank": 5,
@@ -52,7 +72,12 @@
     "internationalUrl": "https://www.durham.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.durham.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It features a distinctive collegiate system and is known for its excellent humanities, science, and history courses."
+    "notes": "It features a distinctive collegiate system and is known for its excellent humanities, science, and history courses.",
+    "tuitionIntlMinGbp": 24500,
+    "tuitionIntlMaxGbp": 31250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.durham.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.durham.ac.uk/colleges-accommodation/"
   },
   {
     "rank": 6,
@@ -63,7 +88,12 @@
     "internationalUrl": "https://www.imperial.ac.uk/study/apply/international-students",
     "ugAdmissionsUrl": "https://www.imperial.ac.uk/study/apply/undergraduate",
     "russellGroup": true,
-    "notes": "It is highly prestigious and focuses exclusively on science, engineering, medicine, and business."
+    "notes": "It is highly prestigious and focuses exclusively on science, engineering, medicine, and business.",
+    "tuitionIntlMinGbp": 36700,
+    "tuitionIntlMaxGbp": 42200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.imperial.ac.uk/study/fees-and-funding/undergraduate/",
+    "accommodationUrl": "https://www.imperial.ac.uk/study/campus-life/accommodation/"
   },
   {
     "rank": 7,
@@ -74,7 +104,12 @@
     "internationalUrl": "https://www.bath.ac.uk/topics/information-for-international-students",
     "ugAdmissionsUrl": "https://www.bath.ac.uk/topics/undergraduate-study",
     "russellGroup": false,
-    "notes": "It is highly regarded for its engineering, business, and physical science programs, as well as outstanding placement options."
+    "notes": "It is highly regarded for its engineering, business, and physical science programs, as well as outstanding placement options.",
+    "tuitionIntlMinGbp": 24200,
+    "tuitionIntlMaxGbp": 30500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 8,
@@ -85,7 +120,12 @@
     "internationalUrl": "https://warwick.ac.uk/study/international",
     "ugAdmissionsUrl": "https://warwick.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is known for its strong links with industry, high graduate employability, and business school."
+    "notes": "It is known for its strong links with industry, high graduate employability, and business school.",
+    "tuitionIntlMinGbp": 24800,
+    "tuitionIntlMaxGbp": 31620,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://warwick.ac.uk/services/academicoffice/funding/",
+    "accommodationUrl": "https://warwick.ac.uk/services/accommodation/"
   },
   {
     "rank": 9,
@@ -96,7 +136,12 @@
     "internationalUrl": "https://www.lboro.ac.uk/international",
     "ugAdmissionsUrl": "https://www.lboro.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is world famous for sports related subjects and holds a strong reputation for engineering."
+    "notes": "It is world famous for sports related subjects and holds a strong reputation for engineering.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 28600,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lboro.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.lboro.ac.uk/accommodation/"
   },
   {
     "rank": 10,
@@ -107,7 +152,12 @@
     "internationalUrl": "https://www.ucl.ac.uk/prospective-students/international",
     "ugAdmissionsUrl": "https://www.ucl.ac.uk/prospective-students/undergraduate",
     "russellGroup": true,
-    "notes": "It was the first university in England to admit students regardless of religion or gender."
+    "notes": "It was the first university in England to admit students regardless of religion or gender.",
+    "tuitionIntlMinGbp": 26200,
+    "tuitionIntlMaxGbp": 37900,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ucl.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.ucl.ac.uk/accommodation/"
   },
   {
     "rank": 11,
@@ -118,7 +168,12 @@
     "internationalUrl": "https://www.lancaster.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.lancaster.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a highly ranked collegiate university with a strong focus on research and business studies."
+    "notes": "It is a highly ranked collegiate university with a strong focus on research and business studies.",
+    "tuitionIntlMinGbp": 22650,
+    "tuitionIntlMaxGbp": 28500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lancaster.ac.uk/study/undergraduate/fees-and-funding/",
+    "accommodationUrl": "https://www.lancaster.ac.uk/accommodation/"
   },
   {
     "rank": 12,
@@ -129,7 +184,12 @@
     "internationalUrl": "https://www.bristol.ac.uk/international",
     "ugAdmissionsUrl": "https://www.bristol.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is known for its high academic standards, strong research, and lively student culture."
+    "notes": "It is known for its high academic standards, strong research, and lively student culture.",
+    "tuitionIntlMinGbp": 23900,
+    "tuitionIntlMaxGbp": 31300,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bristol.ac.uk/fees-funding/",
+    "accommodationUrl": "https://www.bristol.ac.uk/accommodation/"
   },
   {
     "rank": 13,
@@ -140,7 +200,12 @@
     "internationalUrl": "https://www.exeter.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.exeter.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is renowned for its high student satisfaction, beautiful campus, and strong science and humanities research."
+    "notes": "It is renowned for its high student satisfaction, beautiful campus, and strong science and humanities research.",
+    "tuitionIntlMinGbp": 22500,
+    "tuitionIntlMaxGbp": 28500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.exeter.ac.uk/study/funding/",
+    "accommodationUrl": "https://www.exeter.ac.uk/accommodation/"
   },
   {
     "rank": 14,
@@ -151,7 +216,12 @@
     "internationalUrl": "https://www.sheffield.ac.uk/international",
     "ugAdmissionsUrl": "https://www.sheffield.ac.uk/undergraduate",
     "russellGroup": true,
-    "notes": "It is known for its engineering excellence, world class research, and outstanding student union."
+    "notes": "It is known for its engineering excellence, world class research, and outstanding student union.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.sheffield.ac.uk/undergraduate/fees-funding/scholarships",
+    "accommodationUrl": "https://www.sheffield.ac.uk/accommodation"
   },
   {
     "rank": 15,
@@ -162,7 +232,12 @@
     "internationalUrl": "https://www.southampton.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.southampton.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is a leader in ocean and earth sciences, engineering, and electronics research."
+    "notes": "It is a leader in ocean and earth sciences, engineering, and electronics research.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.southampton.ac.uk/study/fees-funding/scholarships",
+    "accommodationUrl": "https://www.southampton.ac.uk/accommodation"
   },
   {
     "rank": 16,
@@ -173,7 +248,12 @@
     "internationalUrl": "https://www.ed.ac.uk/studying/international",
     "ugAdmissionsUrl": "https://www.ed.ac.uk/studying/undergraduate",
     "russellGroup": true,
-    "notes": "It is one of Scotland's ancient universities and is famous for its rich history, medicine, and humanities."
+    "notes": "It is one of Scotland's ancient universities and is famous for its rich history, medicine, and humanities.",
+    "tuitionIntlMinGbp": 24500,
+    "tuitionIntlMaxGbp": 34000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ed.ac.uk/student-funding/undergraduate",
+    "accommodationUrl": null
   },
   {
     "rank": 17,
@@ -184,7 +264,12 @@
     "internationalUrl": "https://www.birmingham.ac.uk/international",
     "ugAdmissionsUrl": "https://www.birmingham.ac.uk/undergraduate",
     "russellGroup": true,
-    "notes": "It is a prominent civic university known for its beautiful campus, redbrick architecture, and research achievements."
+    "notes": "It is a prominent civic university known for its beautiful campus, redbrick architecture, and research achievements.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.birmingham.ac.uk/undergraduate/fees/funding",
+    "accommodationUrl": "https://www.birmingham.ac.uk/accommodation"
   },
   {
     "rank": 18,
@@ -195,7 +280,12 @@
     "internationalUrl": "https://www.kcl.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.kcl.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is a major research intensive institution in the heart of London, famous for humanities, law, and health sciences."
+    "notes": "It is a major research intensive institution in the heart of London, famous for humanities, law, and health sciences.",
+    "tuitionIntlMinGbp": 25600,
+    "tuitionIntlMaxGbp": 33500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.kcl.ac.uk/study/undergraduate/fees-and-funding",
+    "accommodationUrl": "https://www.kcl.ac.uk/accommodation"
   },
   {
     "rank": 19,
@@ -206,7 +296,12 @@
     "internationalUrl": "https://www.liverpool.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.liverpool.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It was the original redbrick university and is notable for health sciences, chemistry, and engineering."
+    "notes": "It was the original redbrick university and is notable for health sciences, chemistry, and engineering.",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.liverpool.ac.uk/study/undergraduate/finance/scholarships/",
+    "accommodationUrl": "https://www.liverpool.ac.uk/accommodation/"
   },
   {
     "rank": 20,
@@ -217,7 +312,12 @@
     "internationalUrl": "https://www.strath.ac.uk/studywithus/internationalstudents",
     "ugAdmissionsUrl": "https://www.strath.ac.uk/studywithus/undergraduate",
     "russellGroup": false,
-    "notes": "It is known as a leading technological university with strong links to industry and commerce."
+    "notes": "It is known as a leading technological university with strong links to industry and commerce.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.strath.ac.uk/studywithus/scholarships/",
+    "accommodationUrl": "https://www.strath.ac.uk/studywithus/accommodation/"
   },
   {
     "rank": 21,
@@ -228,7 +328,12 @@
     "internationalUrl": "https://www.york.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.york.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is a leading research university with a collegiate system and a strong focus on social sciences and humanities."
+    "notes": "It is a leading research university with a collegiate system and a strong focus on social sciences and humanities.",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.york.ac.uk/study/accommodation/"
   },
   {
     "rank": 22,
@@ -239,7 +344,12 @@
     "internationalUrl": "https://www.abdn.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.abdn.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is an ancient Scottish university renowned for its history, medicine, and energy studies."
+    "notes": "It is an ancient Scottish university renowned for its history, medicine, and energy studies.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.abdn.ac.uk/study/funding/",
+    "accommodationUrl": "https://www.abdn.ac.uk/accommodation/"
   },
   {
     "rank": 23,
@@ -250,7 +360,12 @@
     "internationalUrl": "https://www.surrey.ac.uk/international",
     "ugAdmissionsUrl": "https://www.surrey.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is known for space satellite research, hospitality management, and strong graduate employment rates."
+    "notes": "It is known for space satellite research, hospitality management, and strong graduate employment rates.",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 26000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.surrey.ac.uk/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.surrey.ac.uk/accommodation"
   },
   {
     "rank": 24,
@@ -261,7 +376,12 @@
     "internationalUrl": "https://www.leeds.ac.uk/international",
     "ugAdmissionsUrl": "https://www.leeds.ac.uk/undergraduate",
     "russellGroup": true,
-    "notes": "It is one of the largest universities in the UK, known for its diverse academic offerings and vibrant campus life."
+    "notes": "It is one of the largest universities in the UK, known for its diverse academic offerings and vibrant campus life.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 30000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.leeds.ac.uk/undergraduate-fees/doc/scholarships",
+    "accommodationUrl": null
   },
   {
     "rank": 25,
@@ -272,7 +392,12 @@
     "internationalUrl": "https://www.gla.ac.uk/international",
     "ugAdmissionsUrl": "https://www.gla.ac.uk/undergraduate",
     "russellGroup": true,
-    "notes": "It is the fourth oldest university in the English speaking world and is highly regarded for medicine and science."
+    "notes": "It is the fourth oldest university in the English speaking world and is highly regarded for medicine and science.",
+    "tuitionIntlMinGbp": 23000,
+    "tuitionIntlMaxGbp": 32000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.gla.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.gla.ac.uk/accommodation/"
   },
   {
     "rank": 26,
@@ -283,7 +408,12 @@
     "internationalUrl": "https://www.essex.ac.uk/international",
     "ugAdmissionsUrl": "https://www.essex.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is recognized for its strong research in social sciences, international outlook, and politics."
+    "notes": "It is recognized for its strong research in social sciences, international outlook, and politics.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 27,
@@ -294,7 +424,12 @@
     "internationalUrl": "https://www.cardiff.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.cardiff.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is the only Russell Group university in Wales, known for research and high student satisfaction."
+    "notes": "It is the only Russell Group university in Wales, known for research and high student satisfaction.",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 27000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.cardiff.ac.uk/study/undergraduate/funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.cardiff.ac.uk/accommodation"
   },
   {
     "rank": 28,
@@ -305,7 +440,12 @@
     "internationalUrl": "https://www.dundee.ac.uk/international",
     "ugAdmissionsUrl": "https://www.dundee.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is highly regarded for medicine, dentistry, and art and design, located in the UK's first UNESCO City of Design."
+    "notes": "It is highly regarded for medicine, dentistry, and art and design, located in the UK's first UNESCO City of Design.",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.dundee.ac.uk/scholarships",
+    "accommodationUrl": "https://www.dundee.ac.uk/accommodation"
   },
   {
     "rank": 29,
@@ -316,7 +456,12 @@
     "internationalUrl": "https://www.qub.ac.uk/Study/International-students",
     "ugAdmissionsUrl": "https://www.qub.ac.uk/Study/Undergraduate",
     "russellGroup": true,
-    "notes": "It is a highly prestigious redbrick university in Northern Ireland, renowned for research and heritage."
+    "notes": "It is a highly prestigious redbrick university in Northern Ireland, renowned for research and heritage.",
+    "tuitionIntlMinGbp": 18800,
+    "tuitionIntlMaxGbp": 24600,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.qub.ac.uk/Study/Undergraduate/Fees-and-scholarships/",
+    "accommodationUrl": "https://www.qub.ac.uk/accommodation/"
   },
   {
     "rank": 30,
@@ -327,7 +472,12 @@
     "internationalUrl": "https://www.manchester.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.manchester.ac.uk/study/undergraduate",
     "russellGroup": true,
-    "notes": "It is famous for scientific breakthroughs, including the splitting of the atom and the development of graphene."
+    "notes": "It is famous for scientific breakthroughs, including the splitting of the atom and the development of graphene.",
+    "tuitionIntlMinGbp": 23000,
+    "tuitionIntlMaxGbp": 33000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.manchester.ac.uk/study/accommodation/"
   },
   {
     "rank": 31,
@@ -338,7 +488,12 @@
     "internationalUrl": "https://www.hw.ac.uk/study/international.htm",
     "ugAdmissionsUrl": "https://www.hw.ac.uk/study/undergraduate.htm",
     "russellGroup": false,
-    "notes": "It is a leader in science, technology, engineering, and business, with campuses in Dubai and Malaysia."
+    "notes": "It is a leader in science, technology, engineering, and business, with campuses in Dubai and Malaysia.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 23500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 32,
@@ -349,7 +504,12 @@
     "internationalUrl": "https://www.arts.ac.uk/study-at-ual/international",
     "ugAdmissionsUrl": "https://www.arts.ac.uk/study-at-ual/undergraduate",
     "russellGroup": false,
-    "notes": "It is Europe's largest specialist art and design university, consisting of six prestigious colleges."
+    "notes": "It is Europe's largest specialist art and design university, consisting of six prestigious colleges.",
+    "tuitionIntlMinGbp": 25970,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.arts.ac.uk/study-at-ual/fees-and-funding/scholarships-search",
+    "accommodationUrl": "https://www.arts.ac.uk/study-at-ual/accommodation"
   },
   {
     "rank": 33,
@@ -360,7 +520,12 @@
     "internationalUrl": "https://le.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://le.ac.uk/study/undergraduates",
     "russellGroup": false,
-    "notes": "It is famous for the invention of genetic fingerprinting and the discovery of the remains of King Richard III."
+    "notes": "It is famous for the invention of genetic fingerprinting and the discovery of the remains of King Richard III.",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://le.ac.uk/accommodation"
   },
   {
     "rank": 34,
@@ -371,7 +536,12 @@
     "internationalUrl": "https://www.nottingham.ac.uk/studywithus/international-applicants",
     "ugAdmissionsUrl": "https://www.nottingham.ac.uk/studywithus/undergraduate",
     "russellGroup": true,
-    "notes": "It is highly regarded for research, global campuses, and agriculture, science, and engineering programs."
+    "notes": "It is highly regarded for research, global campuses, and agriculture, science, and engineering programs.",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.nottingham.ac.uk/accommodation/"
   },
   {
     "rank": 35,
@@ -382,7 +552,12 @@
     "internationalUrl": "https://www.swansea.ac.uk/international-students",
     "ugAdmissionsUrl": "https://www.swansea.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It offers excellent research in science and engineering alongside beautiful beachside campuses."
+    "notes": "It offers excellent research in science and engineering alongside beautiful beachside campuses.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.swansea.ac.uk/accommodation/"
   },
   {
     "rank": 36,
@@ -393,7 +568,12 @@
     "internationalUrl": "https://www.ntu.ac.uk/international",
     "ugAdmissionsUrl": "https://www.ntu.ac.uk/study-and-courses/undergraduate",
     "russellGroup": false,
-    "notes": "It is recognized for its outstanding student satisfaction, employability, and industry links."
+    "notes": "It is recognized for its outstanding student satisfaction, employability, and industry links.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 18250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ntu.ac.uk/international/scholarships-and-fees/scholarships",
+    "accommodationUrl": "https://www.ntu.ac.uk/accommodation"
   },
   {
     "rank": 37,
@@ -404,7 +584,12 @@
     "internationalUrl": "https://www.mmu.ac.uk/international",
     "ugAdmissionsUrl": "https://www.mmu.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a highly popular, modern university known for creative arts, business, and sustainability."
+    "notes": "It is a highly popular, modern university known for creative arts, business, and sustainability.",
+    "tuitionIntlMinGbp": 17000,
+    "tuitionIntlMaxGbp": 20000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.mmu.ac.uk/accommodation"
   },
   {
     "rank": 38,
@@ -415,7 +600,12 @@
     "internationalUrl": "https://www.port.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.port.ac.uk/study/undergraduate-students",
     "russellGroup": false,
-    "notes": "It is known for strong graduate outcomes, marine biology, and cosmology research."
+    "notes": "It is known for strong graduate outcomes, marine biology, and cosmology research.",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.port.ac.uk/student-life/accommodation"
   },
   {
     "rank": 39,
@@ -426,7 +616,12 @@
     "internationalUrl": "https://www.northumbria.ac.uk/study-at-northumbria/international-admissions",
     "ugAdmissionsUrl": "https://www.northumbria.ac.uk/study-at-northumbria/undergraduate-study",
     "russellGroup": false,
-    "notes": "It is a highly regarded modern university recognized for its research power and design programs."
+    "notes": "It is a highly regarded modern university recognized for its research power and design programs.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 20500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.northumbria.ac.uk/study-at-northumbria/fees-funding/",
+    "accommodationUrl": "https://www.northumbria.ac.uk/study-at-northumbria/accommodation/"
   },
   {
     "rank": 40,
@@ -437,7 +632,12 @@
     "internationalUrl": "https://www.aston.ac.uk/international",
     "ugAdmissionsUrl": "https://www.aston.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is renowned for business education, placement years, and high graduate employment rates."
+    "notes": "It is renowned for business education, placement years, and high graduate employment rates.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 22500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.aston.ac.uk/accommodation"
   },
   {
     "rank": 41,
@@ -448,7 +648,12 @@
     "internationalUrl": "https://www.reading.ac.uk/ready-to-study/international-students",
     "ugAdmissionsUrl": "https://www.reading.ac.uk/ready-to-study/undergraduate",
     "russellGroup": false,
-    "notes": "It is world famous for agriculture, climate science, and Henley Business School."
+    "notes": "It is world famous for agriculture, climate science, and Henley Business School.",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.reading.ac.uk/ready-to-study/accommodation"
   },
   {
     "rank": 42,
@@ -459,7 +664,12 @@
     "internationalUrl": "https://www.sussex.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.sussex.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is renowned for development studies, research impact, and its progressive campus environment."
+    "notes": "It is renowned for development studies, research impact, and its progressive campus environment.",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.sussex.ac.uk/study/fees-funding/undergraduate-scholarships",
+    "accommodationUrl": "https://www.sussex.ac.uk/study/accommodation"
   },
   {
     "rank": 43,
@@ -470,7 +680,12 @@
     "internationalUrl": "https://www.uea.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.uea.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is famous for creative writing, environmental sciences, and the Sainsbury Centre for Visual Arts."
+    "notes": "It is famous for creative writing, environmental sciences, and the Sainsbury Centre for Visual Arts.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uea.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.uea.ac.uk/accommodation"
   },
   {
     "rank": 44,
@@ -481,7 +696,12 @@
     "internationalUrl": "https://www.chi.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.chi.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is recognized for its close-knit community, outstanding student satisfaction, and education studies."
+    "notes": "It is recognized for its close-knit community, outstanding student satisfaction, and education studies.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.chi.ac.uk/student-life/accommodation/"
   },
   {
     "rank": 45,
@@ -492,7 +712,12 @@
     "internationalUrl": "https://www.royalholloway.ac.uk/studying-here/international-students",
     "ugAdmissionsUrl": "https://www.royalholloway.ac.uk/studying-here/undergraduate",
     "russellGroup": false,
-    "notes": "It is famous for its stunning Victorian Founder's Building and strong arts and humanities programs."
+    "notes": "It is famous for its stunning Victorian Founder's Building and strong arts and humanities programs.",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 26000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.royalholloway.ac.uk/studying-here/fees-and-funding/undergraduate/scholarships-and-bursaries/",
+    "accommodationUrl": null
   },
   {
     "rank": 46,
@@ -503,7 +728,12 @@
     "internationalUrl": "https://www.ncl.ac.uk/international",
     "ugAdmissionsUrl": "https://www.ncl.ac.uk/undergraduate",
     "russellGroup": true,
-    "notes": "It is highly ranked for medicine, science, engineering, and its vibrant student experience."
+    "notes": "It is highly ranked for medicine, science, engineering, and its vibrant student experience.",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.ncl.ac.uk/accommodation/"
   },
   {
     "rank": 47,
@@ -514,7 +744,12 @@
     "internationalUrl": "https://www.qmul.ac.uk/international",
     "ugAdmissionsUrl": "https://www.qmul.ac.uk/undergraduate",
     "russellGroup": true,
-    "notes": "It is a diverse research intensive institution with a major campus in East London."
+    "notes": "It is a diverse research intensive institution with a major campus in East London.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.qmul.ac.uk/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.qmul.ac.uk/accommodation/"
   },
   {
     "rank": 48,
@@ -525,7 +760,12 @@
     "internationalUrl": "https://www.aber.ac.uk/en/international",
     "ugAdmissionsUrl": "https://www.aber.ac.uk/en/undergraduate",
     "russellGroup": false,
-    "notes": "It is home to the world's first department of international politics and offers high student satisfaction."
+    "notes": "It is home to the world's first department of international politics and offers high student satisfaction.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.aber.ac.uk/en/accommodation/"
   },
   {
     "rank": 49,
@@ -536,7 +776,12 @@
     "internationalUrl": "https://www.keele.ac.uk/study/internationalstudents",
     "ugAdmissionsUrl": "https://www.keele.ac.uk/study/undergraduatestudy",
     "russellGroup": false,
-    "notes": "It features a massive campus and is pioneer in dual honours degrees and environmental sciences."
+    "notes": "It features a massive campus and is pioneer in dual honours degrees and environmental sciences.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 22500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.keele.ac.uk/accommodation/"
   },
   {
     "rank": 50,
@@ -547,7 +792,12 @@
     "internationalUrl": "https://www.ulster.ac.uk/global",
     "ugAdmissionsUrl": "https://www.ulster.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a multi campus university known for strong professional placements, business, and computing courses."
+    "notes": "It is a multi campus university known for strong professional placements, business, and computing courses.",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.ulster.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.ulster.ac.uk/accommodation"
   },
   {
     "rank": 51,
@@ -558,7 +808,12 @@
     "internationalUrl": "https://www.uwe.ac.uk/courses/international-study",
     "ugAdmissionsUrl": "https://www.uwe.ac.uk/courses/undergraduate",
     "russellGroup": false,
-    "notes": "It is a modern university in Bristol known for high employment rates and strong partnerships with industries."
+    "notes": "It is a modern university in Bristol known for high employment rates and strong partnerships with industries.",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 18000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uwe.ac.uk/courses/funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.uwe.ac.uk/accommodation"
   },
   {
     "rank": 52,
@@ -569,7 +824,12 @@
     "internationalUrl": "https://www.edgehill.ac.uk/international",
     "ugAdmissionsUrl": "https://www.edgehill.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is highly recognized for its teacher training heritage, award winning campus, and student support."
+    "notes": "It is highly recognized for its teacher training heritage, award winning campus, and student support.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.edgehill.ac.uk/study/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.edgehill.ac.uk/accommodation/"
   },
   {
     "rank": 53,
@@ -580,7 +840,12 @@
     "internationalUrl": "https://www.brookes.ac.uk/international",
     "ugAdmissionsUrl": "https://www.brookes.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is one of the top modern universities in the UK, known for architecture, publishing, and hospitality."
+    "notes": "It is one of the top modern universities in the UK, known for architecture, publishing, and hospitality.",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.brookes.ac.uk/studying-at-brookes/finance/undergraduate-finance-funding/",
+    "accommodationUrl": "https://www.brookes.ac.uk/accommodation/"
   },
   {
     "rank": 54,
@@ -591,7 +856,12 @@
     "internationalUrl": "https://www.uwl.ac.uk/international",
     "ugAdmissionsUrl": "https://www.uwl.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is known as the career university with excellent student satisfaction and strong links with employers."
+    "notes": "It is known as the career university with excellent student satisfaction and strong links with employers.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.uwl.ac.uk/accommodation"
   },
   {
     "rank": 55,
@@ -602,7 +872,12 @@
     "internationalUrl": "https://www.bangor.ac.uk/international",
     "ugAdmissionsUrl": "https://www.bangor.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It offers high student satisfaction and is renowned for ocean sciences and environmental studies."
+    "notes": "It offers high student satisfaction and is renowned for ocean sciences and environmental studies.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.bangor.ac.uk/accommodation"
   },
   {
     "rank": 56,
@@ -613,7 +888,12 @@
     "internationalUrl": "https://www.ljmu.ac.uk/international",
     "ugAdmissionsUrl": "https://www.ljmu.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is named after the local pioneer John Moores and is renowned for sports science and maritime studies."
+    "notes": "It is named after the local pioneer John Moores and is renowned for sports science and maritime studies.",
+    "tuitionIntlMinGbp": 17750,
+    "tuitionIntlMaxGbp": 18250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.ljmu.ac.uk/accommodation"
   },
   {
     "rank": 57,
@@ -624,7 +904,12 @@
     "internationalUrl": "https://www.lincoln.ac.uk/studywithus/internationalstudents",
     "ugAdmissionsUrl": "https://www.lincoln.ac.uk/studywithus/undergraduatestudy",
     "russellGroup": false,
-    "notes": "It is a modern university with a historic cathedral background, famous for journalism and science."
+    "notes": "It is a modern university with a historic cathedral background, famous for journalism and science.",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 18200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.lincoln.ac.uk/studywithus/scholarshipsandfunding/",
+    "accommodationUrl": "https://www.lincoln.ac.uk/accommodation/"
   },
   {
     "rank": 58,
@@ -635,7 +920,12 @@
     "internationalUrl": "https://www.kent.ac.uk/international",
     "ugAdmissionsUrl": "https://www.kent.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is known as the UK European university with strong global links and excellent humanities research."
+    "notes": "It is known as the UK European university with strong global links and excellent humanities research.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 22000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.kent.ac.uk/scholarships",
+    "accommodationUrl": "https://www.kent.ac.uk/accommodation"
   },
   {
     "rank": 59,
@@ -646,7 +936,12 @@
     "internationalUrl": "https://www.city.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.city.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is famous for business, journalism, and health sciences, following a major merger in 2024."
+    "notes": "It is famous for business, journalism, and health sciences, following a major merger in 2024.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.city.ac.uk/study/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.city.ac.uk/accommodation"
   },
   {
     "rank": 60,
@@ -657,7 +952,12 @@
     "internationalUrl": "https://www.harper-adams.ac.uk/university-life/international",
     "ugAdmissionsUrl": "https://www.harper-adams.ac.uk/courses/undergraduate",
     "russellGroup": false,
-    "notes": "It is the UK specialist leader in agriculture, agribusiness, food, and animal sciences."
+    "notes": "It is the UK specialist leader in agriculture, agribusiness, food, and animal sciences.",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.harper-adams.ac.uk/accommodation/"
   },
   {
     "rank": 61,
@@ -668,7 +968,12 @@
     "internationalUrl": "https://aub.ac.uk/international",
     "ugAdmissionsUrl": "https://aub.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a highly specialist creative institution known for animation, film, and fashion programs."
+    "notes": "It is a highly specialist creative institution known for animation, film, and fashion programs.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://aub.ac.uk/accommodation"
   },
   {
     "rank": 62,
@@ -679,7 +984,12 @@
     "internationalUrl": "https://www.herts.ac.uk/international",
     "ugAdmissionsUrl": "https://www.herts.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is renowned for aerospace engineering, computer science, and strong links to major employers."
+    "notes": "It is renowned for aerospace engineering, computer science, and strong links to major employers.",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 17250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.herts.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.herts.ac.uk/accommodation"
   },
   {
     "rank": 63,
@@ -690,7 +1000,12 @@
     "internationalUrl": "https://www.southwales.ac.uk/international",
     "ugAdmissionsUrl": "https://www.southwales.ac.uk/study/undergraduate-students",
     "russellGroup": false,
-    "notes": "It is one of the largest universities in Wales, known for nursing, engineering, and creative industries."
+    "notes": "It is one of the largest universities in Wales, known for nursing, engineering, and creative industries.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.southwales.ac.uk/study/fees-and-funding/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.southwales.ac.uk/accommodation/"
   },
   {
     "rank": 64,
@@ -701,7 +1016,12 @@
     "internationalUrl": "https://www.abertay.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.abertay.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is world famous as a pioneer in computer games education and ethical hacking."
+    "notes": "It is world famous as a pioneer in computer games education and ethical hacking.",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 17250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.abertay.ac.uk/life/accommodation/"
   },
   {
     "rank": 65,
@@ -712,7 +1032,12 @@
     "internationalUrl": "https://www.coventry.ac.uk/international-students-hub",
     "ugAdmissionsUrl": "https://www.coventry.ac.uk/study-at-coventry/undergraduate",
     "russellGroup": false,
-    "notes": "It is highly ranked for automotive design and has a strong global focus with campuses in London."
+    "notes": "It is highly ranked for automotive design and has a strong global focus with campuses in London.",
+    "tuitionIntlMinGbp": 14800,
+    "tuitionIntlMaxGbp": 19850,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.coventry.ac.uk/study-at-coventry/finance/scholarships/",
+    "accommodationUrl": "https://www.coventry.ac.uk/accommodation/"
   },
   {
     "rank": 66,
@@ -723,7 +1048,12 @@
     "internationalUrl": "https://www.stir.ac.uk/international",
     "ugAdmissionsUrl": "https://www.stir.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is Scotland's university for sporting excellence and features one of the most beautiful campus settings in Europe."
+    "notes": "It is Scotland's university for sporting excellence and features one of the most beautiful campus settings in Europe.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 21500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.stir.ac.uk/scholarships/",
+    "accommodationUrl": null
   },
   {
     "rank": 67,
@@ -734,7 +1064,12 @@
     "internationalUrl": "https://www.sunderland.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.sunderland.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is recognized for its inclusive approach, strong pharmacy school, and new medical school."
+    "notes": "It is recognized for its inclusive approach, strong pharmacy school, and new medical school.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 68,
@@ -745,7 +1080,12 @@
     "internationalUrl": "https://www.plymouth.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.plymouth.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is renowned for marine biology, coastal sciences, and sustainability education."
+    "notes": "It is renowned for marine biology, coastal sciences, and sustainability education.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 69,
@@ -756,7 +1096,12 @@
     "internationalUrl": "https://www.cardiffmet.ac.uk/international",
     "ugAdmissionsUrl": "https://www.cardiffmet.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a highly international university with a strong reputation for art, design, and sport sciences."
+    "notes": "It is a highly international university with a strong reputation for art, design, and sport sciences.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.cardiffmet.ac.uk/accommodation/"
   },
   {
     "rank": 70,
@@ -767,7 +1112,12 @@
     "internationalUrl": "https://www.glos.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.glos.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It has historic roots and is known for bioscience, creative arts, and sustainability practices."
+    "notes": "It has historic roots and is known for bioscience, creative arts, and sustainability practices.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.glos.ac.uk/finance/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.glos.ac.uk/accommodation/"
   },
   {
     "rank": 71,
@@ -778,7 +1128,12 @@
     "internationalUrl": "https://www.gold.ac.uk/international",
     "ugAdmissionsUrl": "https://www.gold.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is highly celebrated for creative arts, design, media, and progressive cultural studies."
+    "notes": "It is highly celebrated for creative arts, design, media, and progressive cultural studies.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.gold.ac.uk/accommodation/"
   },
   {
     "rank": 72,
@@ -789,7 +1144,12 @@
     "internationalUrl": "https://www.gcu.ac.uk/study/internationalstudents",
     "ugAdmissionsUrl": "https://www.gcu.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a leading modern university known as the university for the common good."
+    "notes": "It is a leading modern university known as the university for the common good.",
+    "tuitionIntlMinGbp": 15200,
+    "tuitionIntlMaxGbp": 18200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.gcu.ac.uk/study/scholarships/",
+    "accommodationUrl": "https://www.gcu.ac.uk/accommodation/"
   },
   {
     "rank": 73,
@@ -800,7 +1160,12 @@
     "internationalUrl": "https://norwichuni.ac.uk/international",
     "ugAdmissionsUrl": "https://norwichuni.ac.uk/study-with-us",
     "russellGroup": false,
-    "notes": "It is a specialist creative arts university known for fine art, design, and media courses."
+    "notes": "It is a specialist creative arts university known for fine art, design, and media courses.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://norwichuni.ac.uk/accommodation/"
   },
   {
     "rank": 74,
@@ -811,7 +1176,12 @@
     "internationalUrl": "https://www.rgu.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.rgu.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It has a reputation for high graduate employability and excellent links with the energy sector."
+    "notes": "It has a reputation for high graduate employability and excellent links with the energy sector.",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.rgu.ac.uk/accommodation"
   },
   {
     "rank": 75,
@@ -822,7 +1192,12 @@
     "internationalUrl": "https://www.bathspa.ac.uk/international",
     "ugAdmissionsUrl": "https://www.bathspa.ac.uk/study-with-us/undergraduate",
     "russellGroup": false,
-    "notes": "It is a beautiful campus university known for creativity, culture, enterprise, and liberal arts."
+    "notes": "It is a beautiful campus university known for creativity, culture, enterprise, and liberal arts.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 76,
@@ -833,7 +1208,12 @@
     "internationalUrl": "https://www.stmarys.ac.uk/international",
     "ugAdmissionsUrl": "https://www.stmarys.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a leading Catholic university in London known for sports science, teacher training, and drama."
+    "notes": "It is a leading Catholic university in London known for sports science, teacher training, and drama.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 77,
@@ -844,7 +1224,12 @@
     "internationalUrl": "https://www.tees.ac.uk/sections/international",
     "ugAdmissionsUrl": "https://www.tees.ac.uk/sections/undergraduate",
     "russellGroup": false,
-    "notes": "It is known for digital media, design, animation, and computing, with a strong focus on student employability."
+    "notes": "It is known for digital media, design, animation, and computing, with a strong focus on student employability.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.tees.ac.uk/undergraduate/fees.cfm",
+    "accommodationUrl": "https://www.tees.ac.uk/accommodation/"
   },
   {
     "rank": 78,
@@ -855,7 +1240,12 @@
     "internationalUrl": "https://www.falmouth.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.falmouth.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a creative hub in Cornwall, famous for game design, photography, illustration, and art."
+    "notes": "It is a creative hub in Cornwall, famous for game design, photography, illustration, and art.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.falmouth.ac.uk/accommodation/"
   },
   {
     "rank": 79,
@@ -866,7 +1256,12 @@
     "internationalUrl": "https://www.derby.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.derby.ac.uk/undergraduate/study",
     "russellGroup": false,
-    "notes": "It is recognized for its industry partnerships, high quality facilities, and practical learning approach."
+    "notes": "It is recognized for its industry partnerships, high quality facilities, and practical learning approach.",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 17250,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.derby.ac.uk/study/fees-finance/scholarships/",
+    "accommodationUrl": "https://www.derby.ac.uk/accommodation/"
   },
   {
     "rank": 80,
@@ -877,7 +1272,12 @@
     "internationalUrl": "https://www.salford.ac.uk/international",
     "ugAdmissionsUrl": "https://www.salford.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It has a major campus at MediaCityUK alongside major broadcasters like the BBC and ITV."
+    "notes": "It has a major campus at MediaCityUK alongside major broadcasters like the BBC and ITV.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.salford.ac.uk/undergraduate/fees-and-funding",
+    "accommodationUrl": "https://www.salford.ac.uk/accommodation"
   },
   {
     "rank": 81,
@@ -888,7 +1288,12 @@
     "internationalUrl": "https://www.kingston.ac.uk/international",
     "ugAdmissionsUrl": "https://www.kingston.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is recognized for its diverse student body, fashion school, and strong support for student entrepreneurship."
+    "notes": "It is recognized for its diverse student body, fashion school, and strong support for student entrepreneurship.",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.kingston.ac.uk/undergraduate/fees-and-funding/scholarships-and-bursaries/",
+    "accommodationUrl": "https://www.kingston.ac.uk/accommodation/"
   },
   {
     "rank": 82,
@@ -899,7 +1304,12 @@
     "internationalUrl": "https://www.hull.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.hull.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is known for the development of liquid crystal technology and has a strong heritage in maritime studies."
+    "notes": "It is known for the development of liquid crystal technology and has a strong heritage in maritime studies.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 83,
@@ -910,7 +1320,12 @@
     "internationalUrl": "https://www.solent.ac.uk/international",
     "ugAdmissionsUrl": "https://www.solent.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is renowned for its world class maritime academy, yacht design, and creative media courses."
+    "notes": "It is renowned for its world class maritime academy, yacht design, and creative media courses.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.solent.ac.uk/accommodation"
   },
   {
     "rank": 84,
@@ -921,7 +1336,12 @@
     "internationalUrl": "https://www.napier.ac.uk/study-with-us/international-students",
     "ugAdmissionsUrl": "https://www.napier.ac.uk/study-with-us/undergraduate",
     "russellGroup": false,
-    "notes": "It is known for cyber security, timber engineering, journalism, and excellent graduate employment rates."
+    "notes": "It is known for cyber security, timber engineering, journalism, and excellent graduate employment rates.",
+    "tuitionIntlMinGbp": 16200,
+    "tuitionIntlMaxGbp": 19200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.napier.ac.uk/study-with-us/undergraduate/fees-and-funding/scholarships/",
+    "accommodationUrl": "https://www.napier.ac.uk/accommodation/"
   },
   {
     "rank": 85,
@@ -932,7 +1352,12 @@
     "internationalUrl": "https://www.uos.ac.uk/international",
     "ugAdmissionsUrl": "https://www.uos.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a young and dynamic university known for its modern waterfront campus and community focus."
+    "notes": "It is a young and dynamic university known for its modern waterfront campus and community focus.",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.uos.ac.uk/accommodation/"
   },
   {
     "rank": 86,
@@ -943,7 +1368,12 @@
     "internationalUrl": "https://www.soas.ac.uk/study/international-students",
     "ugAdmissionsUrl": "https://www.soas.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is a world leading center for the study of Asia, Africa, and the Middle East."
+    "notes": "It is a world leading center for the study of Asia, Africa, and the Middle East.",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.soas.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.soas.ac.uk/accommodation"
   },
   {
     "rank": 87,
@@ -954,7 +1384,12 @@
     "internationalUrl": "https://www.chester.ac.uk/international",
     "ugAdmissionsUrl": "https://www.chester.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is one of the oldest English higher education institutions, famous for education and history studies."
+    "notes": "It is one of the oldest English higher education institutions, famous for education and history studies.",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 88,
@@ -965,7 +1400,12 @@
     "internationalUrl": "https://www.marjon.ac.uk/international",
     "ugAdmissionsUrl": "https://www.marjon.ac.uk/courses/undergraduate",
     "russellGroup": false,
-    "notes": "It has historic teacher training roots and is known for small class sizes and sport sciences."
+    "notes": "It has historic teacher training roots and is known for small class sizes and sport sciences.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.marjon.ac.uk/accommodation/"
   },
   {
     "rank": 89,
@@ -976,7 +1416,12 @@
     "internationalUrl": "https://www.hope.ac.uk/international",
     "ugAdmissionsUrl": "https://www.hope.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It features a strong liberal arts tradition and a beautiful, eco friendly garden campus."
+    "notes": "It features a strong liberal arts tradition and a beautiful, eco friendly garden campus.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.hope.ac.uk/undergraduate/feesandfunding/scholarships/",
+    "accommodationUrl": null
   },
   {
     "rank": 90,
@@ -987,7 +1432,12 @@
     "internationalUrl": "https://www.leedsbeckett.ac.uk/international",
     "ugAdmissionsUrl": "https://www.leedsbeckett.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a large modern university known for sports education, events management, and business links."
+    "notes": "It is a large modern university known for sports education, events management, and business links.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.leedsbeckett.ac.uk/accommodation/"
   },
   {
     "rank": 91,
@@ -998,7 +1448,12 @@
     "internationalUrl": "https://www.bradford.ac.uk/international",
     "ugAdmissionsUrl": "https://www.bradford.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is famous for peace studies, pharmacy, and being a pioneer in student placement schemes."
+    "notes": "It is famous for peace studies, pharmacy, and being a pioneer in student placement schemes.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 22000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bradford.ac.uk/scholarships/",
+    "accommodationUrl": "https://www.bradford.ac.uk/accommodation/"
   },
   {
     "rank": 92,
@@ -1009,7 +1464,12 @@
     "internationalUrl": "https://www.hud.ac.uk/international",
     "ugAdmissionsUrl": "https://www.hud.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is recognized for teaching quality, research in precision engineering, and business enterprise."
+    "notes": "It is recognized for teaching quality, research in precision engineering, and business enterprise.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 93,
@@ -1020,7 +1480,12 @@
     "internationalUrl": "https://www.bournemouth.ac.uk/study/international",
     "ugAdmissionsUrl": "https://www.bournemouth.ac.uk/study/undergraduate",
     "russellGroup": false,
-    "notes": "It is famous for its media school, tourism courses, and animation graduates who work in Hollywood."
+    "notes": "It is famous for its media school, tourism courses, and animation graduates who work in Hollywood.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.bournemouth.ac.uk/study/undergraduate/fees-funding/scholarships/",
+    "accommodationUrl": "https://www.bournemouth.ac.uk/accommodation/"
   },
   {
     "rank": 94,
@@ -1031,7 +1496,12 @@
     "internationalUrl": "https://www.staffs.ac.uk/international",
     "ugAdmissionsUrl": "https://www.staffs.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a pioneer in digital technology, computer games design, and forensics science."
+    "notes": "It is a pioneer in digital technology, computer games design, and forensics science.",
+    "tuitionIntlMinGbp": 15200,
+    "tuitionIntlMaxGbp": 17200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.staffs.ac.uk/accommodation/"
   },
   {
     "rank": 95,
@@ -1042,7 +1512,12 @@
     "internationalUrl": "https://www.shu.ac.uk/international",
     "ugAdmissionsUrl": "https://www.shu.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is one of the largest universities in the UK, highly regarded for health and design programs."
+    "notes": "It is one of the largest universities in the UK, highly regarded for health and design programs.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.shu.ac.uk/accommodation/"
   },
   {
     "rank": 96,
@@ -1053,7 +1528,12 @@
     "internationalUrl": "https://www.uel.ac.uk/international",
     "ugAdmissionsUrl": "https://www.uel.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a highly diverse modern university with state of the art facilities in Docklands and Stratford."
+    "notes": "It is a highly diverse modern university with state of the art facilities in Docklands and Stratford.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": "https://www.uel.ac.uk/study/fees-funding/scholarships",
+    "accommodationUrl": "https://www.uel.ac.uk/accommodation"
   },
   {
     "rank": 97,
@@ -1064,7 +1544,12 @@
     "internationalUrl": "https://www.qmu.ac.uk/study-here/international-students",
     "ugAdmissionsUrl": "https://www.qmu.ac.uk/study-here/undergraduate-study",
     "russellGroup": false,
-    "notes": "It is known for health sciences, nursing, drama, and its eco friendly campus near Edinburgh."
+    "notes": "It is known for health sciences, nursing, drama, and its eco friendly campus near Edinburgh.",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.qmu.ac.uk/accommodation/"
   },
   {
     "rank": 98,
@@ -1075,7 +1560,12 @@
     "internationalUrl": "https://www.uclan.ac.uk/international",
     "ugAdmissionsUrl": "https://www.uclan.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a large modern university known for journalism, forensic science, and engineering."
+    "notes": "It is a large modern university known for journalism, forensic science, and engineering.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.uclan.ac.uk/accommodation/"
   },
   {
     "rank": 99,
@@ -1086,7 +1576,12 @@
     "internationalUrl": "https://www.bolton.ac.uk/international",
     "ugAdmissionsUrl": "https://www.bolton.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "Formerly known as the University of Bolton, it is recognized for professional focus and small classes."
+    "notes": "Formerly known as the University of Bolton, it is recognized for professional focus and small classes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.bolton.ac.uk/accommodation"
   },
   {
     "rank": 100,
@@ -1097,6 +1592,1611 @@
     "internationalUrl": "https://www.uwtsd.ac.uk/international",
     "ugAdmissionsUrl": "https://www.uwtsd.ac.uk/undergraduate",
     "russellGroup": false,
-    "notes": "It is a historic Welsh institution known for teacher training, arts, and strong community engagement."
+    "notes": "It is a historic Welsh institution known for teacher training, arts, and strong community engagement.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9535,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.uwtsd.ac.uk/accommodation/"
+  },
+  {
+    "rank": 101,
+    "name": "De Montfort University",
+    "city": "Leicester",
+    "region": "East Midlands",
+    "website": "https://www.dmu.ac.uk",
+    "internationalUrl": "https://www.dmu.ac.uk/study/international-students",
+    "ugAdmissionsUrl": "https://www.dmu.ac.uk/study/undergraduate",
+    "russellGroup": false,
+    "notes": "A vibrant city-centre campus known for its exceptional focus on employability through its DMU Works scheme, diverse student body, and global learning opportunities.",
+    "tuitionIntlMinGbp": 15250,
+    "tuitionIntlMaxGbp": 16800,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.dmu.ac.uk/study/international-students/fees-and-funding/scholarships.aspx",
+    "accommodationUrl": "https://www.dmu.ac.uk/study/accommodation"
+  },
+  {
+    "rank": 102,
+    "name": "University of Greenwich",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.gre.ac.uk",
+    "internationalUrl": "https://www.gre.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.gre.ac.uk/study/apply",
+    "russellGroup": false,
+    "notes": "Set on a stunning UNESCO World Heritage Site in London, offering a historic campus combined with modern facilities and strong industry connections in the capital.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.gre.ac.uk/finance/funding-your-studies/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.gre.ac.uk/student-services/accommodation"
+  },
+  {
+    "rank": 103,
+    "name": "University of Brighton",
+    "city": "Brighton",
+    "region": "South East",
+    "website": "https://www.brighton.ac.uk",
+    "internationalUrl": "https://www.brighton.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.brighton.ac.uk/applying/index.aspx",
+    "russellGroup": false,
+    "notes": "A creative and professional university located in the vibrant coastal city of Brighton, focusing on hands-on practice, entrepreneurship, and community projects.",
+    "tuitionIntlMinGbp": 15900,
+    "tuitionIntlMaxGbp": 18900,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.brighton.ac.uk/applying/funding-and-fees/scholarships/index.aspx",
+    "accommodationUrl": "https://www.brighton.ac.uk/accommodation-and-locations"
+  },
+  {
+    "rank": 104,
+    "name": "Middlesex University",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.mdx.ac.uk",
+    "internationalUrl": "https://www.mdx.ac.uk/study-with-us/international",
+    "ugAdmissionsUrl": "https://www.mdx.ac.uk/study-with-us/how-to-apply",
+    "russellGroup": false,
+    "notes": "Based in Hendon, North London, Middlesex combines high-tech campus facilities with a global outlook, having international campuses in Dubai, Mauritius, and Malta.",
+    "tuitionIntlMinGbp": 15800,
+    "tuitionIntlMaxGbp": 18000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.mdx.ac.uk/study-with-us/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.mdx.ac.uk/life-at-middlesex/accommodation"
+  },
+  {
+    "rank": 105,
+    "name": "University of Westminster",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.westminster.ac.uk",
+    "internationalUrl": "https://www.westminster.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.westminster.ac.uk/study/undergraduate/how-to-apply",
+    "russellGroup": false,
+    "notes": "Established in 1838 as the UK's first polytechnic, it is situated in the heart of London, offering famous media, architecture, and business programs.",
+    "tuitionIntlMinGbp": 15400,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.westminster.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.westminster.ac.uk/study/student-life/accommodation"
+  },
+  {
+    "rank": 106,
+    "name": "University of Roehampton",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.roehampton.ac.uk",
+    "internationalUrl": "https://www.roehampton.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.roehampton.ac.uk/undergraduate-courses/how-to-apply",
+    "russellGroup": false,
+    "notes": "The only traditional parkland college campus in London, offering a supportive, collegiate community in Southwest London alongside growing career-focused courses.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.roehampton.ac.uk/finance/scholarships",
+    "accommodationUrl": "https://www.roehampton.ac.uk/accommodation"
+  },
+  {
+    "rank": 107,
+    "name": "London South Bank University",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.lsbu.ac.uk",
+    "internationalUrl": "https://www.lsbu.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.lsbu.ac.uk/study/undergraduate/how-to-apply",
+    "russellGroup": false,
+    "notes": "Located in central London's Elephant & Castle, LSBU focuses on practical, vocational education that directly prepares students for professional careers.",
+    "tuitionIntlMinGbp": 14900,
+    "tuitionIntlMaxGbp": 16900,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.lsbu.ac.uk/study/undergraduate/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.lsbu.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 108,
+    "name": "University of Winchester",
+    "city": "Winchester",
+    "region": "South East",
+    "website": "https://www.winchester.ac.uk",
+    "internationalUrl": "https://www.winchester.ac.uk/study/international",
+    "ugAdmissionsUrl": "https://www.winchester.ac.uk/study/undergraduate/how-to-apply",
+    "russellGroup": false,
+    "notes": "A value-driven university set in a beautiful, historic cathedral city, highly regarded for teaching excellence, sustainability, and student happiness.",
+    "tuitionIntlMinGbp": 14200,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.winchester.ac.uk/study/undergraduate/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.winchester.ac.uk/accommodation"
+  },
+  {
+    "rank": 109,
+    "name": "University of Wolverhampton",
+    "city": "Wolverhampton",
+    "region": "West Midlands",
+    "website": "https://www.wlv.ac.uk",
+    "internationalUrl": "https://www.wlv.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.wlv.ac.uk/apply/how-to-apply",
+    "russellGroup": false,
+    "notes": "Known as the Opportunity University, Wolverhampton offers excellent facilities, professional accreditations, and strong ties to Midlands industries.",
+    "tuitionIntlMinGbp": 14450,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.wlv.ac.uk/international/fees-funding-and-scholarships/scholarships",
+    "accommodationUrl": "https://www.wlv.ac.uk/university-life/accommodation"
+  },
+  {
+    "rank": 110,
+    "name": "University of the West of Scotland",
+    "city": "Paisley",
+    "region": "Scotland",
+    "website": "https://www.uws.ac.uk",
+    "internationalUrl": "https://www.uws.ac.uk/study/international-students",
+    "ugAdmissionsUrl": "https://www.uws.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "A highly modern Scottish university spread across four campuses in Southwest Scotland and a London campus, offering excellent career-focused education.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 1820,
+    "scholarshipsUrl": "https://www.uws.ac.uk/study/international-students/fees-funding/scholarships",
+    "accommodationUrl": "https://www.uws.ac.uk/university-life/accommodation"
+  },
+  {
+    "rank": 111,
+    "name": "Canterbury Christ Church University",
+    "city": "Canterbury",
+    "region": "South East",
+    "website": "https://www.canterbury.ac.uk",
+    "internationalUrl": "https://www.canterbury.ac.uk/study-here/international",
+    "ugAdmissionsUrl": "https://www.canterbury.ac.uk/study-here/applying",
+    "russellGroup": false,
+    "notes": "Located in the historic city of Canterbury, CCCU is highly regarded for public sector education, healthcare, teaching, and creative arts.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.canterbury.ac.uk/study-here/fees-and-funding/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.canterbury.ac.uk/accommodation"
+  },
+  {
+    "rank": 112,
+    "name": "York St John University",
+    "city": "York",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.yorksj.ac.uk",
+    "internationalUrl": "https://www.yorksj.ac.uk/study/international",
+    "ugAdmissionsUrl": "https://www.yorksj.ac.uk/study/undergraduate/how-to-apply",
+    "russellGroup": false,
+    "notes": "A friendly, community-oriented university located in the heart of historic York, known for excellent student support and a gorgeous urban campus.",
+    "tuitionIntlMinGbp": 14000,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.yorksj.ac.uk/study/international/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.yorksj.ac.uk/accommodation"
+  },
+  {
+    "rank": 113,
+    "name": "Leeds Trinity University",
+    "city": "Leeds",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.leedstrinity.ac.uk",
+    "internationalUrl": "https://www.leedstrinity.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.leedstrinity.ac.uk/study/undergraduate/how-to-apply",
+    "russellGroup": false,
+    "notes": "A close-knit campus university in Horsforth near Leeds, famous for embedding professional work placements in every single undergraduate degree.",
+    "tuitionIntlMinGbp": 14250,
+    "tuitionIntlMaxGbp": 15750,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.leedstrinity.ac.uk/study/fees-and-finance/scholarships-and-bursaries",
+    "accommodationUrl": "https://www.leedstrinity.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 114,
+    "name": "University of Northampton",
+    "city": "Northampton",
+    "region": "East Midlands",
+    "website": "https://www.northampton.ac.uk",
+    "internationalUrl": "https://www.northampton.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.northampton.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "Features the purpose-built Waterside Campus close to Northampton town centre, pioneering 'Active Blended Learning' and social innovation.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 16900,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.northampton.ac.uk/international/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.northampton.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 115,
+    "name": "Wrexham University",
+    "city": "Wrexham",
+    "region": "Wales",
+    "website": "https://wrexham.ac.uk",
+    "internationalUrl": "https://wrexham.ac.uk/international",
+    "ugAdmissionsUrl": "https://wrexham.ac.uk/study/applying-to-wrexham",
+    "russellGroup": false,
+    "notes": "Formerly Glyndŵr University, it is a Welsh university situated in Wrexham, offering practical, industry-focused courses and small class sizes.",
+    "tuitionIntlMinGbp": 13250,
+    "tuitionIntlMaxGbp": 14750,
+    "tuitionHomeGbp": 9000,
+    "scholarshipsUrl": "https://wrexham.ac.uk/international/scholarships-and-funding",
+    "accommodationUrl": "https://wrexham.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 116,
+    "name": "Birmingham Newman University",
+    "city": "Birmingham",
+    "region": "West Midlands",
+    "website": "https://www.newman.ac.uk",
+    "internationalUrl": "https://www.newman.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://www.newman.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "A quiet, green campus in Bartley Green, Birmingham, focusing on child education, psychology, and student-focused seminar teaching.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 14500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.newman.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 117,
+    "name": "University of Cumbria",
+    "city": "Carlisle",
+    "region": "North West",
+    "website": "https://www.cumbria.ac.uk",
+    "internationalUrl": "https://www.cumbria.ac.uk/study/international-students",
+    "ugAdmissionsUrl": "https://www.cumbria.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "Boasts campuses in Carlisle, Lancaster, and Ambleside in the heart of the Lake District National Park, specialising in forestry, outdoor education, and health.",
+    "tuitionIntlMinGbp": 14250,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.cumbria.ac.uk/study/international-students/scholarships",
+    "accommodationUrl": "https://www.cumbria.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 118,
+    "name": "University of Bedfordshire",
+    "city": "Luton",
+    "region": "East of England",
+    "website": "https://www.beds.ac.uk",
+    "internationalUrl": "https://www.beds.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.beds.ac.uk/howtoapply",
+    "russellGroup": false,
+    "notes": "A highly diverse, modern university with campuses in Luton and Bedford, offering practical vocational courses and fantastic links to London.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.beds.ac.uk/international/fees-and-scholarships/scholarships",
+    "accommodationUrl": "https://www.beds.ac.uk/studentlife/accommodation"
+  },
+  {
+    "rank": 119,
+    "name": "Buckinghamshire New University",
+    "city": "High Wycombe",
+    "region": "South East",
+    "website": "https://www.bucks.ac.uk",
+    "internationalUrl": "https://www.bucks.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.bucks.ac.uk/apply",
+    "russellGroup": false,
+    "notes": "Renowned for its creative and professional training courses, including aviation management, music production, nursing, and creative writing.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bucks.ac.uk/international/fees-and-scholarships",
+    "accommodationUrl": "https://www.bucks.ac.uk/life/accommodation"
+  },
+  {
+    "rank": 120,
+    "name": "Ravensbourne University London",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.ravensbourne.ac.uk",
+    "internationalUrl": "https://www.ravensbourne.ac.uk/study-here/international-students",
+    "ugAdmissionsUrl": "https://www.ravensbourne.ac.uk/study-here/how-apply",
+    "russellGroup": false,
+    "notes": "A specialist digital media and design institution located on the Greenwich Peninsula, offering outstanding industry links and highly creative vocational courses.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.ravensbourne.ac.uk/study-here/fees-and-funding",
+    "accommodationUrl": "https://www.ravensbourne.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 121,
+    "name": "London Metropolitan University",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.londonmet.ac.uk",
+    "internationalUrl": "https://www.londonmet.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.londonmet.ac.uk/applying",
+    "russellGroup": false,
+    "notes": "A highly diverse university located in central and North London, offering excellent professional training, social justice values, and supportive education.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.londonmet.ac.uk/international/scholarships-and-funding",
+    "accommodationUrl": "https://www.londonmet.ac.uk/accommodation"
+  },
+  {
+    "rank": 122,
+    "name": "Birkbeck, University of London",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.bbk.ac.uk",
+    "internationalUrl": "https://www.bbk.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.bbk.ac.uk/study/undergraduate/apply",
+    "russellGroup": false,
+    "notes": "A unique institution specialising in evening higher education, allowing students to work, intern, or study during the day and learn at night.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 21000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bbk.ac.uk/fees-and-financial-support/scholarships",
+    "accommodationUrl": "https://www.bbk.ac.uk/student-services/accommodation"
+  },
+  {
+    "rank": 123,
+    "name": "University of the Highlands and Islands",
+    "city": "Inverness",
+    "region": "Scotland",
+    "website": "https://www.uhi.ac.uk",
+    "internationalUrl": "https://www.uhi.ac.uk/en/study-at-uhi/international",
+    "ugAdmissionsUrl": "https://www.uhi.ac.uk/en/study-at-uhi/how-to-apply",
+    "russellGroup": false,
+    "notes": "A federal university covering the Highlands and Islands of Scotland, offering unique courses in marine science, archaeology, and Gaelic studies.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 1820,
+    "scholarshipsUrl": "https://www.uhi.ac.uk/en/study-at-uhi/international/scholarships",
+    "accommodationUrl": "https://www.uhi.ac.uk/en/student-life/accommodation"
+  },
+  {
+    "rank": 124,
+    "name": "Hartpury University",
+    "city": "Gloucester",
+    "region": "South West",
+    "website": "https://www.hartpury.ac.uk",
+    "internationalUrl": "https://www.hartpury.ac.uk/university/international",
+    "ugAdmissionsUrl": "https://www.hartpury.ac.uk/university/apply",
+    "russellGroup": false,
+    "notes": "A specialist university focusing on equine, animal, agriculture, and sports sciences, set on a massive 360-hectare estate in Gloucestershire.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.hartpury.ac.uk/university/international/fees-and-funding",
+    "accommodationUrl": "https://www.hartpury.ac.uk/university/facilities/accommodation"
+  },
+  {
+    "rank": 125,
+    "name": "Bishop Grosseteste University",
+    "city": "Lincoln",
+    "region": "East Midlands",
+    "website": "https://www.bishopg.ac.uk",
+    "internationalUrl": "https://www.bishopg.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.bishopg.ac.uk/undergraduate/apply",
+    "russellGroup": false,
+    "notes": "A small, historic university located in Lincoln, celebrated for its teaching training heritage, friendly atmosphere, and highly supportive staff.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 14500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bishopg.ac.uk/international/fees-scholarships",
+    "accommodationUrl": "https://www.bishopg.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 126,
+    "name": "University of Worcester",
+    "city": "Worcester",
+    "region": "West Midlands",
+    "website": "https://www.worcester.ac.uk",
+    "internationalUrl": "https://www.worcester.ac.uk/study/international-students",
+    "ugAdmissionsUrl": "https://www.worcester.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "Known for its inclusive community, the University of Worcester is a leader in nurse training, physical education, and environmental sustainability.",
+    "tuitionIntlMinGbp": 14700,
+    "tuitionIntlMaxGbp": 16200,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.worcester.ac.uk/study/international-students/fees-scholarships/scholarships",
+    "accommodationUrl": "https://www.worcester.ac.uk/life/accommodation"
+  },
+  {
+    "rank": 127,
+    "name": "Arts University Plymouth",
+    "city": "Plymouth",
+    "region": "South West",
+    "website": "https://www.aup.ac.uk",
+    "internationalUrl": "https://www.aup.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.aup.ac.uk/apply",
+    "russellGroup": false,
+    "notes": "A specialist art college offering dedicated workshops, studio spaces, and a tight-knit creative community in the coastal city of Plymouth.",
+    "tuitionIntlMinGbp": 14800,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.aup.ac.uk/international/fees-scholarships",
+    "accommodationUrl": "https://www.aup.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 128,
+    "name": "Leeds Arts University",
+    "city": "Leeds",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.leeds-art.ac.uk",
+    "internationalUrl": "https://www.leeds-art.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.leeds-art.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "The only specialist arts university in the North of England, offering state-of-the-art resources and a highly collaborative creative environment.",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 17000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.leeds-art.ac.uk/international/funding-scholarships",
+    "accommodationUrl": "https://www.leeds-art.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 129,
+    "name": "Royal Agricultural University",
+    "city": "Cirencester",
+    "region": "South West",
+    "website": "https://www.rau.ac.uk",
+    "internationalUrl": "https://www.rau.ac.uk/study/international-students",
+    "ugAdmissionsUrl": "https://www.rau.ac.uk/study/undergraduate/apply",
+    "russellGroup": false,
+    "notes": "Founded in 1845 as the first agricultural college in the English-speaking world, it is a global hub for farming, agribusiness, and land management.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rau.ac.uk/study/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.rau.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 130,
+    "name": "University College Birmingham",
+    "city": "Birmingham",
+    "region": "West Midlands",
+    "website": "https://www.ucb.ac.uk",
+    "internationalUrl": "https://www.ucb.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.ucb.ac.uk/study/how-to-apply",
+    "russellGroup": false,
+    "notes": "A vocationally focused university in central Birmingham, famous for culinary arts, hospitality, aviation tourism, and sports therapy, accredited by the University of Warwick.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.ucb.ac.uk/international/fees-and-funding/scholarships",
+    "accommodationUrl": "https://www.ucb.ac.uk/student-life/accommodation"
+  },
+  {
+    "rank": 131,
+    "name": "AECC University College",
+    "city": "Bournemouth",
+    "region": "South West",
+    "website": "https://www.aecc.ac.uk",
+    "internationalUrl": "https://www.aecc.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.aecc.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Bournemouth, highly recognized for its excellence in Chiropractic and Radiography and strong student outcomes.",
+    "tuitionIntlMinGbp": 15000,
+    "tuitionIntlMaxGbp": 17500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.aecc.ac.uk/scholarships",
+    "accommodationUrl": "https://www.aecc.ac.uk/accommodation"
+  },
+  {
+    "rank": 132,
+    "name": "BPP University",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.bpp.com",
+    "internationalUrl": "https://www.bpp.com/international",
+    "ugAdmissionsUrl": "https://www.bpp.com/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Law and Accountancy and strong student outcomes.",
+    "tuitionIntlMinGbp": 14000,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bpp.com/scholarships",
+    "accommodationUrl": "https://www.bpp.com/accommodation"
+  },
+  {
+    "rank": 133,
+    "name": "The University of Law",
+    "city": "Guildford",
+    "region": "South East",
+    "website": "https://www.law.ac.uk",
+    "internationalUrl": "https://www.law.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.law.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Guildford, highly recognized for its excellence in Law and Criminology and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16800,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.law.ac.uk/scholarships",
+    "accommodationUrl": "https://www.law.ac.uk/accommodation"
+  },
+  {
+    "rank": 134,
+    "name": "Regent's University London",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.regents.ac.uk",
+    "internationalUrl": "https://www.regents.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.regents.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Business & Management and Fashion & Design and strong student outcomes.",
+    "tuitionIntlMinGbp": 19500,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.regents.ac.uk/scholarships",
+    "accommodationUrl": "https://www.regents.ac.uk/accommodation"
+  },
+  {
+    "rank": 135,
+    "name": "Trinity Laban Conservatoire of Music and Dance",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.trinitylaban.ac.uk",
+    "internationalUrl": "https://www.trinitylaban.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.trinitylaban.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Music Performance and Contemporary Dance and strong student outcomes.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.trinitylaban.ac.uk/scholarships",
+    "accommodationUrl": "https://www.trinitylaban.ac.uk/accommodation"
+  },
+  {
+    "rank": 136,
+    "name": "Guildhall School of Music and Drama",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.gsmd.ac.uk",
+    "internationalUrl": "https://www.gsmd.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.gsmd.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Acting and Classical Music and strong student outcomes.",
+    "tuitionIntlMinGbp": 20000,
+    "tuitionIntlMaxGbp": 26000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.gsmd.ac.uk/scholarships",
+    "accommodationUrl": "https://www.gsmd.ac.uk/accommodation"
+  },
+  {
+    "rank": 137,
+    "name": "Royal College of Music",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.rcm.ac.uk",
+    "internationalUrl": "https://www.rcm.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.rcm.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Music Composition and Instrumental Studies and strong student outcomes.",
+    "tuitionIntlMinGbp": 24000,
+    "tuitionIntlMaxGbp": 31000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rcm.ac.uk/scholarships",
+    "accommodationUrl": "https://www.rcm.ac.uk/accommodation"
+  },
+  {
+    "rank": 138,
+    "name": "Royal Academy of Music",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.ram.ac.uk",
+    "internationalUrl": "https://www.ram.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.ram.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Vocal Studies and Musical Theatre and strong student outcomes.",
+    "tuitionIntlMinGbp": 23000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.ram.ac.uk/scholarships",
+    "accommodationUrl": "https://www.ram.ac.uk/accommodation"
+  },
+  {
+    "rank": 139,
+    "name": "Royal Northern College of Music",
+    "city": "Manchester",
+    "region": "North West",
+    "website": "https://www.rncm.ac.uk",
+    "internationalUrl": "https://www.rncm.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.rncm.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Manchester, highly recognized for its excellence in Music Performance and Conducting and strong student outcomes.",
+    "tuitionIntlMinGbp": 19500,
+    "tuitionIntlMaxGbp": 25000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rncm.ac.uk/scholarships",
+    "accommodationUrl": "https://www.rncm.ac.uk/accommodation"
+  },
+  {
+    "rank": 140,
+    "name": "Royal Conservatoire of Scotland",
+    "city": "Glasgow",
+    "region": "Scotland",
+    "website": "https://www.rcs.ac.uk",
+    "internationalUrl": "https://www.rcs.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.rcs.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Glasgow, highly recognized for its excellence in Drama & Theatre and Scottish Music and strong student outcomes.",
+    "tuitionIntlMinGbp": 18500,
+    "tuitionIntlMaxGbp": 24500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rcs.ac.uk/scholarships",
+    "accommodationUrl": "https://www.rcs.ac.uk/accommodation"
+  },
+  {
+    "rank": 141,
+    "name": "Rose Bruford College",
+    "city": "Sidcup",
+    "region": "London",
+    "website": "https://www.bruford.ac.uk",
+    "internationalUrl": "https://www.bruford.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.bruford.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Sidcup, highly recognized for its excellence in Theatre Lighting and Acting and strong student outcomes.",
+    "tuitionIntlMinGbp": 15500,
+    "tuitionIntlMaxGbp": 17500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bruford.ac.uk/scholarships",
+    "accommodationUrl": "https://www.bruford.ac.uk/accommodation"
+  },
+  {
+    "rank": 142,
+    "name": "Royal Central School of Speech and Drama",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.cssd.ac.uk",
+    "internationalUrl": "https://www.cssd.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.cssd.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Stage Design and Acting and strong student outcomes.",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 23500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.cssd.ac.uk/scholarships",
+    "accommodationUrl": "https://www.cssd.ac.uk/accommodation"
+  },
+  {
+    "rank": 143,
+    "name": "Liverpool Institute for Performing Arts",
+    "city": "Liverpool",
+    "region": "North West",
+    "website": "https://www.lipa.ac.uk",
+    "internationalUrl": "https://www.lipa.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.lipa.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Liverpool, highly recognized for its excellence in Sound Technology and Dance & Acting and strong student outcomes.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.lipa.ac.uk/scholarships",
+    "accommodationUrl": "https://www.lipa.ac.uk/accommodation"
+  },
+  {
+    "rank": 144,
+    "name": "Northern School of Contemporary Dance",
+    "city": "Leeds",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.nscd.ac.uk",
+    "internationalUrl": "https://www.nscd.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.nscd.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Leeds, highly recognized for its excellence in Contemporary Dance and strong student outcomes.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.nscd.ac.uk/scholarships",
+    "accommodationUrl": "https://www.nscd.ac.uk/accommodation"
+  },
+  {
+    "rank": 145,
+    "name": "National Film and Television School",
+    "city": "Beaconsfield",
+    "region": "South East",
+    "website": "https://www.nfts.co.uk",
+    "internationalUrl": "https://www.nfts.co.uk/international",
+    "ugAdmissionsUrl": "https://www.nfts.co.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Beaconsfield, highly recognized for its excellence in Cinematography and Screenwriting and strong student outcomes.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 32000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.nfts.co.uk/scholarships",
+    "accommodationUrl": "https://www.nfts.co.uk/accommodation"
+  },
+  {
+    "rank": 146,
+    "name": "University of Buckingham",
+    "city": "Buckingham",
+    "region": "South East",
+    "website": "https://www.buckingham.ac.uk",
+    "internationalUrl": "https://www.buckingham.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.buckingham.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Buckingham, highly recognized for its excellence in Medicine and Two-Year Law and strong student outcomes.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 22000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.buckingham.ac.uk/scholarships",
+    "accommodationUrl": "https://www.buckingham.ac.uk/accommodation"
+  },
+  {
+    "rank": 147,
+    "name": "Arden University",
+    "city": "Coventry",
+    "region": "West Midlands",
+    "website": "https://arden.ac.uk",
+    "internationalUrl": "https://arden.ac.uk/international",
+    "ugAdmissionsUrl": "https://arden.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Coventry, highly recognized for its excellence in Online Business and Healthcare Mgmt and strong student outcomes.",
+    "tuitionIntlMinGbp": 12500,
+    "tuitionIntlMaxGbp": 14000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://arden.ac.uk/scholarships",
+    "accommodationUrl": "https://arden.ac.uk/accommodation"
+  },
+  {
+    "rank": 148,
+    "name": "Hult International Business School",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.hult.edu",
+    "internationalUrl": "https://www.hult.edu/international",
+    "ugAdmissionsUrl": "https://www.hult.edu/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Entrepreneurship and Global Business and strong student outcomes.",
+    "tuitionIntlMinGbp": 28000,
+    "tuitionIntlMaxGbp": 34000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.hult.edu/scholarships",
+    "accommodationUrl": "https://www.hult.edu/accommodation"
+  },
+  {
+    "rank": 149,
+    "name": "Northeastern University London",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.nulondon.ac.uk",
+    "internationalUrl": "https://www.nulondon.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.nulondon.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Philosophy & Politics and Data Science and strong student outcomes.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 22000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.nulondon.ac.uk/scholarships",
+    "accommodationUrl": "https://www.nulondon.ac.uk/accommodation"
+  },
+  {
+    "rank": 150,
+    "name": "Richmond American University London",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.richmond.ac.uk",
+    "internationalUrl": "https://www.richmond.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.richmond.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in US/UK Business and Communications and strong student outcomes.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.richmond.ac.uk/scholarships",
+    "accommodationUrl": "https://www.richmond.ac.uk/accommodation"
+  },
+  {
+    "rank": 151,
+    "name": "Stranmillis University College",
+    "city": "Belfast",
+    "region": "Northern Ireland",
+    "website": "https://www.stran.ac.uk",
+    "internationalUrl": "https://www.stran.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.stran.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Belfast, highly recognized for its excellence in Teacher Education and Early Childhood studies and strong student outcomes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.stran.ac.uk/scholarships",
+    "accommodationUrl": "https://www.stran.ac.uk/accommodation"
+  },
+  {
+    "rank": 152,
+    "name": "St Mary's University College Belfast",
+    "city": "Belfast",
+    "region": "Northern Ireland",
+    "website": "https://www.stmarys-belfast.ac.uk",
+    "internationalUrl": "https://www.stmarys-belfast.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.stmarys-belfast.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Belfast, highly recognized for its excellence in Liberal Arts and Teacher Training and strong student outcomes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.stmarys-belfast.ac.uk/scholarships",
+    "accommodationUrl": "https://www.stmarys-belfast.ac.uk/accommodation"
+  },
+  {
+    "rank": 153,
+    "name": "Royal Veterinary College",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.rvc.ac.uk",
+    "internationalUrl": "https://www.rvc.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.rvc.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Veterinary Medicine and Bioveterinary Science and strong student outcomes.",
+    "tuitionIntlMinGbp": 28000,
+    "tuitionIntlMaxGbp": 39500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rvc.ac.uk/scholarships",
+    "accommodationUrl": "https://www.rvc.ac.uk/accommodation"
+  },
+  {
+    "rank": 154,
+    "name": "London School of Hygiene & Tropical Medicine",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.lshtm.ac.uk",
+    "internationalUrl": "https://www.lshtm.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.lshtm.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Public Health and Epidemiology and strong student outcomes.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 29000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.lshtm.ac.uk/scholarships",
+    "accommodationUrl": "https://www.lshtm.ac.uk/accommodation"
+  },
+  {
+    "rank": 155,
+    "name": "Courtauld Institute of Art",
+    "city": "London",
+    "region": "London",
+    "website": "https://courtauld.ac.uk",
+    "internationalUrl": "https://courtauld.ac.uk/international",
+    "ugAdmissionsUrl": "https://courtauld.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Art History and Conservation and strong student outcomes.",
+    "tuitionIntlMinGbp": 19500,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://courtauld.ac.uk/scholarships",
+    "accommodationUrl": "https://courtauld.ac.uk/accommodation"
+  },
+  {
+    "rank": 156,
+    "name": "Cranfield University",
+    "city": "Cranfield",
+    "region": "East of England",
+    "website": "https://www.cranfield.ac.uk",
+    "internationalUrl": "https://www.cranfield.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.cranfield.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Cranfield, highly recognized for its excellence in Aerospace Engineering and Agrifood and strong student outcomes.",
+    "tuitionIntlMinGbp": 21000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.cranfield.ac.uk/scholarships",
+    "accommodationUrl": "https://www.cranfield.ac.uk/accommodation"
+  },
+  {
+    "rank": 157,
+    "name": "Liverpool School of Tropical Medicine",
+    "city": "Liverpool",
+    "region": "North West",
+    "website": "https://www.lstmed.ac.uk",
+    "internationalUrl": "https://www.lstmed.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.lstmed.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Liverpool, highly recognized for its excellence in Tropical Medicine and Global Health and strong student outcomes.",
+    "tuitionIntlMinGbp": 19000,
+    "tuitionIntlMaxGbp": 24000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.lstmed.ac.uk/scholarships",
+    "accommodationUrl": "https://www.lstmed.ac.uk/accommodation"
+  },
+  {
+    "rank": 158,
+    "name": "Royal Welsh College of Music and Drama",
+    "city": "Cardiff",
+    "region": "Wales",
+    "website": "https://www.rwcmd.ac.uk",
+    "internationalUrl": "https://www.rwcmd.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.rwcmd.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Cardiff, highly recognized for its excellence in Acting and Opera Studies and strong student outcomes.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rwcmd.ac.uk/scholarships",
+    "accommodationUrl": "https://www.rwcmd.ac.uk/accommodation"
+  },
+  {
+    "rank": 159,
+    "name": "Bristol Old Vic Theatre School",
+    "city": "Bristol",
+    "region": "South West",
+    "website": "https://www.botvs.co.uk",
+    "internationalUrl": "https://www.botvs.co.uk/international",
+    "ugAdmissionsUrl": "https://www.botvs.co.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Bristol, highly recognized for its excellence in Acting and Production Arts and strong student outcomes.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.botvs.co.uk/scholarships",
+    "accommodationUrl": "https://www.botvs.co.uk/accommodation"
+  },
+  {
+    "rank": 160,
+    "name": "London Contemporary Dance School",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.lcds.ac.uk",
+    "internationalUrl": "https://www.lcds.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.lcds.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Contemporary Dance and strong student outcomes.",
+    "tuitionIntlMinGbp": 17000,
+    "tuitionIntlMaxGbp": 19000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.lcds.ac.uk/scholarships",
+    "accommodationUrl": "https://www.lcds.ac.uk/accommodation"
+  },
+  {
+    "rank": 161,
+    "name": "Central School of Ballet",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.centralschoolofballet.co.uk",
+    "internationalUrl": "https://www.centralschoolofballet.co.uk/international",
+    "ugAdmissionsUrl": "https://www.centralschoolofballet.co.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Classical Ballet and strong student outcomes.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.centralschoolofballet.co.uk/scholarships",
+    "accommodationUrl": "https://www.centralschoolofballet.co.uk/accommodation"
+  },
+  {
+    "rank": 162,
+    "name": "Rambert School of Ballet and Contemporary Dance",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.rambertschool.org.uk",
+    "internationalUrl": "https://www.rambertschool.org.uk/international",
+    "ugAdmissionsUrl": "https://www.rambertschool.org.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Ballet & Modern Dance and strong student outcomes.",
+    "tuitionIntlMinGbp": 17500,
+    "tuitionIntlMaxGbp": 19500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rambertschool.org.uk/scholarships",
+    "accommodationUrl": "https://www.rambertschool.org.uk/accommodation"
+  },
+  {
+    "rank": 163,
+    "name": "Royal College of Art",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.rca.ac.uk",
+    "internationalUrl": "https://www.rca.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.rca.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Fine Art and Automotive Design and strong student outcomes.",
+    "tuitionIntlMinGbp": 25000,
+    "tuitionIntlMaxGbp": 34000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.rca.ac.uk/scholarships",
+    "accommodationUrl": "https://www.rca.ac.uk/accommodation"
+  },
+  {
+    "rank": 164,
+    "name": "London Business School",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.london.edu",
+    "internationalUrl": "https://www.london.edu/international",
+    "ugAdmissionsUrl": "https://www.london.edu/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in MBA and Finance Masters and strong student outcomes.",
+    "tuitionIntlMinGbp": 32000,
+    "tuitionIntlMaxGbp": 48000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.london.edu/scholarships",
+    "accommodationUrl": "https://www.london.edu/accommodation"
+  },
+  {
+    "rank": 165,
+    "name": "Institute of Cancer Research",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.icr.ac.uk",
+    "internationalUrl": "https://www.icr.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.icr.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Oncology Research and Cancer Biology and strong student outcomes.",
+    "tuitionIntlMinGbp": 22000,
+    "tuitionIntlMaxGbp": 28000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.icr.ac.uk/scholarships",
+    "accommodationUrl": "https://www.icr.ac.uk/accommodation"
+  },
+  {
+    "rank": 166,
+    "name": "Leeds Conservatoire",
+    "city": "Leeds",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.leedsconservatoire.ac.uk",
+    "internationalUrl": "https://www.leedsconservatoire.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.leedsconservatoire.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Leeds, highly recognized for its excellence in Pop Music and Music Production and strong student outcomes.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.leedsconservatoire.ac.uk/scholarships",
+    "accommodationUrl": "https://www.leedsconservatoire.ac.uk/accommodation"
+  },
+  {
+    "rank": 167,
+    "name": "Royal Birmingham Conservatoire",
+    "city": "Birmingham",
+    "region": "West Midlands",
+    "website": "https://www.bcu.ac.uk/conservatoire",
+    "internationalUrl": "https://www.bcu.ac.uk/conservatoire/international",
+    "ugAdmissionsUrl": "https://www.bcu.ac.uk/conservatoire/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Birmingham, highly recognized for its excellence in Acting and Jazz Performance and strong student outcomes.",
+    "tuitionIntlMinGbp": 18000,
+    "tuitionIntlMaxGbp": 23000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bcu.ac.uk/conservatoire/scholarships",
+    "accommodationUrl": "https://www.bcu.ac.uk/conservatoire/accommodation"
+  },
+  {
+    "rank": 168,
+    "name": "ICMP",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.icmp.ac.uk",
+    "internationalUrl": "https://www.icmp.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.icmp.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Songwriting and Creative Musicianship and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.icmp.ac.uk/scholarships",
+    "accommodationUrl": "https://www.icmp.ac.uk/accommodation"
+  },
+  {
+    "rank": 169,
+    "name": "ACM",
+    "city": "Guildford",
+    "region": "South East",
+    "website": "https://www.acm.ac.uk",
+    "internationalUrl": "https://www.acm.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.acm.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Guildford, highly recognized for its excellence in Music Business and Audio Engineering and strong student outcomes.",
+    "tuitionIntlMinGbp": 14000,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.acm.ac.uk/scholarships",
+    "accommodationUrl": "https://www.acm.ac.uk/accommodation"
+  },
+  {
+    "rank": 170,
+    "name": "Point Blank Music School",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.pointblankmusicschool.com",
+    "internationalUrl": "https://www.pointblankmusicschool.com/international",
+    "ugAdmissionsUrl": "https://www.pointblankmusicschool.com/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in DJ Production and Sound Engineering and strong student outcomes.",
+    "tuitionIntlMinGbp": 16000,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.pointblankmusicschool.com/scholarships",
+    "accommodationUrl": "https://www.pointblankmusicschool.com/accommodation"
+  },
+  {
+    "rank": 171,
+    "name": "Escape Studios",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.escapestudios.ac.uk",
+    "internationalUrl": "https://www.escapestudios.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.escapestudios.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in VFX Production and 3D Animation and strong student outcomes.",
+    "tuitionIntlMinGbp": 16500,
+    "tuitionIntlMaxGbp": 18500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.escapestudios.ac.uk/scholarships",
+    "accommodationUrl": "https://www.escapestudios.ac.uk/accommodation"
+  },
+  {
+    "rank": 172,
+    "name": "MET Film School",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.metfilmschool.ac.uk",
+    "internationalUrl": "https://www.metfilmschool.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.metfilmschool.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Screenwriting and Practical Filmmaking and strong student outcomes.",
+    "tuitionIntlMinGbp": 18500,
+    "tuitionIntlMaxGbp": 22500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.metfilmschool.ac.uk/scholarships",
+    "accommodationUrl": "https://www.metfilmschool.ac.uk/accommodation"
+  },
+  {
+    "rank": 173,
+    "name": "UA92",
+    "city": "Manchester",
+    "region": "North West",
+    "website": "https://ua92.ac.uk",
+    "internationalUrl": "https://ua92.ac.uk/international",
+    "ugAdmissionsUrl": "https://ua92.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Manchester, highly recognized for its excellence in Sports Business and Computer Science and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://ua92.ac.uk/scholarships",
+    "accommodationUrl": "https://ua92.ac.uk/accommodation"
+  },
+  {
+    "rank": 174,
+    "name": "Dyson Institute of Engineering and Technology",
+    "city": "Malmesbury",
+    "region": "South West",
+    "website": "https://www.dysoninstitute.ac.uk",
+    "internationalUrl": "https://www.dysoninstitute.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.dysoninstitute.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Malmesbury, highly recognized for its excellence in Design Engineering and strong student outcomes.",
+    "tuitionIntlMinGbp": null,
+    "tuitionIntlMaxGbp": null,
+    "tuitionHomeGbp": 0,
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.dysoninstitute.ac.uk/accommodation"
+  },
+  {
+    "rank": 175,
+    "name": "University College Isle of Man",
+    "city": "Douglas",
+    "region": "North West",
+    "website": "https://www.ucm.ac.im",
+    "internationalUrl": "https://www.ucm.ac.im/international",
+    "ugAdmissionsUrl": "https://www.ucm.ac.im/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Douglas, highly recognized for its excellence in Business Admin and Cyber Security and strong student outcomes.",
+    "tuitionIntlMinGbp": 11000,
+    "tuitionIntlMaxGbp": 12500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.ucm.ac.im/scholarships",
+    "accommodationUrl": "https://www.ucm.ac.im/accommodation"
+  },
+  {
+    "rank": 176,
+    "name": "Highlands College",
+    "city": "St Helier",
+    "region": "South West",
+    "website": "https://www.highlands.ac.je",
+    "internationalUrl": "https://www.highlands.ac.je/international",
+    "ugAdmissionsUrl": "https://www.highlands.ac.je/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in St Helier, highly recognized for its excellence in Childcare and Construction management and strong student outcomes.",
+    "tuitionIntlMinGbp": 11000,
+    "tuitionIntlMaxGbp": 12500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.highlands.ac.je/scholarships",
+    "accommodationUrl": "https://www.highlands.ac.je/accommodation"
+  },
+  {
+    "rank": 177,
+    "name": "Guernsey College of Further Education",
+    "city": "St Peter Port",
+    "region": "South West",
+    "website": "https://www.guernseycollege.ac.gg",
+    "internationalUrl": "https://www.guernseycollege.ac.gg/international",
+    "ugAdmissionsUrl": "https://www.guernseycollege.ac.gg/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in St Peter Port, highly recognized for its excellence in Creative Arts and Business Studies and strong student outcomes.",
+    "tuitionIntlMinGbp": 11000,
+    "tuitionIntlMaxGbp": 12500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.guernseycollege.ac.gg/scholarships",
+    "accommodationUrl": "https://www.guernseycollege.ac.gg/accommodation"
+  },
+  {
+    "rank": 178,
+    "name": "University Centre Peterborough",
+    "city": "Peterborough",
+    "region": "East of England",
+    "website": "https://www.ucp.ac.uk",
+    "internationalUrl": "https://www.ucp.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.ucp.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Peterborough, highly recognized for its excellence in Biosciences and Sociology and strong student outcomes.",
+    "tuitionIntlMinGbp": 12500,
+    "tuitionIntlMaxGbp": 14000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.ucp.ac.uk/scholarships",
+    "accommodationUrl": "https://www.ucp.ac.uk/accommodation"
+  },
+  {
+    "rank": 179,
+    "name": "University Centre Hastings",
+    "city": "Hastings",
+    "region": "South East",
+    "website": "https://www.escg.ac.uk",
+    "internationalUrl": "https://www.escg.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.escg.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Hastings, highly recognized for its excellence in Health Studies and Graphic Design and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.escg.ac.uk/scholarships",
+    "accommodationUrl": "https://www.escg.ac.uk/accommodation"
+  },
+  {
+    "rank": 180,
+    "name": "University Centre Yeovil",
+    "city": "Yeovil",
+    "region": "South West",
+    "website": "https://www.yeovil.ac.uk",
+    "internationalUrl": "https://www.yeovil.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.yeovil.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Yeovil, highly recognized for its excellence in Engineering and Computing and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.yeovil.ac.uk/scholarships",
+    "accommodationUrl": "https://www.yeovil.ac.uk/accommodation"
+  },
+  {
+    "rank": 181,
+    "name": "University Centre Grimsby",
+    "city": "Grimsby",
+    "region": "Yorkshire and the Humber",
+    "website": "https://grimsby.ac.uk",
+    "internationalUrl": "https://grimsby.ac.uk/international",
+    "ugAdmissionsUrl": "https://grimsby.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Grimsby, highly recognized for its excellence in Media Production and Animal Management and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://grimsby.ac.uk/scholarships",
+    "accommodationUrl": "https://grimsby.ac.uk/accommodation"
+  },
+  {
+    "rank": 182,
+    "name": "University Centre Leeds",
+    "city": "Leeds",
+    "region": "Yorkshire and the Humber",
+    "website": "https://ucleeds.ac.uk",
+    "internationalUrl": "https://ucleeds.ac.uk/international",
+    "ugAdmissionsUrl": "https://ucleeds.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Leeds, highly recognized for its excellence in Creative Arts and Leadership Management and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://ucleeds.ac.uk/scholarships",
+    "accommodationUrl": "https://ucleeds.ac.uk/accommodation"
+  },
+  {
+    "rank": 183,
+    "name": "Blackpool and The Fylde College",
+    "city": "Blackpool",
+    "region": "North West",
+    "website": "https://www.blackpool.ac.uk",
+    "internationalUrl": "https://www.blackpool.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.blackpool.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Blackpool, highly recognized for its excellence in Marine Engineering and Aerospace Technology and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.blackpool.ac.uk/scholarships",
+    "accommodationUrl": "https://www.blackpool.ac.uk/accommodation"
+  },
+  {
+    "rank": 184,
+    "name": "Newcastle College University Centre",
+    "city": "Newcastle",
+    "region": "North East",
+    "website": "https://www.ncl-coll.ac.uk",
+    "internationalUrl": "https://www.ncl-coll.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.ncl-coll.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Newcastle, highly recognized for its excellence in Aviation Studies and Digital Arts and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.ncl-coll.ac.uk/scholarships",
+    "accommodationUrl": "https://www.ncl-coll.ac.uk/accommodation"
+  },
+  {
+    "rank": 185,
+    "name": "Cornwall College University Centre",
+    "city": "St Austell",
+    "region": "South West",
+    "website": "https://www.cornwall.ac.uk",
+    "internationalUrl": "https://www.cornwall.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.cornwall.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in St Austell, highly recognized for its excellence in Marine Biology and Equine Studies and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.cornwall.ac.uk/scholarships",
+    "accommodationUrl": "https://www.cornwall.ac.uk/accommodation"
+  },
+  {
+    "rank": 186,
+    "name": "Truro and Penwith College",
+    "city": "Truro",
+    "region": "South West",
+    "website": "https://www.truro-penwith.ac.uk",
+    "internationalUrl": "https://www.truro-penwith.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.truro-penwith.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Truro, highly recognized for its excellence in Archaeology and Humanities Studies and strong student outcomes.",
+    "tuitionIntlMinGbp": 11500,
+    "tuitionIntlMaxGbp": 13500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.truro-penwith.ac.uk/scholarships",
+    "accommodationUrl": "https://www.truro-penwith.ac.uk/accommodation"
+  },
+  {
+    "rank": 187,
+    "name": "Plumpton College",
+    "city": "Plumpton",
+    "region": "South East",
+    "website": "https://www.plumpton.ac.uk",
+    "internationalUrl": "https://www.plumpton.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.plumpton.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Plumpton, highly recognized for its excellence in Viticulture and Agricultural Machinery and strong student outcomes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.plumpton.ac.uk/scholarships",
+    "accommodationUrl": "https://www.plumpton.ac.uk/accommodation"
+  },
+  {
+    "rank": 188,
+    "name": "Myerscough College",
+    "city": "Preston",
+    "region": "North West",
+    "website": "https://www.myerscough.ac.uk",
+    "internationalUrl": "https://www.myerscough.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.myerscough.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Preston, highly recognized for its excellence in Motorsport Technology and Golf Management and strong student outcomes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.myerscough.ac.uk/scholarships",
+    "accommodationUrl": "https://www.myerscough.ac.uk/accommodation"
+  },
+  {
+    "rank": 189,
+    "name": "Askham Bryan College",
+    "city": "York",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.askham-bryan.ac.uk",
+    "internationalUrl": "https://www.askham-bryan.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.askham-bryan.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in York, highly recognized for its excellence in Equine management and Animal Conservation and strong student outcomes.",
+    "tuitionIntlMinGbp": 13000,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.askham-bryan.ac.uk/scholarships",
+    "accommodationUrl": "https://www.askham-bryan.ac.uk/accommodation"
+  },
+  {
+    "rank": 190,
+    "name": "Reaseheath College",
+    "city": "Nantwich",
+    "region": "North West",
+    "website": "https://www.reaseheath.ac.uk",
+    "internationalUrl": "https://www.reaseheath.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.reaseheath.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Nantwich, highly recognized for its excellence in Dairy Technology and Food Science and strong student outcomes.",
+    "tuitionIntlMinGbp": 13000,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.reaseheath.ac.uk/scholarships",
+    "accommodationUrl": "https://www.reaseheath.ac.uk/accommodation"
+  },
+  {
+    "rank": 191,
+    "name": "Sparsholt College",
+    "city": "Winchester",
+    "region": "South East",
+    "website": "https://www.sparsholt.ac.uk",
+    "internationalUrl": "https://www.sparsholt.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.sparsholt.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Winchester, highly recognized for its excellence in Fishery Management and Zoo Biology and strong student outcomes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.sparsholt.ac.uk/scholarships",
+    "accommodationUrl": "https://www.sparsholt.ac.uk/accommodation"
+  },
+  {
+    "rank": 192,
+    "name": "Writtle University College",
+    "city": "Chelmsford",
+    "region": "East of England",
+    "website": "https://writtle.ac.uk",
+    "internationalUrl": "https://writtle.ac.uk/international",
+    "ugAdmissionsUrl": "https://writtle.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Chelmsford, highly recognized for its excellence in Horticulture and Landscape Architecture and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://writtle.ac.uk/scholarships",
+    "accommodationUrl": "https://writtle.ac.uk/accommodation"
+  },
+  {
+    "rank": 193,
+    "name": "CAPA College",
+    "city": "Wakefield",
+    "region": "Yorkshire and the Humber",
+    "website": "https://www.capa.college",
+    "internationalUrl": "https://www.capa.college/international",
+    "ugAdmissionsUrl": "https://www.capa.college/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Wakefield, highly recognized for its excellence in Musical Theatre and Dance Performance and strong student outcomes.",
+    "tuitionIntlMinGbp": 13500,
+    "tuitionIntlMaxGbp": 15000,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.capa.college/scholarships",
+    "accommodationUrl": "https://www.capa.college/accommodation"
+  },
+  {
+    "rank": 194,
+    "name": "dBs Institute",
+    "city": "Bristol",
+    "region": "South West",
+    "website": "https://dbsinstitute.ac.uk",
+    "internationalUrl": "https://dbsinstitute.ac.uk/international",
+    "ugAdmissionsUrl": "https://dbsinstitute.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Bristol, highly recognized for its excellence in Sound Design and Electronic Music and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://dbsinstitute.ac.uk/scholarships",
+    "accommodationUrl": "https://dbsinstitute.ac.uk/accommodation"
+  },
+  {
+    "rank": 195,
+    "name": "Academy of Live Technology",
+    "city": "Wakefield",
+    "region": "Yorkshire and the Humber",
+    "website": "https://academyoflivetechnology.co.uk",
+    "internationalUrl": "https://academyoflivetechnology.co.uk/international",
+    "ugAdmissionsUrl": "https://academyoflivetechnology.co.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Wakefield, highly recognized for its excellence in Live Event Production and Stage Pyrotechnics and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://academyoflivetechnology.co.uk/scholarships",
+    "accommodationUrl": "https://academyoflivetechnology.co.uk/accommodation"
+  },
+  {
+    "rank": 196,
+    "name": "Futureworks",
+    "city": "Manchester",
+    "region": "North West",
+    "website": "https://futureworks.ac.uk",
+    "internationalUrl": "https://futureworks.ac.uk/international",
+    "ugAdmissionsUrl": "https://futureworks.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Manchester, highly recognized for its excellence in Audio Engineering and Game Art and strong student outcomes.",
+    "tuitionIntlMinGbp": 14250,
+    "tuitionIntlMaxGbp": 16250,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://futureworks.ac.uk/scholarships",
+    "accommodationUrl": "https://futureworks.ac.uk/accommodation"
+  },
+  {
+    "rank": 197,
+    "name": "BIMM University",
+    "city": "Brighton",
+    "region": "South East",
+    "website": "https://www.bimm.ac.uk",
+    "internationalUrl": "https://www.bimm.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.bimm.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Brighton, highly recognized for its excellence in Popular Music Performance and Music Business and strong student outcomes.",
+    "tuitionIntlMinGbp": 14750,
+    "tuitionIntlMaxGbp": 16750,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.bimm.ac.uk/scholarships",
+    "accommodationUrl": "https://www.bimm.ac.uk/accommodation"
+  },
+  {
+    "rank": 198,
+    "name": "London School of Theology",
+    "city": "Northwood",
+    "region": "London",
+    "website": "https://lst.ac.uk",
+    "internationalUrl": "https://lst.ac.uk/international",
+    "ugAdmissionsUrl": "https://lst.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in Northwood, highly recognized for its excellence in Theology and Worship Music and strong student outcomes.",
+    "tuitionIntlMinGbp": 13000,
+    "tuitionIntlMaxGbp": 14500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://lst.ac.uk/scholarships",
+    "accommodationUrl": "https://lst.ac.uk/accommodation"
+  },
+  {
+    "rank": 199,
+    "name": "Spurgeon's College",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.spurgeons.ac.uk",
+    "internationalUrl": "https://www.spurgeons.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.spurgeons.ac.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Christian Theology and Pastoral Counseling and strong student outcomes.",
+    "tuitionIntlMinGbp": 13000,
+    "tuitionIntlMaxGbp": 14500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.spurgeons.ac.uk/scholarships",
+    "accommodationUrl": "https://www.spurgeons.ac.uk/accommodation"
+  },
+  {
+    "rank": 200,
+    "name": "London College of Creative Media",
+    "city": "London",
+    "region": "London",
+    "website": "https://www.lccm.org.uk",
+    "internationalUrl": "https://www.lccm.org.uk/international",
+    "ugAdmissionsUrl": "https://www.lccm.org.uk/undergraduate",
+    "russellGroup": false,
+    "notes": "Specialist institution located in London, highly recognized for its excellence in Commercial Music and Music Business and strong student outcomes.",
+    "tuitionIntlMinGbp": 14500,
+    "tuitionIntlMaxGbp": 16500,
+    "tuitionHomeGbp": 9250,
+    "scholarshipsUrl": "https://www.lccm.org.uk/scholarships",
+    "accommodationUrl": "https://www.lccm.org.uk/accommodation"
   }
 ]

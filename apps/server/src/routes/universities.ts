@@ -38,6 +38,11 @@ function toUniversity(row: typeof universities.$inferSelect): University {
     ugAdmissionsUrl: row.ugAdmissionsUrl,
     russellGroup: row.russellGroup,
     notes: row.notes,
+    tuitionIntlMinGbp: row.tuitionIntlMinGbp,
+    tuitionIntlMaxGbp: row.tuitionIntlMaxGbp,
+    tuitionHomeGbp: row.tuitionHomeGbp,
+    scholarshipsUrl: row.scholarshipsUrl,
+    accommodationUrl: row.accommodationUrl,
     lastUpdated: row.lastUpdated.toISOString(),
   }
 }
@@ -75,6 +80,11 @@ universityRoutes.get('/', validate('query', listQuerySchema), async (c) => {
       ugAdmissionsUrl: universities.ugAdmissionsUrl,
       russellGroup: universities.russellGroup,
       notes: universities.notes,
+      tuitionIntlMinGbp: universities.tuitionIntlMinGbp,
+      tuitionIntlMaxGbp: universities.tuitionIntlMaxGbp,
+      tuitionHomeGbp: universities.tuitionHomeGbp,
+      scholarshipsUrl: universities.scholarshipsUrl,
+      accommodationUrl: universities.accommodationUrl,
       lastUpdated: universities.lastUpdated,
     })
     .from(universities)

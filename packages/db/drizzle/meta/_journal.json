@@ -15,6 +15,13 @@
       "when": 1784300172762,
       "tag": "0001_brown_bromley",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784303429025,
+      "tag": "0002_green_jazinda",
+      "breakpoints": true
     }
   ]
 }

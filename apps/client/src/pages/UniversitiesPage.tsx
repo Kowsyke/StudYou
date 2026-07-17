@@ -1,4 +1,4 @@
-import { UK_REGIONS, type University } from '@studyou/types'
+import type { University } from '@studyou/types'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
 import {
   ArrowUpRight,
@@ -15,6 +15,7 @@ import {
 import { useMemo, useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
+import { UkRegionMap } from '../components/UkRegionMap'
 import { Button } from '../components/ui/button'
 import { Input, Select } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
@@ -31,12 +32,25 @@ const defaultFilters: UniversityFilters = {
 
 type Mode = 'browse' | 'swipe'
 
+function formatK(gbp: number): string {
+  return `£${(gbp / 1000).toLocaleString('en-GB', { maximumFractionDigits: 1 })}k`
+}
+
 export function UniversitiesPage() {
   const [filters, setFilters] = useState<UniversityFilters>(defaultFilters)
   const [mode, setMode] = useState<Mode>('browse')
   const [shortlist, setShortlist] = useState<University[]>([])
   const [skipped, setSkipped] = useState<string[]>([])
   const { data: universities, isPending, error, refetch, isRefetching } = useUniversities(filters)
+  const { data: allUniversities } = useUniversities(defaultFilters)
+
+  const regionCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const u of allUniversities ?? []) {
+      counts[u.region] = (counts[u.region] ?? 0) + 1
+    }
+    return counts
+  }, [allUniversities])
 
   const toggleRegion = (region: string) => {
     setFilters((f) => ({
@@ -78,94 +92,90 @@ export function UniversitiesPage() {
         </p>
       </header>
 
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="relative flex-1 min-w-52 max-w-72">
-          <Search
-            size={14}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
-          />
-          <Input
-            className="pl-8"
-            placeholder="Search universities or cities..."
-            value={filters.search}
-            onChange={(e) => setFilters({ ...filters, search: e.target.value })}
-          />
+      <div className="flex flex-col md:flex-row gap-8 mb-7">
+        <div className="shrink-0">
+          <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary mb-2.5">
+            Pick your regions
+          </p>
+          <UkRegionMap selected={filters.regions} counts={regionCounts} onToggle={toggleRegion} />
+          {filters.regions.length > 0 ? (
+            <button
+              onClick={() => setFilters({ ...filters, regions: [] })}
+              className="mt-2.5 text-xs font-medium text-accent hover:underline rounded-xs"
+            >
+              Clear {filters.regions.length} selected
+            </button>
+          ) : (
+            <p className="mt-2.5 text-caption text-ink-tertiary">
+              No regions selected, showing the whole UK.
+            </p>
+          )}
         </div>
 
-        <button
-          onClick={() => setFilters({ ...filters, russellGroup: !filters.russellGroup })}
-          aria-pressed={filters.russellGroup}
-          className={cn(
-            'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms] inline-flex items-center gap-1.5',
-            filters.russellGroup
-              ? 'bg-accent-solid border-transparent text-white shadow-sm [background-image:var(--accent-gradient)]'
-              : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
-          )}
-        >
-          <GraduationCap size={13} />
-          Russell Group
-        </button>
+        <div className="flex-1 min-w-0 flex flex-col gap-3">
+          <div className="relative max-w-80">
+            <Search
+              size={14}
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
+            />
+            <Input
+              className="pl-8"
+              placeholder="Search universities or cities..."
+              value={filters.search}
+              onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+            />
+          </div>
 
-        <Select
-          className="w-36 h-8 text-xs"
-          value={filters.sort}
-          onChange={(e) => setFilters({ ...filters, sort: e.target.value as 'rank' | 'name' })}
-          aria-label="Sort universities by"
-        >
-          <option value="rank">Sort by rank</option>
-          <option value="name">Sort by name</option>
-        </Select>
-
-        <fieldset
-          className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0 ml-auto"
-          aria-label="View mode"
-        >
-          <ModeButton
-            active={mode === 'browse'}
-            onClick={() => setMode('browse')}
-            icon={LayoutGrid}
-            label="Browse"
-          />
-          <ModeButton
-            active={mode === 'swipe'}
-            onClick={() => setMode('swipe')}
-            icon={RotateCcw}
-            label="Swipe"
-          />
-        </fieldset>
-      </div>
-
-      <fieldset
-        className="flex flex-wrap gap-1.5 mb-6 border-0"
-        aria-label="Filter by UK region, multiple allowed"
-      >
-        {UK_REGIONS.map((region) => {
-          const active = filters.regions.includes(region)
-          return (
+          <div className="flex flex-wrap items-center gap-3">
             <button
-              key={region}
-              onClick={() => toggleRegion(region)}
-              aria-pressed={active}
+              onClick={() => setFilters({ ...filters, russellGroup: !filters.russellGroup })}
+              aria-pressed={filters.russellGroup}
               className={cn(
-                'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms]',
-                active
+                'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms] inline-flex items-center gap-1.5',
+                filters.russellGroup
                   ? 'bg-accent-solid border-transparent text-white shadow-sm [background-image:var(--accent-gradient)]'
                   : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
               )}
             >
-              {region}
+              <GraduationCap size={13} />
+              Russell Group
             </button>
-          )
-        })}
-        {filters.regions.length > 0 && (
-          <button
-            onClick={() => setFilters({ ...filters, regions: [] })}
-            className="text-xs font-medium px-3 py-1.5 rounded-full text-accent hover:bg-accent-soft transition-colors duration-[120ms]"
-          >
-            Clear regions
-          </button>
-        )}
-      </fieldset>
+
+            <Select
+              className="w-36 h-8 text-xs"
+              value={filters.sort}
+              onChange={(e) => setFilters({ ...filters, sort: e.target.value as 'rank' | 'name' })}
+              aria-label="Sort universities by"
+            >
+              <option value="rank">Sort by rank</option>
+              <option value="name">Sort by name</option>
+            </Select>
+
+            <fieldset
+              className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0"
+              aria-label="View mode"
+            >
+              <ModeButton
+                active={mode === 'browse'}
+                onClick={() => setMode('browse')}
+                icon={LayoutGrid}
+                label="Browse"
+              />
+              <ModeButton
+                active={mode === 'swipe'}
+                onClick={() => setMode('swipe')}
+                icon={RotateCcw}
+                label="Swipe"
+              />
+            </fieldset>
+          </div>
+
+          <p className="text-caption text-ink-tertiary">
+            {(universities ?? []).length} universities in this view. Every link goes to the official
+            university page, for international and home students.
+          </p>
+        </div>
+      </div>
 
       {isPending ? (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
@@ -327,7 +337,16 @@ function UniversityCard({
 
       <p className="text-xs text-ink-secondary leading-relaxed grow">{u.notes}</p>
 
-      <div className="flex items-center gap-3 border-t border-hairline pt-2.5 text-xs font-medium">
+      {u.tuitionIntlMinGbp !== null && u.tuitionIntlMaxGbp !== null && (
+        <p className="text-caption text-ink-tertiary bg-canvas border border-hairline rounded-sm px-2.5 py-1.5 tabular-nums">
+          International tuition about {formatK(u.tuitionIntlMinGbp)} to{' '}
+          {formatK(u.tuitionIntlMaxGbp)}
+          {u.tuitionHomeGbp !== null && <> per year, home {formatK(u.tuitionHomeGbp)}</>}.
+          Indicative, always confirm on the official page.
+        </p>
+      )}
+
+      <div className="flex items-center gap-x-3 gap-y-1 flex-wrap border-t border-hairline pt-2.5 text-xs font-medium">
         <a
           href={u.website}
           target="_blank"
@@ -346,6 +365,28 @@ function UniversityCard({
           International
           <ExternalLink size={10} />
         </a>
+        {u.scholarshipsUrl && (
+          <a
+            href={u.scholarshipsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
+          >
+            Scholarships
+            <ExternalLink size={10} />
+          </a>
+        )}
+        {u.accommodationUrl && (
+          <a
+            href={u.accommodationUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
+          >
+            Accommodation
+            <ExternalLink size={10} />
+          </a>
+        )}
         <a
           href={u.ugAdmissionsUrl}
           target="_blank"
@@ -489,6 +530,12 @@ function SwipeCard({
         </span>
       )}
       <p className="text-body text-ink-secondary leading-relaxed grow">{u.notes}</p>
+      {u.tuitionIntlMinGbp !== null && u.tuitionIntlMaxGbp !== null && (
+        <p className="text-caption text-ink-tertiary tabular-nums">
+          International tuition about {formatK(u.tuitionIntlMinGbp)} to{' '}
+          {formatK(u.tuitionIntlMaxGbp)} per year, indicative.
+        </p>
+      )}
       <div className="flex items-center gap-3 border-t border-hairline pt-3 text-xs font-medium">
         <a
           href={u.internationalUrl}
