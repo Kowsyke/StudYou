@@ -9,6 +9,20 @@
       content="StudYou: a transparent, personalised roadmap for international students coming to the UK. Guidance and signposting, not legal or immigration advice."
     />
     <title>StudYou</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply the persisted theme before first paint so there is no flash.
+      try {
+        if (localStorage.getItem('studyou_theme') === 'dark') {
+          document.documentElement.classList.add('dark')
+        }
+      } catch (_) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

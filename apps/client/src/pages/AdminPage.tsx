@@ -8,27 +8,25 @@ import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Input, Label, Select, Textarea } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
+import { useChartTokens } from '../hooks/useChartTokens'
 import { useAnalytics, useCategories } from '../hooks/useMeta'
 import { useDeleteResource, useResources, useSaveResource } from '../hooks/useResources'
 import { apiErrorMessage } from '../lib/api'
 import { formatGbp } from '../lib/format'
 import { toast } from '../store/toastStore'
 
-const chartInk = '#898781'
-const chartGrid = '#e1e0d9'
-const seriesBlue = '#2a78d6'
-const seriesGreen = '#008300'
-
-const tooltipStyle = {
-  borderRadius: 12,
-  border: '1px solid rgb(0 0 0 / 0.08)',
-  boxShadow: '0 8px 24px rgb(0 0 0 / 0.08)',
-  fontSize: 12,
-  background: '#ffffff',
-}
-
 export function AdminPage() {
   const { data: analytics, isPending, error, refetch, isRefetching } = useAnalytics(true)
+  const chart = useChartTokens()
+
+  const tooltipStyle = {
+    borderRadius: 12,
+    border: `1px solid ${chart.border}`,
+    boxShadow: 'var(--elevation-lg)',
+    fontSize: 12,
+    background: chart.surface,
+    color: chart.ink,
+  }
 
   return (
     <div>
@@ -77,29 +75,29 @@ export function AdminPage() {
                     data={analytics.stageBreakdown}
                     margin={{ top: 4, right: 4, left: -18 }}
                   >
-                    <CartesianGrid stroke={chartGrid} strokeWidth={1} vertical={false} />
+                    <CartesianGrid stroke={chart.grid} strokeWidth={1} vertical={false} />
                     <XAxis
                       dataKey="stageTitle"
-                      tick={{ fill: chartInk, fontSize: 11 }}
-                      axisLine={{ stroke: chartGrid }}
+                      tick={{ fill: chart.ink, fontSize: 11 }}
+                      axisLine={{ stroke: chart.grid }}
                       tickLine={false}
                       interval={0}
                     />
                     <YAxis
                       unit="%"
                       domain={[0, 100]}
-                      tick={{ fill: chartInk, fontSize: 11 }}
+                      tick={{ fill: chart.ink, fontSize: 11 }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
-                      cursor={{ fill: 'rgb(0 0 0 / 0.03)' }}
+                      cursor={{ fill: 'var(--accent-soft)' }}
                       contentStyle={tooltipStyle}
                       formatter={(value) => [`${value}%`, 'Completion']}
                     />
                     <Bar
                       dataKey="completionRate"
-                      fill={seriesBlue}
+                      fill={chart.accent}
                       radius={[4, 4, 0, 0]}
                       barSize={28}
                     />
@@ -116,28 +114,28 @@ export function AdminPage() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={220}>
                   <BarChart data={analytics.dropOff} margin={{ top: 4, right: 4, left: -18 }}>
-                    <CartesianGrid stroke={chartGrid} strokeWidth={1} vertical={false} />
+                    <CartesianGrid stroke={chart.grid} strokeWidth={1} vertical={false} />
                     <XAxis
                       dataKey="stageTitle"
-                      tick={{ fill: chartInk, fontSize: 11 }}
-                      axisLine={{ stroke: chartGrid }}
+                      tick={{ fill: chart.ink, fontSize: 11 }}
+                      axisLine={{ stroke: chart.grid }}
                       tickLine={false}
                       interval={0}
                     />
                     <YAxis
                       allowDecimals={false}
-                      tick={{ fill: chartInk, fontSize: 11 }}
+                      tick={{ fill: chart.ink, fontSize: 11 }}
                       axisLine={false}
                       tickLine={false}
                     />
                     <Tooltip
-                      cursor={{ fill: 'rgb(0 0 0 / 0.03)' }}
+                      cursor={{ fill: 'var(--accent-soft)' }}
                       contentStyle={tooltipStyle}
                       formatter={(value) => [value, 'Journeys reached']}
                     />
                     <Bar
                       dataKey="studentsReached"
-                      fill={seriesGreen}
+                      fill={chart.positive}
                       radius={[4, 4, 0, 0]}
                       barSize={28}
                     />

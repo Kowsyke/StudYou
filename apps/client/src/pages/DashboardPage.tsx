@@ -159,7 +159,7 @@ export function DashboardPage() {
                         d.daysLeft < 0
                           ? 'bg-danger-soft text-danger'
                           : d.daysLeft <= 14
-                            ? 'bg-[#fdf3e3] text-[#8a5a00]'
+                            ? 'bg-warning-soft text-warning'
                             : undefined
                       }
                     >

@@ -3,12 +3,12 @@ import type { HTMLAttributes } from 'react'
 import { cn } from '../../lib/utils'
 
 const categoryStyles: Record<CategoryKey, string> = {
-  visa: 'bg-[#eaf3fe] text-[#1c5cab]',
-  health: 'bg-[#e8f6e8] text-[#006300]',
-  finance: 'bg-[#fdf3e3] text-[#8a5a00]',
-  housing: 'bg-[#f3effc] text-[#4a3aa7]',
-  documents: 'bg-[#eef1f4] text-[#3d4852]',
-  arrival: 'bg-[#e6f7f0] text-[#0d6b4c]',
+  visa: 'bg-accent-soft text-accent',
+  health: 'bg-positive-soft text-positive',
+  finance: 'bg-warning-soft text-warning',
+  housing: 'bg-category-housing-soft text-category-housing',
+  documents: 'bg-surface-secondary text-ink-secondary',
+  arrival: 'bg-category-arrival-soft text-category-arrival',
 }
 
 export const categoryLabels: Record<CategoryKey, string> = {
@@ -28,8 +28,8 @@ export function Badge({ className, category, children, ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium',
-        category ? categoryStyles[category] : 'bg-canvas text-ink-secondary',
+        'inline-flex items-center px-1.5 py-0.5 rounded-xs text-micro font-semibold uppercase tracking-[0.02em]',
+        category ? categoryStyles[category] : 'bg-surface-secondary text-ink-secondary',
         className,
       )}
       {...props}

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Moon, Sun } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { QueryError } from '../components/QueryError'
@@ -10,7 +11,43 @@ import { hasNoJourney, useJourney, useUpdateSettings } from '../hooks/useJourney
 import { useCountries } from '../hooks/useMeta'
 import { apiErrorMessage } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
+import { type Theme, useThemeStore } from '../store/themeStore'
 import { toast } from '../store/toastStore'
+
+const themeOptions: { value: Theme; label: string; icon: typeof Sun }[] = [
+  { value: 'light', label: 'Light', icon: Sun },
+  { value: 'dark', label: 'Dark', icon: Moon },
+]
+
+function ThemeToggle() {
+  const theme = useThemeStore((s) => s.theme)
+  const setTheme = useThemeStore((s) => s.setTheme)
+
+  return (
+    <fieldset
+      className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0"
+      aria-label="Appearance"
+    >
+      {themeOptions.map((option) => {
+        const active = theme === option.value
+        return (
+          <button
+            key={option.value}
+            type="button"
+            aria-pressed={active}
+            onClick={() => setTheme(option.value)}
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-[6px] text-caption font-semibold transition-colors duration-[120ms] ${
+              active ? 'bg-surface text-ink shadow-sm' : 'text-ink-secondary hover:text-ink'
+            }`}
+          >
+            <option.icon size={12} />
+            {option.label}
+          </button>
+        )
+      })}
+    </fieldset>
+  )
+}
 
 export function SettingsPage() {
   const user = useAuthStore((s) => s.user)
@@ -111,6 +148,16 @@ export function SettingsPage() {
           Adjust your plan. Your roadmap and budget update everywhere, instantly.
         </p>
       </header>
+
+      <Card className="max-w-xl mb-5">
+        <CardHeader>
+          <CardTitle>Appearance</CardTitle>
+          <CardDescription>Choose how StudYou looks. Saved on this device.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ThemeToggle />
+        </CardContent>
+      </Card>
 
       <Card className="max-w-xl">
         <CardHeader>

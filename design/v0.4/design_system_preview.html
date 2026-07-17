@@ -1,0 +1,3309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudYou Visual System: Design Tokens and Screens Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      
+      /* Light Theme Tokens */
+      --canvas: #FAF9F6; /* warm near white background */
+      --surface: #FFFFFF; /* white cards and panels */
+      --surface-secondary: #F2F1EC;
+      --ink: #1C1C1E; /* charcoal primary text */
+      --ink-secondary: #636366; /* secondary text */
+      --ink-tertiary: #8E8E93; /* tertiary/muted text */
+      --accent: #0066CC; /* single accent color for progress, primary actions, and focus states */
+      --accent-hover: #0055AA;
+      --accent-pressed: #004488;
+      --accent-soft: rgba(0, 102, 204, 0.08);
+      --border: rgba(0, 0, 0, 0.06);
+      --border-strong: rgba(0, 0, 0, 0.12);
+      --border-focus: #0066CC;
+      
+      --positive: #248A3D;
+      --positive-soft: rgba(36, 138, 61, 0.08);
+      --danger: #C93B2B;
+      --danger-soft: rgba(201, 59, 43, 0.08);
+      --warning: #B25E00;
+      --warning-soft: rgba(178, 94, 0, 0.08);
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+      --shadow-overlay: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+      
+      /* Radii */
+      --radius-xs: 4px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      
+      /* Motion */
+      --duration-fast: 120ms;
+      --duration-normal: 200ms;
+      --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    .dark {
+      /* Dark Theme Tokens */
+      --canvas: #0F0F10; /* warm near black background */
+      --surface: #1E1E20; /* dark grey cards and panels */
+      --surface-secondary: #27272A;
+      --ink: #F2F2F7; /* near white primary text */
+      --ink-secondary: #AEAEB2; /* secondary text */
+      --ink-tertiary: #636366; /* tertiary/muted text */
+      --accent: #0A84FF; /* single accent color for dark theme */
+      --accent-hover: #3399FF;
+      --accent-pressed: #0066CC;
+      --accent-soft: rgba(10, 132, 255, 0.12);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.15);
+      --border-focus: #0A84FF;
+      
+      --positive: #30D158;
+      --positive-soft: rgba(48, 209, 88, 0.12);
+      --danger: #FF453A;
+      --danger-soft: rgba(255, 69, 58, 0.12);
+      --warning: #FF9F0A;
+      --warning-soft: rgba(255, 159, 10, 0.12);
+      
+      /* Shadows */
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.15);
+      --shadow-overlay: 0 16px 48px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--canvas);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out);
+    }
+
+    /* System Shell Layout */
+    .sidebar {
+      width: 260px;
+      background-color: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      user-select: none;
+      z-index: 10;
+      transition: background-color var(--duration-normal) var(--ease-out), border-color var(--duration-normal) var(--ease-out);
+    }
+
+    .sidebar-header {
+      padding: 24px 20px 16px;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-logo {
+      width: 20px;
+      height: 20px;
+      border-radius: var(--radius-xs);
+      background-color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .brand-badge {
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background-color: var(--surface-secondary);
+      color: var(--ink-secondary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 0 12px;
+      overflow-y: auto;
+    }
+
+    .nav-section-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--ink-tertiary);
+      letter-spacing: 0.05em;
+      margin: 16px 8px 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+      border: 1px solid transparent;
+    }
+
+    .nav-item:hover {
+      background-color: var(--surface-secondary);
+      color: var(--ink);
+    }
+
+    .nav-item.active {
+      background-color: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      stroke-width: 2;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .theme-toggle-container {
+      display: flex;
+      background-color: var(--surface-secondary);
+      padding: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    .theme-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 6px;
+      border: none;
+      background: none;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--ink-secondary);
+      transition: background-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+    }
+
+    .theme-btn.active {
+      background-color: var(--surface);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .theme-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+      background-color: var(--canvas);
+      padding: 32px 40px;
+      transition: background-color var(--duration-normal) var(--ease-out);
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .page-subtitle {
+      font-size: 13px;
+      color: var(--ink-secondary);
+      margin-top: 4px;
+    }
+
+    /* Utility Components & Tokens Display */
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .token-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .token-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    .color-swatch-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+    }
+
+    .color-info {
+      flex: 1;
+    }
+
+    .color-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .color-hex {
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      font-family: monospace;
+    }
+
+    /* Scales Display */
+    .scale-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .scale-row:last-child {
+      border: none;
+    }
+
+    .scale-value {
+      width: 80px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .scale-visual {
+      flex: 1;
+      height: 8px;
+      background-color: var(--accent);
+      border-radius: 4px;
+    }
+
+    /* Common UI Elements */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--duration-fast) var(--ease-out), 
+                  border-color var(--duration-fast) var(--ease-out), 
+                  transform var(--duration-fast) var(--ease-out),
+                  box-shadow var(--duration-fast) var(--ease-out);
+      user-select: none;
+      outline: none;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #FFFFFF;
+    }
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+    .btn-primary:active {
+      background-color: var(--accent-pressed);
+      transform: scale(0.98);
+    }
+    .btn-primary:focus-visible {
+      box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--accent);
+    }
+
+    .btn-secondary {
+      background-color: var(--surface);
+      border-color: var(--border-strong);
+      color: var(--ink);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-secondary:hover {
+      background-color: var(--surface-secondary);
+    }
+    .btn-secondary:active {
+      background-color: var(--border);
+      transform: scale(0.98);
+    }
+    .btn-secondary:focus-visible {
+      box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--accent);
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: #FFFFFF;
+    }
+    .btn-danger:hover {
+      background-color: #B32E22;
+    }
+    .btn-danger:active {
+      background-color: #9C251A;
+      transform: scale(0.98);
+    }
+
+    .input-field {
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background-color: var(--surface);
+      color: var(--ink);
+      outline: none;
+      transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+    }
+    .input-field:hover {
+      border-color: var(--ink-tertiary);
+    }
+    .input-field:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    /* Screen-specific Layout Container */
+    .screen-container {
+      display: none;
+      animation: fadeIn var(--duration-slow) var(--ease-out);
+    }
+
+    .screen-container.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Mock Desktop Frame */
+    .desktop-preview-frame {
+      width: 100%;
+      max-width: 1200px;
+      height: 640px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background-color: var(--canvas);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .desktop-titlebar {
+      height: 40px;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .dot-close { background-color: #FF5F56; }
+    .dot-minimize { background-color: #FFBD2E; }
+    .dot-maximize { background-color: #27C93F; }
+
+    .window-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .window-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .desktop-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* SCREEN 1: LOGIN */
+    .login-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, var(--surface-secondary) 0%, var(--canvas) 100%);
+      position: relative;
+    }
+
+    .login-card {
+      width: 360px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-overlay);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
+
+    .login-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-expired-alert {
+      background-color: var(--warning-soft);
+      border: 1px solid var(--warning);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--warning);
+      font-weight: 500;
+      text-align: left;
+      line-height: 1.4;
+    }
+
+    .login-footer {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      line-height: 1.4;
+    }
+
+    /* SCREEN 2: DASHBOARD */
+    .dashboard-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 24px;
+      gap: 20px;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .dashboard-row-full {
+      grid-column: 1 / -1;
+    }
+
+    .dashboard-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title-sm {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .progress-ring-container {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .progress-ring-svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle-bg {
+      fill: none;
+      stroke: var(--surface-secondary);
+      stroke-width: 10px;
+    }
+
+    .progress-ring-circle {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 10px;
+      stroke-linecap: round;
+      stroke-dasharray: 251.2;
+      stroke-dashoffset: 80.38; /* 68% complete */
+      transition: stroke-dashoffset var(--duration-slow) var(--ease-out);
+    }
+
+    .progress-ring-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .progress-percent {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .progress-description {
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
+
+    .budget-tracker {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .budget-main-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .budget-amount {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .budget-currency-label {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      margin-left: 4px;
+    }
+
+    .budget-gauge {
+      height: 6px;
+      background-color: var(--surface-secondary);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .budget-gauge-fill {
+      height: 100%;
+      background-color: var(--accent);
+      width: 81%;
+    }
+
+    .budget-gauge-fill.over-budget {
+      background-color: var(--danger);
+    }
+
+    .budget-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
+
+    .budget-over-badge {
+      background-color: var(--danger-soft);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .deadline-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .deadline-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background-color: var(--canvas);
+      border: 1px solid var(--border);
+    }
+
+    .deadline-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .deadline-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .deadline-date {
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .deadline-flag {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+    }
+
+    .deadline-flag.overdue {
+      background-color: var(--danger-soft);
+      color: var(--danger);
+    }
+
+    .deadline-flag.upcoming {
+      background-color: var(--warning-soft);
+      color: var(--warning);
+    }
+
+    .stage-progress-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stage-progress-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stage-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+    }
+
+    .stage-bar {
+      height: 4px;
+      background-color: var(--surface-secondary);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .stage-bar-fill {
+      height: 100%;
+      background-color: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* SCREEN 3: JOURNEY BOARD */
+    .journey-layout {
+      display: flex;
+      height: 100%;
+      overflow-x: auto;
+      padding: 16px;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .journey-column {
+      flex: 0 0 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background-color: var(--surface-secondary);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      max-height: 100%;
+    }
+
+    .column-header {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 4px;
+    }
+
+    .column-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .column-meta {
+      font-size: 10px;
+      color: var(--ink-tertiary);
+    }
+
+    .task-card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      overflow-y: auto;
+    }
+
+    .task-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+    }
+
+    .task-card:hover {
+      border-color: var(--ink-tertiary);
+      transform: translateY(-1px);
+    }
+
+    .task-card-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* Animated Checkbox */
+    .custom-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 1.5px solid var(--ink-tertiary);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+    }
+
+    .task-card.checked .custom-checkbox {
+      background-color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .custom-checkbox svg {
+      width: 10px;
+      height: 10px;
+      stroke: #FFFFFF;
+      stroke-width: 3;
+      fill: none;
+      stroke-dasharray: 12;
+      stroke-dashoffset: 12;
+      transition: stroke-dashoffset var(--duration-normal) var(--ease-out);
+    }
+
+    .task-card.checked .custom-checkbox svg {
+      stroke-dashoffset: 0;
+    }
+
+    .task-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.3;
+      transition: color var(--duration-fast) var(--ease-out), text-decoration var(--duration-fast) var(--ease-out);
+    }
+
+    .task-card.checked .task-title {
+      color: var(--ink-tertiary);
+      text-decoration: line-through;
+    }
+
+    .task-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: var(--radius-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+
+    .badge-finance {
+      background-color: var(--warning-soft);
+      color: var(--warning);
+    }
+
+    .badge-document {
+      background-color: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .badge-official {
+      background-color: var(--positive-soft);
+      color: var(--positive);
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--ink-tertiary);
+      padding-top: 4px;
+      border-top: 1px solid var(--border);
+    }
+
+    .task-cost {
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .source-link {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .source-link:hover {
+      text-decoration: underline;
+    }
+
+    .source-link svg {
+      width: 8px;
+      height: 8px;
+    }
+
+    /* SCREEN 4: RESOURCE LIBRARY */
+    .resources-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .filter-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .search-input-container {
+      position: relative;
+      flex: 1;
+      max-width: 320px;
+    }
+
+    .search-input-container svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      color: var(--ink-tertiary);
+    }
+
+    .search-input-container input {
+      padding-left: 32px;
+    }
+
+    .category-pills {
+      display: flex;
+      gap: 6px;
+    }
+
+    .pill-btn {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 16px;
+      background-color: var(--surface);
+      border: 1px solid var(--border-strong);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: all var(--duration-fast) var(--ease-out);
+    }
+
+    .pill-btn:hover {
+      background-color: var(--surface-secondary);
+      color: var(--ink);
+    }
+
+    .pill-btn.active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .sort-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .select-dropdown {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background-color: var(--surface);
+      color: var(--ink);
+      outline: none;
+    }
+
+    .order-toggle-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background-color: var(--surface);
+      cursor: pointer;
+      color: var(--ink-secondary);
+    }
+    .order-toggle-btn:hover {
+      background-color: var(--surface-secondary);
+    }
+
+    .order-toggle-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .resource-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .resource-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--ink-tertiary);
+    }
+
+    .resource-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .resource-desc {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+
+    .resource-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+    }
+
+    .resource-cost {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    /* Resource Empty State */
+    .empty-state-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 32px;
+      text-align: center;
+      background-color: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      gap: 16px;
+    }
+
+    .empty-state-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--ink-tertiary);
+    }
+
+    .empty-state-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .empty-state-desc {
+      font-size: 13px;
+      color: var(--ink-secondary);
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+    /* SCREEN 5: ADMIN INSIGHTS */
+    .admin-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    .stats-tiles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat-tile {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .stat-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .chart-container-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .mock-chart {
+      height: 160px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 10px 10px 0;
+      border-bottom: 2px solid var(--border-strong);
+      position: relative;
+    }
+
+    .chart-bar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      gap: 8px;
+    }
+
+    .chart-bar {
+      width: 24px;
+      background-color: var(--accent);
+      border-radius: 4px 4px 0 0;
+      transition: height var(--duration-slow) var(--ease-out);
+      position: relative;
+    }
+
+    .chart-bar.drop-off {
+      background-color: var(--danger);
+    }
+
+    .chart-bar-tooltip {
+      position: absolute;
+      top: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .chart-label {
+      font-size: 10px;
+      color: var(--ink-secondary);
+    }
+
+    .admin-table-container {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .admin-table-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .admin-table th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-secondary);
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      background-color: var(--surface-secondary);
+    }
+
+    .admin-table td {
+      font-size: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      color: var(--ink-secondary);
+    }
+
+    .admin-table tr:hover td {
+      background-color: var(--canvas);
+      color: var(--ink);
+    }
+
+    .admin-table td.resource-name {
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border);
+      background: none;
+      cursor: pointer;
+      color: var(--ink-secondary);
+    }
+
+    .btn-icon:hover {
+      background-color: var(--surface-secondary);
+      color: var(--ink);
+    }
+
+    .btn-icon-danger:hover {
+      background-color: var(--danger-soft);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+
+    /* SCREEN 6: SETTINGS */
+    .settings-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 20px;
+      overflow-y: auto;
+      max-width: 580px;
+    }
+
+    .settings-group {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .settings-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .settings-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .settings-row label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .settings-row input, .settings-row select {
+      max-width: 320px;
+    }
+
+    .settings-row-desc {
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      line-height: 1.4;
+    }
+
+    /* Overlay: Recalculation Confirmation Dialog */
+    .overlay-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--duration-normal) var(--ease-out);
+    }
+
+    .overlay-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .dialog-card {
+      width: 400px;
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-overlay);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transform: scale(0.95);
+      transition: transform var(--duration-normal) var(--ease-out);
+    }
+
+    .overlay-backdrop.active .dialog-card {
+      transform: scale(1);
+    }
+
+    .dialog-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .dialog-desc {
+      font-size: 13px;
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    /* SCREEN 7: OVERLAYS */
+    .overlays-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      gap: 24px;
+      overflow-y: auto;
+    }
+
+    .overlay-demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* Cmd K Palette Mock */
+    .cmd-k-palette {
+      background-color: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-overlay);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+    }
+
+    .cmd-k-input-wrapper {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cmd-k-input-wrapper svg {
+      width: 16px;
+      height: 16px;
+      color: var(--ink-tertiary);
+    }
+
+    .cmd-k-input {
+      border: none;
+      outline: none;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      background: none;
+      color: var(--ink);
+      flex: 1;
+    }
+
+    .cmd-k-group {
+      padding: 8px 0;
+    }
+
+    .cmd-k-group-title {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--ink-tertiary);
+      padding: 6px 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .cmd-k-item {
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--ink-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background-color var(--duration-fast) var(--ease-out);
+    }
+
+    .cmd-k-item:hover, .cmd-k-item.selected {
+      background-color: var(--surface-secondary);
+      color: var(--ink);
+    }
+
+    .cmd-k-shortcut {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--ink-tertiary);
+      background-color: var(--canvas);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* Toast Notification Mock */
+    .toast-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 320px;
+    }
+
+    .toast-mock {
+      background-color: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toast-mock::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+    }
+
+    .toast-success::before { background-color: var(--positive); }
+    .toast-error::before { background-color: var(--danger); }
+
+    .toast-icon {
+      width: 18px;
+      height: 18px;
+    }
+    .toast-success .toast-icon { color: var(--positive); }
+    .toast-error .toast-icon { color: var(--danger); }
+
+    .toast-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toast-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .toast-desc {
+      font-size: 11px;
+      color: var(--ink-secondary);
+    }
+
+    /* Loading Skeletons Mock */
+    .skeleton-card {
+      background-color: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shimmer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.4) 50%, 
+        rgba(255,255,255,0) 100%);
+      animation: shimmer-anim 1.5s infinite;
+    }
+
+    .dark .shimmer {
+      background: linear-gradient(90deg, 
+        rgba(255,255,255,0) 0%, 
+        rgba(255,255,255,0.08) 50%, 
+        rgba(255,255,255,0) 100%);
+    }
+
+    @keyframes shimmer-anim {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .skeleton-line {
+      height: 10px;
+      background-color: var(--surface-secondary);
+      border-radius: var(--radius-xs);
+    }
+
+    .skeleton-line.title { width: 40%; height: 14px; }
+    .skeleton-line.body-1 { width: 85%; }
+    .skeleton-line.body-2 { width: 90%; }
+    .skeleton-line.body-3 { width: 60%; }
+
+    /* Error Card with Retry Mock */
+    .error-card-mock {
+      background-color: var(--surface);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      max-width: 400px;
+    }
+
+    .error-card-icon {
+      color: var(--danger);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .error-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .error-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .error-card-desc {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      line-height: 1.4;
+    }
+
+    /* Global Error Screen Mock */
+    .global-error-screen-mock {
+      background-color: var(--canvas);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px;
+      gap: 16px;
+    }
+
+    .global-error-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .global-error-desc {
+      font-size: 13px;
+      color: var(--ink-secondary);
+      max-width: 360px;
+      line-height: 1.5;
+    }
+
+    .global-error-code {
+      font-family: monospace;
+      font-size: 11px;
+      background-color: var(--surface-secondary);
+      padding: 6px 12px;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border);
+      color: var(--ink-secondary);
+    }
+
+    /* Spec Layout Styles */
+    .section-desc {
+      font-size: 14px;
+      color: var(--ink-secondary);
+      margin-bottom: 24px;
+      max-width: 800px;
+      line-height: 1.6;
+    }
+
+    .table-spec {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 24px;
+    }
+
+    .table-spec th, .table-spec td {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-spec th {
+      font-weight: 600;
+      color: var(--ink-secondary);
+      background-color: var(--surface-secondary);
+    }
+
+    .motion-bar-spec {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 12px 0;
+    }
+
+    .motion-preview-track {
+      width: 200px;
+      height: 12px;
+      background-color: var(--surface-secondary);
+      border-radius: 6px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .motion-preview-ball {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    /* Screen Tab Containers */
+    .screen-header-bar {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+      gap: 12px;
+      overflow-x: auto;
+    }
+
+    .screen-tab-btn {
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      border: none;
+      background: none;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .screen-tab-btn:hover {
+      color: var(--ink);
+    }
+
+    .screen-tab-btn.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .screen-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .toast-container-fixed {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .toast-container-fixed .toast-mock {
+      pointer-events: auto;
+      animation: slideInToast var(--duration-normal) var(--ease-out);
+    }
+
+    @keyframes slideInToast {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="light">
+
+  <!-- Left Sidebar Panel -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-title">
+        <div class="brand-logo">SY</div>
+        StudYou Visual System
+        <span class="brand-badge">Beta</span>
+      </div>
+    </div>
+    
+    <div class="sidebar-nav">
+      <div class="nav-section-title">Design Spec</div>
+      <div class="nav-item active" onclick="switchMainTab('tokens', this)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+        Tokens & Scales
+      </div>
+      <div class="nav-item" onclick="switchMainTab('motion', this)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Motion Spec
+      </div>
+      <div class="nav-item" onclick="switchMainTab('states', this)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+        Interaction States
+      </div>
+      
+      <div class="nav-section-title">Visual Mockups</div>
+      <div class="nav-item" onclick="switchMainTab('screens', this)">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        Screens Playground
+      </div>
+    </div>
+    
+    <div class="sidebar-footer">
+      <div class="theme-toggle-container">
+        <button class="theme-btn active" id="light-btn" onclick="setTheme('light')">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m12.728 12.728l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+          Light
+        </button>
+        <button class="theme-btn" id="dark-btn" onclick="setTheme('dark')">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          Dark
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Viewport -->
+  <div class="main-content">
+    
+    <!-- TAB 1: DESIGN TOKENS -->
+    <div id="tab-tokens" class="screen-container active">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Refined Design Tokens</h1>
+          <p class="page-subtitle">A quiet, confident, native macOS visual foundation for international students.</p>
+        </div>
+      </div>
+      
+      <p class="section-desc">
+        StudYou uses a minimalist, content-first design system with generous spacing, soft depth, and restrained color. The canvas is a warm near-white background. Cards and panels use pure white with a soft border and subtle shadows. Colors are neutral grays, except for a single accent color used sparingly. No emojis are used in the user interface.
+      </p>
+
+      <div class="token-grid">
+        <!-- Color Tokens -->
+        <div class="token-card">
+          <h3>Light Theme Colors</h3>
+          <div class="color-swatch-list">
+            <div class="color-row">
+              <div class="swatch" style="background-color: #FAF9F6;"></div>
+              <div class="color-info">
+                <div class="color-name">Canvas (Background)</div>
+                <div class="color-hex">#FAF9F6</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #FFFFFF;"></div>
+              <div class="color-info">
+                <div class="color-name">Surface (Cards)</div>
+                <div class="color-hex">#FFFFFF</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #1C1C1E;"></div>
+              <div class="color-info">
+                <div class="color-name">Ink Primary</div>
+                <div class="color-hex">#1C1C1E</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #636366;"></div>
+              <div class="color-info">
+                <div class="color-name">Ink Secondary</div>
+                <div class="color-hex">#636366</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #8E8E93;"></div>
+              <div class="color-info">
+                <div class="color-name">Ink Tertiary</div>
+                <div class="color-hex">#8E8E93</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #0066CC;"></div>
+              <div class="color-info">
+                <div class="color-name">Accent (System Blue)</div>
+                <div class="color-hex">#0066CC</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="token-card">
+          <h3>Dark Theme Colors</h3>
+          <div class="color-swatch-list">
+            <div class="color-row">
+              <div class="swatch" style="background-color: #0F0F10;"></div>
+              <div class="color-info">
+                <div class="color-name">Canvas (Background)</div>
+                <div class="color-hex">#0F0F10</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #1E1E20;"></div>
+              <div class="color-info">
+                <div class="color-name">Surface (Cards)</div>
+                <div class="color-hex">#1E1E20</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #F2F2F7;"></div>
+              <div class="color-info">
+                <div class="color-name">Ink Primary</div>
+                <div class="color-hex">#F2F2F7</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #AEAEB2;"></div>
+              <div class="color-info">
+                <div class="color-name">Ink Secondary</div>
+                <div class="color-hex">#AEAEB2</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #636366;"></div>
+              <div class="color-info">
+                <div class="color-name">Ink Tertiary</div>
+                <div class="color-hex">#636366</div>
+              </div>
+            </div>
+            <div class="color-row">
+              <div class="swatch" style="background-color: #0A84FF;"></div>
+              <div class="color-info">
+                <div class="color-name">Accent (System Blue)</div>
+                <div class="color-hex">#0A84FF</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spacing Scale -->
+        <div class="token-card">
+          <h3>Spacing Scale</h3>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="scale-row">
+              <div class="scale-value">4px (0.25r)</div>
+              <div class="scale-visual" style="width: 4px;"></div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-value">8px (0.50r)</div>
+              <div class="scale-visual" style="width: 8px;"></div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-value">12px (0.75r)</div>
+              <div class="scale-visual" style="width: 12px;"></div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-value">16px (1.00r)</div>
+              <div class="scale-visual" style="width: 16px;"></div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-value">24px (1.50r)</div>
+              <div class="scale-visual" style="width: 24px;"></div>
+            </div>
+            <div class="scale-row">
+              <div class="scale-value">32px (2.00r)</div>
+              <div class="scale-visual" style="width: 32px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Radii & Shadows -->
+        <div class="token-card">
+          <h3>Radius & Shadows Scale</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <div style="font-size: 11px; color: var(--ink-secondary); margin-bottom: 4px;">Border Radii</div>
+              <div style="display: flex; gap: 8px;">
+                <div style="width: 32px; height: 32px; border: 1px solid var(--border-strong); border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600;">4px</div>
+                <div style="width: 32px; height: 32px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600;">8px</div>
+                <div style="width: 32px; height: 32px; border: 1px solid var(--border-strong); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600;">12px</div>
+                <div style="width: 32px; height: 32px; border: 1px solid var(--border-strong); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600;">16px</div>
+              </div>
+            </div>
+            <div style="margin-top: 8px;">
+              <div style="font-size: 11px; color: var(--ink-secondary); margin-bottom: 4px;">Shadow Levels</div>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="padding: 6px 10px; background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xs); box-shadow: var(--shadow-sm); font-size: 11px;">Small Shadow (Elevation 1)</div>
+                <div style="padding: 6px 10px; background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xs); box-shadow: var(--shadow-md); font-size: 11px;">Medium Shadow (Elevation 2)</div>
+                <div style="padding: 6px 10px; background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xs); box-shadow: var(--shadow-lg); font-size: 11px;">Large Shadow (Elevation 3)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typographic Scale -->
+        <div class="token-card" style="grid-column: 1 / -1;">
+          <h3>Typographic Scale (grotesque/system sans-serif)</h3>
+          <table class="table-spec" style="margin: 0;">
+            <thead>
+              <tr>
+                <th>Token</th>
+                <th>Font Size</th>
+                <th>Line Height</th>
+                <th>Weight</th>
+                <th>Sample</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Title 1</td>
+                <td>32px / 2.0rem</td>
+                <td>1.2</td>
+                <td>Bold (700)</td>
+                <td style="font-size: 32px; font-weight: 700; letter-spacing: -0.02em;">StudYou Application</td>
+              </tr>
+              <tr>
+                <td>Title 2</td>
+                <td>24px / 1.5rem</td>
+                <td>1.3</td>
+                <td>Bold (700)</td>
+                <td style="font-size: 24px; font-weight: 700; letter-spacing: -0.02em;">Prepare for Departure</td>
+              </tr>
+              <tr>
+                <td>Title 3</td>
+                <td>20px / 1.25rem</td>
+                <td>1.4</td>
+                <td>Semibold (600)</td>
+                <td style="font-size: 20px; font-weight: 600;">Personal Roadmap</td>
+              </tr>
+              <tr>
+                <td>Body Large</td>
+                <td>16px / 1.0rem</td>
+                <td>1.5</td>
+                <td>Regular (400)</td>
+                <td style="font-size: 16px;">Track your budget and deadlines in real-time.</td>
+              </tr>
+              <tr>
+                <td>Body Regular</td>
+                <td>13px / 0.8125rem</td>
+                <td>1.5</td>
+                <td>Regular (400) / Medium (500)</td>
+                <td style="font-size: 13px;">Ensure your CAS request is submitted by the deadline.</td>
+              </tr>
+              <tr>
+                <td>Caption / Badge</td>
+                <td>11px / 0.6875rem</td>
+                <td>1.4</td>
+                <td>Semibold (600)</td>
+                <td style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Documentation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: MOTION SPEC -->
+    <div id="tab-motion" class="screen-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Motion Specification</h1>
+          <p class="page-subtitle">Subtle, quick, and native transitions. Never bouncy, always confident.</p>
+        </div>
+      </div>
+
+      <p class="section-desc">
+        Motion is used to reinforce spatial relationships, indicate interactivity, and celebrate completions without creating cognitive overhead or slowing down workflow. 
+      </p>
+
+      <div class="token-card" style="margin-bottom: 24px;">
+        <h3>Durations & Easings</h3>
+        <table class="table-spec">
+          <thead>
+            <tr>
+              <th>Interaction</th>
+              <th>Duration</th>
+              <th>Easing Function</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Hover states & focus rings</td>
+              <td>120ms</td>
+              <td>linear</td>
+              <td>Instant response to pointer location change.</td>
+            </tr>
+            <tr>
+              <td>Task checkbox tick & toast slide-in</td>
+              <td>200ms</td>
+              <td>cubic-bezier(0.16, 1, 0.3, 1)</td>
+              <td>Smooth, fast motion. The checkmark draws using a stroke offset.</td>
+            </tr>
+            <tr>
+              <td>Command palette open & transitions</td>
+              <td>300ms</td>
+              <td>cubic-bezier(0.16, 1, 0.3, 1)</td>
+              <td>A polished, swift macOS-like drop down/fade animation.</td>
+            </tr>
+            <tr>
+              <td>Dialog overlay fades</td>
+              <td>250ms</td>
+              <td>cubic-bezier(0.65, 0, 0.35, 1)</td>
+              <td>Calm, gradual appearance to prevent disorientation.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="token-card">
+        <h3>Interactive Easing Playground</h3>
+        <p class="section-desc" style="font-size: 12px; margin-bottom: 12px;">Click on the track below to preview the pacing of the easing function.</p>
+        
+        <div class="motion-bar-spec">
+          <div style="width: 140px; font-size: 12px; font-weight: 600;">Fast (120ms, linear)</div>
+          <div class="motion-preview-track" onclick="runMotionAnim('fast', this)">
+            <div class="motion-preview-ball" id="ball-fast"></div>
+          </div>
+          <span style="font-size: 11px; color: var(--ink-secondary);">Click to test</span>
+        </div>
+
+        <div class="motion-bar-spec">
+          <div style="width: 140px; font-size: 12px; font-weight: 600;">Standard (200ms, ease-out)</div>
+          <div class="motion-preview-track" onclick="runMotionAnim('normal', this)">
+            <div class="motion-preview-ball" id="ball-normal"></div>
+          </div>
+          <span style="font-size: 11px; color: var(--ink-secondary);">Click to test</span>
+        </div>
+
+        <div class="motion-bar-spec">
+          <div style="width: 140px; font-size: 12px; font-weight: 600;">Slow (300ms, ease-out)</div>
+          <div class="motion-preview-track" onclick="runMotionAnim('slow', this)">
+            <div class="motion-preview-ball" id="ball-slow"></div>
+          </div>
+          <span style="font-size: 11px; color: var(--ink-secondary);">Click to test</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: INTERACTION STATES -->
+    <div id="tab-states" class="screen-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Interaction States</h1>
+          <p class="page-subtitle">Subtle feedback loops for buttons, inputs, task rows, and card interactive elements.</p>
+        </div>
+      </div>
+
+      <div class="token-grid">
+        <!-- Button States -->
+        <div class="token-card">
+          <h3>Button States</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <div style="font-size: 11px; color: var(--ink-secondary); margin-bottom: 6px;">Primary Action</div>
+              <button class="btn btn-primary">Primary Button</button>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--ink-secondary); margin-bottom: 6px;">Secondary / Bordered</div>
+              <button class="btn btn-secondary">Secondary Button</button>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: var(--ink-secondary); margin-bottom: 6px;">Danger Action</div>
+              <button class="btn btn-danger">Danger Button</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input States -->
+        <div class="token-card">
+          <h3>Input Field States</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); display: block; margin-bottom: 4px;">Default / Hover</label>
+              <input type="text" class="input-field" placeholder="Enter details...">
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); display: block; margin-bottom: 4px;">Focus State</label>
+              <input type="text" class="input-field" style="border-color: var(--border-focus); box-shadow: 0 0 0 3px var(--accent-soft);" value="Active user input">
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Row States -->
+        <div class="token-card" style="grid-column: 1 / -1;">
+          <h3>Interactive Task Cards</h3>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="task-card" onclick="toggleTaskCardDemo(this)">
+              <div class="task-card-row">
+                <div class="custom-checkbox">
+                  <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <div>
+                  <div class="task-title">Unchecked Task State</div>
+                  <div style="font-size: 11px; color: var(--ink-tertiary); margin-top: 2px;">Click to toggle state</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-card checked" onclick="toggleTaskCardDemo(this)">
+              <div class="task-card-row">
+                <div class="custom-checkbox">
+                  <svg viewBox="0 0 24 24" style="stroke-dashoffset: 0;"><path d="M20 6L9 17l-5-5"/></svg>
+                </div>
+                <div>
+                  <div class="task-title">Checked Task State</div>
+                  <div style="font-size: 11px; color: var(--ink-tertiary); margin-top: 2px;">Click to toggle state</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: SCREENS PLAYGROUND -->
+    <div id="tab-screens" class="screen-container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Desktop Screens (1280px Viewport)</h1>
+          <p class="page-subtitle">Fully styled, interactive light theme mockups using the defined visual system.</p>
+        </div>
+      </div>
+
+      <!-- Navigation for Mock Screens -->
+      <div class="screen-header-bar">
+        <button class="screen-tab-btn active" onclick="switchMockScreen('login', this)">1. Login Card</button>
+        <button class="screen-tab-btn" onclick="switchMockScreen('dashboard', this)">2. Dashboard</button>
+        <button class="screen-tab-btn" onclick="switchMockScreen('journey', this)">3. Journey Board</button>
+        <button class="screen-tab-btn" onclick="switchMockScreen('resources', this)">4. Resource Library</button>
+        <button class="screen-tab-btn" onclick="switchMockScreen('admin', this)">5. Admin Insights</button>
+        <button class="screen-tab-btn" onclick="switchMockScreen('settings', this)">6. Settings</button>
+        <button class="screen-tab-btn" onclick="switchMockScreen('overlays', this)">7. Overlays & Components</button>
+      </div>
+
+      <!-- Desktop Viewport Frame -->
+      <div class="desktop-preview-frame">
+        <div class="desktop-titlebar">
+          <div class="window-dots">
+            <div class="dot dot-close"></div>
+            <div class="dot dot-minimize"></div>
+            <div class="dot dot-maximize"></div>
+          </div>
+          <div class="window-title" id="desktop-window-title">StudYou: Sign In</div>
+          <div class="window-actions">
+            <!-- Simulated macOS top status elements -->
+            <div style="width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--ink-secondary);"></div>
+          </div>
+        </div>
+
+        <div class="desktop-body" id="desktop-window-content">
+          
+          <!-- MOCK SCREEN 1: LOGIN -->
+          <div id="mock-login" class="login-wrapper" style="display: flex;">
+            <div class="login-card">
+              <div class="login-header">
+                <div class="brand-logo" style="width: 32px; height: 32px; font-size: 16px; border-radius: var(--radius-sm);">SY</div>
+                <h2 style="font-size: 20px; font-weight: 700; color: var(--ink);">StudYou</h2>
+                <p style="font-size: 12px; color: var(--ink-secondary);">UK Student Application Roadmap</p>
+              </div>
+
+              <!-- Calm Session Expired Variant -->
+              <div class="login-expired-alert">
+                Your session has expired. For your security, please sign in again to resume your roadmap progress.
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="settings-row">
+                  <label for="login-email">Email Address</label>
+                  <input type="email" id="login-email" class="input-field" value="student@studyou.app" readonly>
+                </div>
+                <div class="settings-row">
+                  <label for="login-pass">Password</label>
+                  <input type="password" id="login-pass" class="input-field" value="••••••••••••" readonly>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" onclick="showToast('Success', 'Successfully signed in as student.')">Sign In</button>
+
+              <div class="login-footer">
+                Disclaimer: StudYou is a personal roadmap engine providing guidance and signposting. It is not legal or immigration advice.
+              </div>
+            </div>
+          </div>
+
+          <!-- MOCK SCREEN 2: DASHBOARD -->
+          <div id="mock-dashboard" class="dashboard-panel" style="display: none;">
+            
+            <div class="page-header" style="margin-bottom: 0;">
+              <div>
+                <h2 style="font-size: 20px; font-weight: 700; color: var(--ink);">Dashboard</h2>
+                <p style="font-size: 12px; color: var(--ink-secondary);">Overview of your application roadmap status.</p>
+              </div>
+            </div>
+
+            <div class="dashboard-grid">
+              
+              <!-- Completion Ring Card -->
+              <div class="dashboard-card">
+                <div class="card-header-row">
+                  <span class="card-title-sm">Journey Completion</span>
+                </div>
+                <div class="progress-ring-container">
+                  <svg class="progress-ring-svg" width="90" height="90">
+                    <circle class="progress-ring-circle-bg" cx="45" cy="45" r="40"></circle>
+                    <circle class="progress-ring-circle" id="dashboard-ring" cx="45" cy="45" r="40"></circle>
+                  </svg>
+                  <div class="progress-ring-text">
+                    <span class="progress-percent" id="dashboard-percent-text">68%</span>
+                    <span class="progress-description">14 of 21 Tasks Completed</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Budget Tracker Card -->
+              <div class="dashboard-card">
+                <div class="card-header-row">
+                  <span class="card-title-sm">Budget Tracker</span>
+                  <span class="budget-over-badge">Over Budget</span>
+                </div>
+                <div class="budget-tracker">
+                  <div class="budget-main-row">
+                    <div>
+                      <span class="budget-amount">£2,450</span>
+                      <span class="budget-currency-label">Spent of £2,300</span>
+                    </div>
+                  </div>
+                  <div class="budget-gauge">
+                    <div class="budget-gauge-fill over-budget" style="width: 100%;"></div>
+                  </div>
+                  <div class="budget-details">
+                    <span>Remaining: £0 (Over by £150)</span>
+                    <span style="font-weight: 500;">Home: $3,185 spent / $2,990 limit</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Upcoming Deadlines -->
+              <div class="dashboard-card">
+                <div class="card-header-row">
+                  <span class="card-title-sm">Upcoming Deadlines</span>
+                </div>
+                <div class="deadline-list">
+                  <div class="deadline-item">
+                    <div class="deadline-info">
+                      <span class="deadline-name">IELTS Academic Test</span>
+                      <span class="deadline-date">Target: 13 Jul 2026</span>
+                    </div>
+                    <span class="deadline-flag overdue">Overdue by 3 days</span>
+                  </div>
+                  <div class="deadline-item">
+                    <div class="deadline-info">
+                      <span class="deadline-name">TB Screening Certificate</span>
+                      <span class="deadline-date">Target: 20 Jul 2026</span>
+                    </div>
+                    <span class="deadline-flag upcoming">Due in 4 days</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Per Stage Progress -->
+              <div class="dashboard-card">
+                <div class="card-header-row">
+                  <span class="card-title-sm">Progress Per Stage</span>
+                </div>
+                <div class="stage-progress-list">
+                  <div class="stage-progress-item">
+                    <div class="stage-info">
+                      <span>1. Prepare</span>
+                      <span>100%</span>
+                    </div>
+                    <div class="stage-bar"><div class="stage-bar-fill" style="width: 100%;"></div></div>
+                  </div>
+                  <div class="stage-progress-item">
+                    <div class="stage-info">
+                      <span>2. Apply</span>
+                      <span>80%</span>
+                    </div>
+                    <div class="stage-bar"><div class="stage-bar-fill" style="width: 80%;"></div></div>
+                  </div>
+                  <div class="stage-progress-item">
+                    <div class="stage-info">
+                      <span>3. Visa</span>
+                      <span>0%</span>
+                    </div>
+                    <div class="stage-bar"><div class="stage-bar-fill" style="width: 0%;"></div></div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- MOCK SCREEN 3: JOURNEY BOARD -->
+          <div id="mock-journey" class="journey-layout" style="display: none;">
+            
+            <!-- Column 1 -->
+            <div class="journey-column">
+              <div class="column-header">
+                <span class="column-title">1. Prepare</span>
+                <span class="column-meta">4 of 4 completed</span>
+              </div>
+              <div class="task-card-list">
+                <div class="task-card checked" onclick="toggleDashboardCard(this, 'prepare-1')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24" style="stroke-dashoffset: 0;"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Register on StudYou</span>
+                  </div>
+                  <div class="task-tags">
+                    <span class="badge badge-document">Official</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£0</span>
+                    <a href="#" class="source-link" onclick="event.stopPropagation()">
+                      Source
+                      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                    </a>
+                  </div>
+                </div>
+                <div class="task-card checked" onclick="toggleDashboardCard(this, 'prepare-2')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24" style="stroke-dashoffset: 0;"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Select Target Intake Date</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£0</span>
+                    <span style="font-size: 10px;">10 Jul 2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="journey-column">
+              <div class="column-header">
+                <span class="column-title">2. Apply</span>
+                <span class="column-meta">1 of 3 completed</span>
+              </div>
+              <div class="task-card-list">
+                <div class="task-card checked" onclick="toggleDashboardCard(this, 'apply-1')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24" style="stroke-dashoffset: 0;"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Submit University Applications</span>
+                  </div>
+                  <div class="task-tags">
+                    <span class="badge badge-official">Official</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£50</span>
+                    <span style="font-size: 10px;">12 Jul 2026</span>
+                  </div>
+                </div>
+                <div class="task-card" onclick="toggleDashboardCard(this, 'apply-2')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Book IELTS Academic Test</span>
+                  </div>
+                  <div class="task-tags">
+                    <span class="badge badge-finance">Testing</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£210</span>
+                    <span style="font-size: 10px;">13 Jul 2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="journey-column">
+              <div class="column-header">
+                <span class="column-title">3. Visa</span>
+                <span class="column-meta">0 of 4 completed</span>
+              </div>
+              <div class="task-card-list">
+                <div class="task-card" onclick="toggleDashboardCard(this, 'visa-1')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Pay Immigration Health Surcharge</span>
+                  </div>
+                  <div class="task-tags">
+                    <span class="badge badge-finance">Finance</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£776</span>
+                    <span style="font-size: 10px;">10 Aug 2026</span>
+                  </div>
+                </div>
+                <div class="task-card" onclick="toggleDashboardCard(this, 'visa-2')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Submit Visa Application Form</span>
+                  </div>
+                  <div class="task-tags">
+                    <span class="badge badge-document">Visa</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£490</span>
+                    <span style="font-size: 10px;">12 Aug 2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 4 -->
+            <div class="journey-column">
+              <div class="column-header">
+                <span class="column-title">4. Pre-departure</span>
+                <span class="column-meta">0 of 3 completed</span>
+              </div>
+              <div class="task-card-list">
+                <div class="task-card" onclick="toggleDashboardCard(this, 'predep-1')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Secure Student Accommodation</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£500</span>
+                    <span style="font-size: 10px;">25 Aug 2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 5 -->
+            <div class="journey-column">
+              <div class="column-header">
+                <span class="column-title">5. Arrive & Settle</span>
+                <span class="column-meta">0 of 5 completed</span>
+              </div>
+              <div class="task-card-list">
+                <div class="task-card" onclick="toggleDashboardCard(this, 'arrive-1')">
+                  <div class="task-card-row">
+                    <div class="custom-checkbox">
+                      <svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                    </div>
+                    <span class="task-title">Collect Biometric Residence Permit</span>
+                  </div>
+                  <div class="task-tags">
+                    <span class="badge badge-document">Official</span>
+                  </div>
+                  <div class="task-footer">
+                    <span class="task-cost">£0</span>
+                    <span style="font-size: 10px;">15 Sep 2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MOCK SCREEN 4: RESOURCE LIBRARY -->
+          <div id="mock-resources" class="resources-wrapper" style="display: none;">
+            
+            <div class="filter-bar">
+              <div class="search-input-container">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" class="input-field" placeholder="Search knowledge base..." id="resource-search" oninput="filterResources()">
+              </div>
+              
+              <div class="category-pills">
+                <button class="pill-btn active" onclick="setResourceCategory('All', this)">All</button>
+                <button class="pill-btn" onclick="setResourceCategory('Visa', this)">Visa</button>
+                <button class="pill-btn" onclick="setResourceCategory('Finance', this)">Finance</button>
+                <button class="pill-btn" onclick="setResourceCategory('Testing', this)">Testing</button>
+              </div>
+
+              <div class="sort-controls">
+                <select class="select-dropdown" id="resource-sort" onchange="filterResources()">
+                  <option value="cost-asc">Cost: Low to High</option>
+                  <option value="cost-desc">Cost: High to Low</option>
+                  <option value="title">Title</option>
+                </select>
+                <button class="order-toggle-btn" onclick="toggleResourceOrder()" title="Toggle order">
+                  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" id="order-svg"><path d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+                </button>
+                <button class="btn btn-secondary" onclick="toggleEmptyState()" style="padding: 6px 12px; font-size: 12px;">Toggle Empty State</button>
+              </div>
+            </div>
+
+            <!-- Empty State Container (initially hidden) -->
+            <div class="empty-state-container" id="resources-empty-state" style="display: none;">
+              <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <h3 class="empty-state-title">No resources found</h3>
+              <p class="empty-state-desc">Try modifying your search queries or clearing filters to locate other documents.</p>
+              <button class="btn btn-primary" onclick="clearFilters()">Clear Filters</button>
+            </div>
+
+            <!-- Resources Grid -->
+            <div class="resources-grid" id="resources-grid">
+              
+              <div class="resource-card" data-category="Visa" data-cost="490" data-title="UK Student Visa Application">
+                <div class="resource-meta">
+                  <span>Visa Phase</span>
+                  <span>Updated 3 days ago</span>
+                </div>
+                <h3 class="resource-title">UK Student Visa Application</h3>
+                <p class="resource-desc">Official government fees and document requirements for the Student Route visa application.</p>
+                <div class="resource-footer">
+                  <span class="resource-cost">£490</span>
+                  <a href="#" class="source-link">
+                    Gov.uk
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </a>
+                </div>
+              </div>
+
+              <div class="resource-card" data-category="Testing" data-cost="210" data-title="IELTS Academic English Test">
+                <div class="resource-meta">
+                  <span>Testing</span>
+                  <span>Updated 2 weeks ago</span>
+                </div>
+                <h3 class="resource-title">IELTS Academic English Test</h3>
+                <p class="resource-desc">Secure English Language Test (SELT) booking, fee scale and target score requirements.</p>
+                <div class="resource-footer">
+                  <span class="resource-cost">£210</span>
+                  <a href="#" class="source-link">
+                    IELTS.org
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </a>
+                </div>
+              </div>
+
+              <div class="resource-card" data-category="Finance" data-cost="776" data-title="Immigration Health Surcharge (IHS)">
+                <div class="resource-meta">
+                  <span>Finance</span>
+                  <span>Updated 1 month ago</span>
+                </div>
+                <h3 class="resource-title">Immigration Health Surcharge (IHS)</h3>
+                <p class="resource-desc">Mandatory medical surcharge calculation covering access to the UK National Health Service (NHS).</p>
+                <div class="resource-footer">
+                  <span class="resource-cost">£776</span>
+                  <a href="#" class="source-link">
+                    NHS.uk
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- MOCK SCREEN 5: ADMIN INSIGHTS -->
+          <div id="mock-admin" class="admin-wrapper" style="display: none;">
+            
+            <div class="stats-tiles">
+              <div class="stat-tile">
+                <span class="stat-label">Total Enrolled</span>
+                <span class="stat-val">1,240</span>
+              </div>
+              <div class="stat-tile">
+                <span class="stat-label">Visa Success Rate</span>
+                <span class="stat-val">98.4%</span>
+              </div>
+              <div class="stat-tile">
+                <span class="stat-label">Avg. Completed Tasks</span>
+                <span class="stat-val">14.2</span>
+              </div>
+              <div class="stat-tile">
+                <span class="stat-label">Active Skeletons</span>
+                <span class="stat-val">312</span>
+              </div>
+            </div>
+
+            <div class="chart-container-row">
+              <div class="dashboard-card">
+                <span class="card-title-sm">Journey Completion Per Stage (%)</span>
+                <div class="mock-chart">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 140px;"><span class="chart-bar-tooltip">100%</span></div>
+                    <span class="chart-label">Prep</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 112px;"><span class="chart-bar-tooltip">80%</span></div>
+                    <span class="chart-label">Apply</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 63px;"><span class="chart-bar-tooltip">45%</span></div>
+                    <span class="chart-label">Visa</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 28px;"><span class="chart-bar-tooltip">20%</span></div>
+                    <span class="chart-label">Depart</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="height: 7px;"><span class="chart-bar-tooltip">5%</span></div>
+                    <span class="chart-label">Arrive</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="dashboard-card">
+                <span class="card-title-sm">User Drop-Off Rate (%)</span>
+                <div class="mock-chart">
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar drop-off" style="height: 7px;"><span class="chart-bar-tooltip">5%</span></div>
+                    <span class="chart-label">Prep</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar drop-off" style="height: 28px;"><span class="chart-bar-tooltip">20%</span></div>
+                    <span class="chart-label">Apply</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar drop-off" style="height: 77px;"><span class="chart-bar-tooltip">55%</span></div>
+                    <span class="chart-label">Visa</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar drop-off" style="height: 21px;"><span class="chart-bar-tooltip">15%</span></div>
+                    <span class="chart-label">Depart</span>
+                  </div>
+                  <div class="chart-bar-wrapper">
+                    <div class="chart-bar drop-off" style="height: 7px;"><span class="chart-bar-tooltip">5%</span></div>
+                    <span class="chart-label">Arrive</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Knowledge Base Admin Table -->
+            <div class="admin-table-container">
+              <div class="admin-table-header">
+                <span class="settings-group-title">Knowledge Base Resources</span>
+                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;" onclick="showToast('Admin Info', 'Create form overlay would display here.')">Create Resource</button>
+              </div>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Est. Cost</th>
+                    <th>Last Updated</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="resource-name">UK Student Visa Application</td>
+                    <td>Visa</td>
+                    <td>£490</td>
+                    <td>3 days ago</td>
+                    <td>
+                      <div class="admin-actions" style="justify-content: flex-end;">
+                        <button class="btn-icon" title="Edit" onclick="showToast('Action', 'Edit resource triggered')">
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                        </button>
+                        <button class="btn-icon btn-icon-danger" title="Delete" onclick="showToast('Warning', 'Delete action requires confirmation')">
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="resource-name">Immigration Health Surcharge</td>
+                    <td>Finance</td>
+                    <td>£776</td>
+                    <td>1 month ago</td>
+                    <td>
+                      <div class="admin-actions" style="justify-content: flex-end;">
+                        <button class="btn-icon" title="Edit"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg></button>
+                        <button class="btn-icon btn-icon-danger" title="Delete"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width:12px; height:12px;"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+          <!-- MOCK SCREEN 6: SETTINGS -->
+          <div id="mock-settings" class="settings-wrapper" style="display: none;">
+            
+            <div class="page-header" style="margin-bottom: 0;">
+              <div>
+                <h2 style="font-size: 20px; font-weight: 700; color: var(--ink);">Settings</h2>
+                <p style="font-size: 12px; color: var(--ink-secondary);">Manage budget configuration and targets.</p>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <span class="settings-group-title">Roadmap Parameters</span>
+              
+              <div class="settings-row">
+                <label for="settings-budget">Intake Budget Limit (GBP)</label>
+                <input type="number" id="settings-budget" class="input-field" value="2300">
+                <span class="settings-row-desc">Primary currency limit. Used to trigger over-budget state notifications.</span>
+              </div>
+
+              <div class="settings-row">
+                <label for="settings-intake">Intake Commencement Date</label>
+                <input type="date" id="settings-intake" class="input-field" value="2026-09-20">
+                <span class="settings-row-desc">Changing this date rewrites and recalibrates every deadline target.</span>
+              </div>
+
+              <div class="settings-row">
+                <label for="settings-country">Origin Home Country</label>
+                <select id="settings-country" class="select-dropdown" style="max-width: 320px;">
+                  <option value="US">United States (USD / $)</option>
+                  <option value="IN">India (INR / ₹)</option>
+                  <option value="NG">Nigeria (NGN / ₦)</option>
+                </select>
+                <span class="settings-row-desc">Determines currency conversions shown in details.</span>
+              </div>
+
+              <div style="margin-top: 8px;">
+                <button class="btn btn-primary" onclick="triggerRecalculateDialog()">Save Parameters</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- MOCK SCREEN 7: OVERLAYS -->
+          <div id="mock-overlays" class="overlays-wrapper" style="display: none;">
+            
+            <div class="overlay-demo-grid">
+              
+              <!-- Cmd K Palette -->
+              <div>
+                <div style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); margin-bottom: 8px; text-transform: uppercase;">Command Palette (Cmd/Ctrl K)</div>
+                <div class="cmd-k-palette">
+                  <div class="cmd-k-input-wrapper">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input type="text" class="cmd-k-input" placeholder="Type a command or search..." value="Go to">
+                  </div>
+                  <div class="cmd-k-group">
+                    <div class="cmd-k-group-title">Navigation</div>
+                    <div class="cmd-k-item selected">
+                      <span>Go to Dashboard</span>
+                      <span class="cmd-k-shortcut">G D</span>
+                    </div>
+                    <div class="cmd-k-item">
+                      <span>Go to Journey Board</span>
+                      <span class="cmd-k-shortcut">G J</span>
+                    </div>
+                    <div class="cmd-k-item">
+                      <span>Go to Resources Library</span>
+                      <span class="cmd-k-shortcut">G R</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Toast Notifications Stack -->
+              <div>
+                <div style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); margin-bottom: 8px; text-transform: uppercase;">Toast Notifications</div>
+                <div class="toast-list">
+                  <div class="toast-mock toast-success">
+                    <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div class="toast-content">
+                      <span class="toast-title">Settings Saved</span>
+                      <span class="toast-desc">Roadmap parameters updated successfully.</span>
+                    </div>
+                  </div>
+                  <div class="toast-mock toast-error">
+                    <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <div class="toast-content">
+                      <span class="toast-title">Recalculation Failed</span>
+                      <span class="toast-desc">Unable to rewrite target deadlines.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Loading Skeletons -->
+              <div>
+                <div style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); margin-bottom: 8px; text-transform: uppercase;">Loading Skeletons</div>
+                <div class="skeleton-card">
+                  <div class="shimmer"></div>
+                  <div class="skeleton-line title"></div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="skeleton-line body-1"></div>
+                    <div class="skeleton-line body-2"></div>
+                    <div class="skeleton-line body-3"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Error Card with Retry -->
+              <div>
+                <div style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); margin-bottom: 8px; text-transform: uppercase;">Error Component with Retry</div>
+                <div class="error-card-mock">
+                  <svg class="error-card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                  <div class="error-card-content">
+                    <span class="error-card-title">Failed to load resource data</span>
+                    <span class="error-card-desc">The request to fetch exchange rates timed out. Please check your network connection and try again.</span>
+                    <div>
+                      <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 11px; margin-top: 4px;" onclick="showToast('Query Info', 'Attempting query refetch...')">Retry Connection</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Global Fallback Screen Mock -->
+              <div style="grid-column: 1 / -1;">
+                <div style="font-size: 11px; font-weight: 600; color: var(--ink-secondary); margin-bottom: 8px; text-transform: uppercase;">Global Error Screen Fallback</div>
+                <div class="global-error-screen-mock">
+                  <h3 class="global-error-title">Something went wrong</h3>
+                  <p class="global-error-desc">An unexpected application error occurred. We have logged the trace details. Please reload the interface.</p>
+                  <div class="global-error-code">Reference Code: ERR_REACT_19_RENDER_FAIL_ROOT</div>
+                  <button class="btn btn-primary" onclick="showToast('Reload Info', 'Reloading main React container...')">Reload Application</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Confirmation Dialog Backdrop Overlay -->
+        <div class="overlay-backdrop" id="settings-confirm-dialog">
+          <div class="dialog-card">
+            <span class="dialog-title">Recompute target deadlines?</span>
+            <p class="dialog-desc">Changing your intake date rewrites target deadlines for every task across your StudYou roadmap using the calendar scheduling engine. This recalculation cannot be undone.</p>
+            <div class="dialog-actions">
+              <button class="btn btn-secondary" onclick="closeRecalculateDialog()">Cancel</button>
+              <button class="btn btn-primary" onclick="confirmRecalculate()">Recompute Deadlines</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Imperative Fixed Toast Area -->
+  <div class="toast-container-fixed" id="fixed-toast-container"></div>
+
+  <!-- JavaScript Interaction Logic -->
+  <script>
+    // Theme switching logic
+    function setTheme(theme) {
+      const body = document.body;
+      const lightBtn = document.getElementById('light-btn');
+      const darkBtn = document.getElementById('dark-btn');
+      
+      if (theme === 'dark') {
+        body.classList.add('dark');
+        lightBtn.classList.remove('active');
+        darkBtn.classList.add('active');
+      } else {
+        body.classList.remove('dark');
+        lightBtn.classList.add('active');
+        darkBtn.classList.remove('active');
+      }
+    }
+
+    // Main Tab controller
+    function switchMainTab(tabId, el) {
+      // Toggle nav highlights
+      document.querySelectorAll('.sidebar-nav .nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      el.classList.add('active');
+
+      // Toggle container visibility
+      document.querySelectorAll('.screen-container').forEach(cont => {
+        cont.classList.remove('active');
+      });
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    // Mock screen switcher in tab 4
+    function switchMockScreen(screenId, el) {
+      document.querySelectorAll('.screen-header-bar .screen-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      el.classList.add('active');
+
+      // Hide all mock screen contents
+      document.getElementById('mock-login').style.display = 'none';
+      document.getElementById('mock-dashboard').style.display = 'none';
+      document.getElementById('mock-journey').style.display = 'none';
+      document.getElementById('mock-resources').style.display = 'none';
+      document.getElementById('mock-admin').style.display = 'none';
+      document.getElementById('mock-settings').style.display = 'none';
+      document.getElementById('mock-overlays').style.display = 'none';
+
+      // Show selected mock screen
+      const activeScreen = document.getElementById('mock-' + screenId);
+      if (screenId === 'journey') {
+        activeScreen.style.display = 'flex';
+      } else {
+        activeScreen.style.display = 'block';
+      }
+
+      // Update window title bar
+      const titleLabel = document.getElementById('desktop-window-title');
+      const titles = {
+        'login': 'StudYou: Sign In',
+        'dashboard': 'StudYou: Dashboard',
+        'journey': 'StudYou: Personal Roadmap Board',
+        'resources': 'StudYou: Knowledge Resource Library',
+        'admin': 'StudYou: System Admin Insights',
+        'settings': 'StudYou: Parameter Settings',
+        'overlays': 'StudYou: Overlay Component Suite'
+      };
+      titleLabel.textContent = titles[screenId] ? titles[screenId] : 'StudYou Application';
+    }
+
+    // Motion animation preview helper
+    function runMotionAnim(speed, trackEl) {
+      const ball = trackEl.querySelector('.motion-preview-ball');
+      ball.style.transition = 'none';
+      ball.style.left = '0';
+      
+      // Force repaint
+      void ball.offsetWidth;
+      
+      const durations = {
+        'fast': '120ms',
+        'normal': '200ms',
+        'slow': '300ms'
+      };
+      
+      ball.style.transition = `left ${durations[speed]} cubic-bezier(0.16, 1, 0.3, 1)`;
+      ball.style.left = '188px'; // Move to end of 200px track (subtracting 12px ball diameter)
+    }
+
+    // Task Card checklist state toggler
+    function toggleTaskCardDemo(card) {
+      card.classList.toggle('checked');
+      const checkboxSvg = card.querySelector('.custom-checkbox svg');
+      if (card.classList.contains('checked')) {
+        checkboxSvg.style.strokeDashoffset = '0';
+        showToast('Task Complete', 'Task updated and marked completed successfully.');
+      } else {
+        checkboxSvg.style.strokeDashoffset = '12';
+        showToast('Task Incomplete', 'Task updated and marked incomplete.');
+      }
+    }
+
+    // State bindings between screens
+    const journeyState = {
+      'prepare-1': true,
+      'prepare-2': true,
+      'apply-1': true,
+      'apply-2': false,
+      'visa-1': false,
+      'visa-2': false,
+      'predep-1': false,
+      'arrive-1': false
+    };
+
+    function toggleDashboardCard(card, taskId) {
+      card.classList.toggle('checked');
+      const isChecked = card.classList.contains('checked');
+      journeyState[taskId] = isChecked;
+      
+      const svg = card.querySelector('.custom-checkbox svg');
+      if (isChecked) {
+        svg.style.strokeDashoffset = '0';
+        showToast('Journey Checked', 'Marked task as done. Roadmap recalculated.');
+      } else {
+        svg.style.strokeDashoffset = '12';
+        showToast('Journey Unchecked', 'Marked task as pending.');
+      }
+
+      // Recompute total progress % dynamically
+      const keys = Object.keys(journeyState);
+      const completedCount = keys.filter(k => journeyState[k]).length;
+      const totalCount = keys.length;
+      const pct = Math.round((completedCount / totalCount) * 100);
+
+      // Update ring
+      const ringText = document.getElementById('dashboard-percent-text');
+      const ringCircle = document.getElementById('dashboard-ring');
+      if (ringText && ringCircle) {
+        ringText.textContent = pct + '%';
+        // Stroke offset calculation: C = 2 * PI * r = 2 * 3.14159 * 40 = 251.2
+        const offset = 251.2 - (251.2 * pct) / 100;
+        ringCircle.style.strokeDashoffset = offset;
+      }
+    }
+
+    // Resource Library filters and sorts
+    let activeCategory = 'All';
+    let sortAscending = true;
+
+    function setResourceCategory(category, el) {
+      document.querySelectorAll('.category-pills .pill-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      el.classList.add('active');
+      activeCategory = category;
+      filterResources();
+    }
+
+    function toggleResourceOrder() {
+      sortAscending = !sortAscending;
+      const orderSvg = document.getElementById('order-svg');
+      if (sortAscending) {
+        orderSvg.innerHTML = '<path d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/>';
+      } else {
+        orderSvg.innerHTML = '<path d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4v-12"/>';
+      }
+      filterResources();
+    }
+
+    function filterResources() {
+      const searchVal = document.getElementById('resource-search').value.toLowerCase();
+      const sortVal = document.getElementById('resource-sort').value;
+      const grid = document.getElementById('resources-grid');
+      const cards = Array.from(grid.getElementsByClassName('resource-card'));
+      
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const title = card.getAttribute('data-title').toLowerCase();
+        const category = card.getAttribute('data-category');
+        
+        const matchesSearch = title.includes(searchVal);
+        const matchesCategory = activeCategory === 'All' || category === activeCategory;
+
+        if (matchesSearch && matchesCategory) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Handle Empty State Visibility
+      const emptyState = document.getElementById('resources-empty-state');
+      if (visibleCount === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'flex';
+      } else {
+        grid.style.display = 'grid';
+        emptyState.style.display = 'none';
+      }
+
+      // Perform Sort (reordering DOM elements)
+      const sortedCards = cards.filter(card => card.style.display !== 'none').sort((a, b) => {
+        if (sortVal.startsWith('cost')) {
+          const costA = parseInt(a.getAttribute('data-cost'));
+          const costB = parseInt(b.getAttribute('data-cost'));
+          return sortAscending ? costA - costB : costB - costA;
+        } else {
+          const titleA = a.getAttribute('data-title');
+          const titleB = b.getAttribute('data-title');
+          return sortAscending ? titleA.localeCompare(titleB) : titleB.localeCompare(titleA);
+        }
+      });
+
+      sortedCards.forEach(card => grid.appendChild(card));
+    }
+
+    function toggleEmptyState() {
+      const grid = document.getElementById('resources-grid');
+      const emptyState = document.getElementById('resources-empty-state');
+      if (grid.style.display === 'none') {
+        grid.style.display = 'grid';
+        emptyState.style.display = 'none';
+      } else {
+        grid.style.display = 'none';
+        emptyState.style.display = 'flex';
+      }
+    }
+
+    function clearFilters() {
+      document.getElementById('resource-search').value = '';
+      activeCategory = 'All';
+      document.querySelectorAll('.category-pills .pill-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent === 'All') btn.classList.add('active');
+      });
+      filterResources();
+    }
+
+    // Settings & Confirmation Dialog Controls
+    function triggerRecalculateDialog() {
+      const backdrop = document.getElementById('settings-confirm-dialog');
+      backdrop.classList.add('active');
+    }
+
+    function closeRecalculateDialog() {
+      const backdrop = document.getElementById('settings-confirm-dialog');
+      backdrop.classList.remove('active');
+    }
+
+    function confirmRecalculate() {
+      closeRecalculateDialog();
+      showToast('Roadmap Recalculated', 'Target deadlines shift applied successfully to all tasks.');
+    }
+
+    // Imperative Toast System
+    function showToast(title, desc) {
+      const container = document.getElementById('fixed-toast-container');
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast-mock toast-success';
+      toast.innerHTML = `
+        <svg class="toast-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <div class="toast-content">
+          <span class="toast-title">${title}</span>
+          <span class="toast-desc">${desc}</span>
+        </div>
+      `;
+      
+      container.appendChild(toast);
+      
+      // Auto-remove toast after 3s
+      setTimeout(() => {
+        toast.style.transition = 'opacity var(--duration-normal) var(--ease-out), transform var(--duration-normal) var(--ease-out)';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-12px)';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
