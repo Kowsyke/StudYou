@@ -45,6 +45,7 @@ StudYou is built on three pillars.
 - Admin dashboard: completion rates and drop off analytics across stages
 - Command palette: press Ctrl K (or Cmd K on Mac) to jump to any task, stage, resource or page
 - Settings: students can change their budget, intake date and home country at any time; an intake date change recalculates every target date through the deadline engine after an explicit confirmation
+- Appearance: a light and a dark theme, switched in Settings and remembered per device; the whole interface is built on semantic design tokens so the theme swap is a single class change
 
 Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API layer with middleware, not just hidden in the UI. The API is hardened with rate limited auth routes, security headers on every response, a central error handler that never leaks internals, and zod validation on every body, parameter and query string.
 
@@ -53,7 +54,7 @@ Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API 
 - Runtime: Bun (Node compatible, native TypeScript, fast startup and I/O)
 - Backend: Hono, a lightweight high performance web framework, versioned REST under /api/v1
 - Frontend: React 19, Vite, TypeScript
-- Styling: TailwindCSS v4 design tokens, shadcn style components, Framer Motion transitions, cmdk command palette
+- Styling: TailwindCSS v4 semantic design tokens with light and dark themes, shadcn style components, Framer Motion transitions honouring prefers-reduced-motion, cmdk command palette, WCAG AA checked color pairings
 - State: Zustand for client state, TanStack Query v5 for server state
 - Database: PostgreSQL with Drizzle ORM (type safe, SQL transparent) and generated migrations
 - Auth: JWT and bcrypt, role based access control
