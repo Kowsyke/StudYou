@@ -1,4 +1,5 @@
-import { CheckCircle2 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import { CalendarClock, CheckCircle2, TrendingUp, Wallet } from 'lucide-react'
 import { Navigate } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
@@ -20,6 +21,20 @@ export function DashboardPage() {
       <div>
         <Skeleton className="h-7 w-56 mb-2" />
         <Skeleton className="h-3.5 w-80 mb-6" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+          {['a', 'b', 'c', 'd'].map((key) => (
+            <div
+              key={key}
+              className="bg-surface rounded-lg border border-hairline shadow-md p-4 flex items-center gap-3 shimmer-host"
+            >
+              <Skeleton className="h-9 w-9 rounded-sm" />
+              <div className="space-y-1.5">
+                <Skeleton className="h-4 w-16" />
+                <Skeleton className="h-2.5 w-20" />
+              </div>
+            </div>
+          ))}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <CardSkeleton lines={3} />
           <CardSkeleton lines={3} />
@@ -46,6 +61,9 @@ export function DashboardPage() {
   const firstName = user?.fullName.split(' ')[0] ?? 'there'
   const gaugePercent =
     budget.totalPence === 0 ? 0 : Math.min(100, (budget.spentPence / budget.totalPence) * 100)
+  const daysToIntake = Math.ceil(
+    (new Date(`${journey.intakeDate}T00:00:00Z`).getTime() - Date.now()) / 86_400_000,
+  )
 
   return (
     <div>
@@ -56,6 +74,17 @@ export function DashboardPage() {
           application roadmap status.
         </p>
       </header>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <StatTile icon={TrendingUp} value={`${percentComplete}%`} label="Roadmap complete" />
+        <StatTile icon={CheckCircle2} value={`${doneTotal} of ${taskTotal}`} label="Tasks done" />
+        <StatTile icon={Wallet} value={formatGbp(budget.spentPence)} label="Spent so far" />
+        <StatTile
+          icon={CalendarClock}
+          value={daysToIntake >= 0 ? String(daysToIntake) : 'Arrived'}
+          label={daysToIntake >= 0 ? 'Days to intake' : 'Intake passed'}
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <Card>
@@ -177,5 +206,25 @@ export function DashboardPage() {
         </Card>
       </div>
     </div>
+  )
+}
+
+/* Icon chip, big value, small label: the stat tile pattern from the
+   tiled layout reference. */
+function StatTile({
+  icon: Icon,
+  value,
+  label,
+}: { icon: LucideIcon; value: string; label: string }) {
+  return (
+    <Card className="p-4 flex items-center gap-3">
+      <span className="h-9 w-9 shrink-0 rounded-sm bg-accent-soft text-accent flex items-center justify-center">
+        <Icon size={17} />
+      </span>
+      <span className="min-w-0">
+        <span className="block text-body-lg font-bold text-ink truncate tabular-nums">{value}</span>
+        <span className="block text-caption text-ink-secondary">{label}</span>
+      </span>
+    </Card>
   )
 }
