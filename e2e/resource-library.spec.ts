@@ -10,12 +10,14 @@ test.beforeEach(async ({ page }) => {
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('heading', { name: /Hello, Demo/ })).toBeVisible()
   await page.getByRole('link', { name: 'Resources' }).click()
-  await expect(page.getByRole('heading', { name: 'Resource library' })).toBeVisible()
-  // Let the page settle before driving the filters: interacting within the
-  // first few hundred milliseconds of the mount can race React StrictMode's
-  // dev only effect churn and drop the query update (dev server only).
-  await expect(page.getByRole('heading', { level: 3 }).first()).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Resource Library/i })).toBeVisible()
+  // Let the page settle before interacting: clicking within the first few
+  // hundred milliseconds of the mount can race React StrictMode's dev only
+  // effect churn and drop the state update (dev server only).
   await page.waitForTimeout(500)
+  await page.getByRole('button', { name: 'Classic Grid' }).click()
+  await expect(page.getByRole('heading', { level: 3 }).first()).toBeVisible()
+  await page.waitForTimeout(300)
 })
 
 test('search narrows the results', async ({ page }) => {
@@ -45,7 +47,7 @@ test('sort by cost orders results by price', async ({ page }) => {
   await page.getByLabel('Sort by').selectOption('cost')
 
   // Cheapest seeded resource first when ascending.
-  await expect(page.getByRole('heading', { level: 3 }).first()).toHaveText('UCAS application fee')
+  await expect(page.getByRole('heading', { level: 3 }).first()).toHaveText('TOTUM student card')
 
   await page.getByRole('button', { name: /^Order/ }).click()
   await expect(page.getByRole('heading', { level: 3 }).first()).toHaveText(

@@ -1,0 +1,51 @@
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build client
+        run: pnpm --filter @studyou/client build
+
+      - name: Bundle server for Node
+        run: |
+          cd apps/server
+          bun build src/node.ts --target node --outdir ../../deploy
+          cd ../..
+          cp -r apps/client/dist deploy/client-dist
+          cat > deploy/package.json <<'PKG'
+          {
+            "name": "studyou-deploy",
+            "private": true,
+            "scripts": { "start": "node node.js" }
+          }
+          PKG
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: studyou-app-7097
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: deploy
