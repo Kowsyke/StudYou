@@ -5,6 +5,7 @@ import {
   Check,
   ExternalLink,
   GraduationCap,
+  Heart,
   LayoutGrid,
   Plus,
   RotateCcw,
@@ -15,12 +16,16 @@ import {
 import { useMemo, useState } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
-import { UkRegionMap } from '../components/UkRegionMap'
+import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
 import { Input, Select } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
+import { useRegionCosts } from '../hooks/useMeta'
 import { type UniversityFilters, useUniversities } from '../hooks/useUniversities'
+import { formatGbpWhole } from '../lib/format'
 import { cn } from '../lib/utils'
+import { usePreferencesStore } from '../store/preferencesStore'
+import { useProfileStore } from '../store/profileStore'
 import { toast } from '../store/toastStore'
 
 const defaultFilters: UniversityFilters = {
@@ -32,17 +37,21 @@ const defaultFilters: UniversityFilters = {
 
 type Mode = 'browse' | 'swipe'
 
-function formatK(gbp: number): string {
-  return `£${(gbp / 1000).toLocaleString('en-GB', { maximumFractionDigits: 1 })}k`
-}
-
 export function UniversitiesPage() {
   const [filters, setFilters] = useState<UniversityFilters>(defaultFilters)
   const [mode, setMode] = useState<Mode>('browse')
-  const [shortlist, setShortlist] = useState<University[]>([])
+  const shortlistIds = useProfileStore((s) => s.shortlistIds)
+  const toggleShortlistId = useProfileStore((s) => s.toggleShortlist)
+  const removeShortlistId = useProfileStore((s) => s.removeFromShortlist)
+  const clearShortlistStore = useProfileStore((s) => s.clearShortlist)
   const [skipped, setSkipped] = useState<string[]>([])
   const { data: universities, isPending, error, refetch, isRefetching } = useUniversities(filters)
   const { data: allUniversities } = useUniversities(defaultFilters)
+  const compactCards = usePreferencesStore((s) => s.compactCards)
+  const { data: regionCosts } = useRegionCosts()
+  const gridClass = compactCards
+    ? 'grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3'
+    : 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'
 
   const regionCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -61,25 +70,28 @@ export function UniversitiesPage() {
     }))
   }
 
-  const inShortlist = (u: University) => shortlist.some((s) => s.id === u.id)
+  // Shortlist lives in the persisted profile store so it survives
+  // reloads and shows up on the profile page.
+  const shortlist = useMemo(
+    () => (allUniversities ?? []).filter((u) => shortlistIds.includes(u.id)),
+    [allUniversities, shortlistIds],
+  )
+
+  const inShortlist = (u: University) => shortlistIds.includes(u.id)
 
   const addToShortlist = (u: University) => {
     if (!inShortlist(u)) {
-      setShortlist((list) => [...list, u])
+      toggleShortlistId(u.id)
       toast.success(`${u.name} shortlisted.`)
     }
   }
 
-  const removeFromShortlist = (id: string) => {
-    setShortlist((list) => list.filter((s) => s.id !== id))
-  }
+  const removeFromShortlist = (id: string) => removeShortlistId(id)
 
   const deck = useMemo(
     () =>
-      (universities ?? []).filter(
-        (u) => !skipped.includes(u.id) && !shortlist.some((s) => s.id === u.id),
-      ),
-    [universities, skipped, shortlist],
+      (universities ?? []).filter((u) => !skipped.includes(u.id) && !shortlistIds.includes(u.id)),
+    [universities, skipped, shortlistIds],
   )
 
   return (
@@ -87,17 +99,17 @@ export function UniversitiesPage() {
       <header className="mb-6">
         <h1 className="text-title3 text-ink">Find your university</h1>
         <p className="text-xs text-ink-secondary mt-1">
-          The top 100 UK universities with official admissions links for international and home
-          students. Pick regions, browse or swipe, and shortlist as many as you like.
+          200 UK universities with official admissions links for international and home students.
+          Pick regions, browse or swipe, and shortlist as many as you like.
         </p>
       </header>
 
-      <div className="flex flex-col md:flex-row gap-8 mb-7">
+      <div className="flex flex-col lg:flex-row gap-8 mb-7">
         <div className="shrink-0">
           <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary mb-2.5">
             Pick your regions
           </p>
-          <UkRegionMap selected={filters.regions} counts={regionCounts} onToggle={toggleRegion} />
+          <UkGeoMap selected={filters.regions} counts={regionCounts} onToggle={toggleRegion} />
           {filters.regions.length > 0 ? (
             <button
               onClick={() => setFilters({ ...filters, regions: [] })}
@@ -109,6 +121,35 @@ export function UniversitiesPage() {
             <p className="mt-2.5 text-caption text-ink-tertiary">
               No regions selected, showing the whole UK.
             </p>
+          )}
+
+          {filters.regions.length > 0 && (regionCosts ?? []).length > 0 && (
+            <div className="mt-3 flex flex-col gap-1.5 max-w-[340px]">
+              {(regionCosts ?? [])
+                .filter((rc) => filters.regions.includes(rc.region))
+                .slice(0, 4)
+                .map((rc) => (
+                  <div
+                    key={rc.region}
+                    className="bg-surface/60 border border-hairline rounded-md px-2.5 py-1.5 flex flex-col gap-0.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-ink text-xs">{rc.region}</span>
+                      <span className="text-micro text-ink-muted capitalize">
+                        {rc.costLevel} cost
+                      </span>
+                    </div>
+                    <div className="text-caption text-ink-tertiary flex flex-wrap gap-x-2 gap-y-0.5 mt-0.5 leading-snug">
+                      <span>
+                        • Rent: {formatGbpWhole(rc.monthlyRentMinGbp)}-
+                        {formatGbpWhole(rc.monthlyRentMaxGbp)}
+                      </span>
+                      <span>• Living: {formatGbpWhole(rc.monthlyLivingGbp)}</span>
+                      <span>• Pass: {formatGbpWhole(rc.transportPassGbp)}</span>
+                    </div>
+                  </div>
+                ))}
+            </div>
           )}
         </div>
 
@@ -197,7 +238,7 @@ export function UniversitiesPage() {
           action={<Button onClick={() => setFilters(defaultFilters)}>Clear filters</Button>}
         />
       ) : mode === 'browse' ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+        <div className={gridClass}>
           {(universities ?? []).map((u) => (
             <UniversityCard
               key={u.id}
@@ -252,7 +293,7 @@ export function UniversitiesPage() {
                 Open application pages
                 <ArrowUpRight size={13} />
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => setShortlist([])}>
+              <Button variant="ghost" size="sm" onClick={clearShortlistStore}>
                 Clear
               </Button>
             </div>
@@ -338,12 +379,20 @@ function UniversityCard({
       <p className="text-xs text-ink-secondary leading-relaxed grow">{u.notes}</p>
 
       {u.tuitionIntlMinGbp !== null && u.tuitionIntlMaxGbp !== null && (
-        <p className="text-caption text-ink-tertiary bg-canvas border border-hairline rounded-sm px-2.5 py-1.5 tabular-nums">
-          International tuition about {formatK(u.tuitionIntlMinGbp)} to{' '}
-          {formatK(u.tuitionIntlMaxGbp)}
-          {u.tuitionHomeGbp !== null && <> per year, home {formatK(u.tuitionHomeGbp)}</>}.
-          Indicative, always confirm on the official page.
-        </p>
+        <div className="bg-canvas border border-hairline rounded-sm px-2.5 py-2 tabular-nums">
+          <p className="text-xs font-semibold text-ink">
+            {formatGbpWhole(u.tuitionIntlMinGbp)} to {formatGbpWhole(u.tuitionIntlMaxGbp)}
+            <span className="text-ink-tertiary font-normal"> per year international</span>
+          </p>
+          {u.tuitionHomeGbp !== null && (
+            <p className="text-caption text-ink-secondary mt-0.5">
+              Home students: {formatGbpWhole(u.tuitionHomeGbp)} per year
+            </p>
+          )}
+          <p className="text-micro text-ink-tertiary mt-0.5">
+            Indicative, always confirm on the official page.
+          </p>
+        </div>
       )}
 
       <div className="flex items-center gap-x-3 gap-y-1 flex-wrap border-t border-hairline pt-2.5 text-xs font-medium">
@@ -466,10 +515,17 @@ function SwipeDeck({
           <X size={14} />
           Skip
         </Button>
-        <Button onClick={() => onShortlist(top)}>
-          <Check size={14} />
+        <button
+          onClick={() => onShortlist(top)}
+          aria-label={`Shortlist ${top.name}`}
+          className="group sheen inline-flex items-center gap-2 h-9 px-4 rounded-full text-body font-semibold bg-surface text-danger border border-hairline-strong shadow-sm transition-all duration-[120ms] hover:border-danger hover:shadow-md active:scale-[0.96]"
+        >
+          <Heart
+            size={16}
+            className="transition-all duration-200 fill-transparent group-hover:fill-current group-hover:scale-110 group-active:scale-125"
+          />
           Shortlist
-        </Button>
+        </button>
       </div>
     </div>
   )
@@ -504,8 +560,9 @@ function SwipeCard({
     >
       <motion.span
         style={{ opacity: shortlistOpacity }}
-        className="absolute top-4 right-4 text-caption font-bold uppercase tracking-[0.05em] text-positive border-2 border-positive rounded-sm px-2 py-1 rotate-6"
+        className="absolute top-4 right-4 inline-flex items-center gap-1 text-caption font-bold uppercase tracking-[0.05em] text-danger border-2 border-danger rounded-sm px-2 py-1 rotate-6"
       >
+        <Heart size={12} className="fill-current" />
         Shortlist
       </motion.span>
       <motion.span
@@ -531,9 +588,9 @@ function SwipeCard({
       )}
       <p className="text-body text-ink-secondary leading-relaxed grow">{u.notes}</p>
       {u.tuitionIntlMinGbp !== null && u.tuitionIntlMaxGbp !== null && (
-        <p className="text-caption text-ink-tertiary tabular-nums">
-          International tuition about {formatK(u.tuitionIntlMinGbp)} to{' '}
-          {formatK(u.tuitionIntlMaxGbp)} per year, indicative.
+        <p className="text-caption text-ink-secondary tabular-nums">
+          {formatGbpWhole(u.tuitionIntlMinGbp)} to {formatGbpWhole(u.tuitionIntlMaxGbp)} per year
+          international, indicative.
         </p>
       )}
       <div className="flex items-center gap-3 border-t border-hairline pt-3 text-xs font-medium">

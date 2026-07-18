@@ -2,12 +2,7 @@ import type { HTMLAttributes } from 'react'
 import { cn } from '../../lib/utils'
 
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('bg-surface rounded-lg border border-hairline shadow-md', className)}
-      {...props}
-    />
-  )
+  return <div className={cn('aurora-card rounded-lg shadow-md', className)} {...props} />
 }
 
 /* Banded header: a clear titled section band above the card body, from

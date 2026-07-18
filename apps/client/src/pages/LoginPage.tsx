@@ -31,13 +31,14 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 [background:radial-gradient(circle_at_50%_50%,var(--surface-secondary)_0%,var(--canvas)_100%)]">
+      <div className="ambient ambient-a" aria-hidden="true" />
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, ease: swift }}
         className="w-[360px] max-w-full"
       >
-        <div className="bg-surface border border-hairline rounded-lg shadow-overlay p-8 flex flex-col gap-5">
+        <div className="glass-reflect bg-surface border border-hairline rounded-lg shadow-overlay p-8 flex flex-col gap-5">
           <div className="flex flex-col items-center gap-2 text-center">
             <span className="w-8 h-8 rounded-sm bg-accent-solid text-white text-body-lg font-extrabold flex items-center justify-center">
               SY

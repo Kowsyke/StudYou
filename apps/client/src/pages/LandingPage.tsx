@@ -27,9 +27,9 @@ const marqueeItems = [
 ]
 
 const stats = [
-  { value: '5', label: 'Journey stages' },
+  { value: '200', label: 'UK universities' },
   { value: '21', label: 'Official steps' },
-  { value: '12', label: 'Sourced resources' },
+  { value: '47', label: 'Sourced resources' },
   { value: '0', label: 'Agency fees' },
 ]
 
@@ -43,12 +43,16 @@ export function LandingPage() {
       <div className="blob blob-b w-[380px] h-[380px] top-1/3 -right-32" />
 
       <nav className="relative z-10 max-w-5xl mx-auto flex items-center justify-between px-6 py-5">
-        <span className="flex items-center gap-2 text-body-lg font-bold tracking-[-0.01em]">
-          <span className="w-6 h-6 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)]">
+        <Link
+          to="/"
+          aria-label="StudYou home"
+          className="flex items-center gap-2 text-body-lg font-bold tracking-[-0.01em] rounded-sm"
+        >
+          <span className="breathe w-6 h-6 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)] transition-transform duration-[120ms] hover:rotate-6 hover:scale-110">
             SY
           </span>
           StudYou
-        </span>
+        </Link>
         <div className="flex items-center gap-2">
           <Link to="/login">
             <Button variant="ghost" size="sm">
@@ -141,15 +145,26 @@ export function LandingPage() {
         <FloatingPreview />
       </main>
 
-      <div className="relative z-10 border-y border-hairline bg-surface/60 backdrop-blur-sm py-3 overflow-hidden">
+      <div className="relative z-10 border-y border-hairline bg-surface/60 backdrop-blur-sm py-3.5 overflow-hidden">
         <div className="marquee-track">
           {[...marqueeItems, ...marqueeItems].map((item, index) => (
-            <span
+            <Link
               key={`${item}-${index >= marqueeItems.length ? 'b' : 'a'}`}
-              className="shrink-0 text-caption font-semibold text-ink-secondary bg-surface border border-hairline rounded-full px-3 py-1.5 shadow-sm"
+              to="/register"
+              tabIndex={index >= marqueeItems.length ? -1 : 0}
+              className="marquee-chip shrink-0 inline-flex items-center gap-1.5 text-caption font-semibold text-ink-secondary bg-surface border border-hairline rounded-full px-3 py-1.5 shadow-sm"
             >
+              <span
+                aria-hidden="true"
+                className="h-1.5 w-1.5 rounded-full"
+                style={{
+                  background: 'var(--aurora)',
+                  backgroundPosition: `${(index % marqueeItems.length) * 8}% 50%`,
+                  backgroundSize: '400% 400%',
+                }}
+              />
               {item}
-            </span>
+            </Link>
           ))}
         </div>
       </div>

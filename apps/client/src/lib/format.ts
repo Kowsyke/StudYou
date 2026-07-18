@@ -29,3 +29,12 @@ export function daysLeftLabel(daysLeft: number): string {
   if (daysLeft === 1) return 'Due tomorrow'
   return `${daysLeft} days left`
 }
+
+/* Whole pound amounts (tuition figures arrive as GBP integers). */
+export function formatGbpWhole(gbp: number): string {
+  return new Intl.NumberFormat('en-GB', {
+    style: 'currency',
+    currency: 'GBP',
+    maximumFractionDigits: 0,
+  }).format(gbp)
+}

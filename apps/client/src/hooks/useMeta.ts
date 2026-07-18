@@ -1,4 +1,4 @@
-import type { AdminAnalytics, ApiResponse, Category, Country } from '@studyou/types'
+import type { AdminAnalytics, ApiResponse, Category, Country, RegionCost } from '@studyou/types'
 import { useQuery } from '@tanstack/react-query'
 import { api } from '../lib/api'
 
@@ -33,5 +33,16 @@ export function useAnalytics(enabled: boolean) {
       return data.data
     },
     enabled,
+  })
+}
+
+export function useRegionCosts() {
+  return useQuery({
+    queryKey: ['region-costs'],
+    queryFn: async () => {
+      const { data } = await api.get<ApiResponse<RegionCost[]>>('/meta/region-costs')
+      return data.data ?? []
+    },
+    staleTime: Number.POSITIVE_INFINITY,
   })
 }

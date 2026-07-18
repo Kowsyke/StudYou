@@ -28,6 +28,8 @@ interface CreateJourneyInput {
   intakeDate: string
   courseLevel: string
   budgetPence: number
+  major?: string
+  regions?: string[]
 }
 
 export function useCreateJourney() {

@@ -18,7 +18,7 @@
     <script>
       // Apply the persisted theme before first paint so there is no flash.
       try {
-        if (localStorage.getItem('studyou_theme') === 'dark') {
+        if (localStorage.getItem('studyou_theme') !== 'light') {
           document.documentElement.classList.add('dark')
         }
       } catch (_) {}

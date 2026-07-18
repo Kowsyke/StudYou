@@ -1,18 +1,46 @@
 import type { LucideIcon } from 'lucide-react'
-import { CalendarClock, CheckCircle2, TrendingUp, Wallet } from 'lucide-react'
-import { Navigate } from 'react-router-dom'
+import {
+  Bookmark,
+  CalendarClock,
+  CheckCircle2,
+  ExternalLink,
+  FileText,
+  HeartPulse,
+  Home,
+  PlaneLanding,
+  Stamp,
+  Trash2,
+  TrendingUp,
+  Wallet,
+} from 'lucide-react'
+import { useMemo } from 'react'
+import { Link, Navigate } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
 import { Card, CardContent, CardHeader, CardKicker } from '../components/ui/card'
 import { ProgressBar, ProgressRing } from '../components/ui/progress'
 import { CardSkeleton, Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney } from '../hooks/useJourney'
+import { useResources } from '../hooks/useResources'
 import { daysLeftLabel, formatDate, formatGbp, formatHome } from '../lib/format'
 import { useAuthStore } from '../store/authStore'
+import { useBookmarkStore, useBookmarkedIds } from '../store/bookmarkStore'
+import { usePreferencesStore } from '../store/preferencesStore'
 
 export function DashboardPage() {
   const user = useAuthStore((s) => s.user)
+  const dueSoonDays = usePreferencesStore((s) => s.dueSoonDays)
+  const showHomeCurrency = usePreferencesStore((s) => s.showHomeCurrency)
   const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
+
+  const resourceFilters = useMemo(
+    () => ({ search: '', category: '', sort: 'title' as const, order: 'asc' as const }),
+    [],
+  )
+  const { data: resources } = useResources(resourceFilters)
+  const bookmarkedIds = useBookmarkedIds()
+  const { toggleBookmark } = useBookmarkStore()
+  const bookmarkedResources = (resources ?? []).filter((r) => bookmarkedIds.includes(r.id))
 
   if (error && hasNoJourney(error)) return <Navigate to="/onboarding" replace />
 
@@ -64,6 +92,15 @@ export function DashboardPage() {
   const daysToIntake = Math.ceil(
     (new Date(`${journey.intakeDate}T00:00:00Z`).getTime() - Date.now()) / 86_400_000,
   )
+
+  const categoryIcons: Record<string, LucideIcon> = {
+    visa: Stamp,
+    health: HeartPulse,
+    finance: Wallet,
+    housing: Home,
+    documents: FileText,
+    arrival: PlaneLanding,
+  }
 
   return (
     <div>
@@ -123,7 +160,7 @@ export function DashboardPage() {
             </div>
             <div className="flex justify-between text-xs text-ink-secondary flex-wrap gap-1">
               <span>Still to pay: {formatGbp(budget.remainingPence)}</span>
-              {budget.spentHome !== null && budget.homeCurrencyCode && (
+              {showHomeCurrency && budget.spentHome !== null && budget.homeCurrencyCode && (
                 <span className="font-medium">
                   Home: about {formatHome(budget.spentHome, budget.homeCurrencyCode)} spent
                 </span>
@@ -158,7 +195,12 @@ export function DashboardPage() {
                     className="flex items-center justify-between gap-3 px-3 py-2 rounded-sm bg-canvas border border-hairline"
                   >
                     <div className="min-w-0">
-                      <p className="text-body font-semibold text-ink truncate">{d.title}</p>
+                      <Link
+                        to={`/journey#task-${d.taskId}`}
+                        className="text-body font-semibold text-ink hover:text-accent hover:underline truncate block"
+                      >
+                        {d.title}
+                      </Link>
                       <p className="text-caption text-ink-tertiary">
                         Target: {formatDate(d.targetDate)}
                       </p>
@@ -167,7 +209,7 @@ export function DashboardPage() {
                       className={`text-micro font-semibold px-1.5 py-0.5 rounded-xs shrink-0 ${
                         d.daysLeft < 0
                           ? 'bg-danger-soft text-danger'
-                          : d.daysLeft <= 14
+                          : d.daysLeft <= dueSoonDays
                             ? 'bg-warning-soft text-warning'
                             : 'bg-surface-secondary text-ink-secondary'
                       }`}
@@ -204,6 +246,85 @@ export function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+
+        <Card className="md:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between border-b border-hairline pb-3">
+            <div>
+              <CardKicker>Saved for reference</CardKicker>
+              <h2 className="text-body font-bold text-ink flex items-center gap-1.5">
+                <Bookmark size={15} className="text-accent" fill="currentColor" />
+                Bookmarked Resources
+              </h2>
+            </div>
+            <span className="text-caption text-ink-tertiary">
+              {bookmarkedResources.length} saved
+            </span>
+          </CardHeader>
+          <CardContent className="pt-4">
+            {bookmarkedResources.length === 0 ? (
+              <div className="py-6 text-center">
+                <p className="text-caption text-ink-secondary">No bookmarks saved yet.</p>
+                <Link
+                  to="/resources"
+                  className="text-caption text-accent font-semibold hover:underline mt-1 inline-block"
+                >
+                  Explore the Knowledge Tree &rarr;
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {bookmarkedResources.map((res) => {
+                  const Icon = categoryIcons[res.categoryKey] ?? FileText
+                  return (
+                    <div
+                      key={res.id}
+                      className="p-3 bg-canvas border border-hairline rounded-sm flex items-start justify-between gap-3 group relative hover:border-hairline-strong transition-colors duration-100"
+                    >
+                      <div className="flex gap-2.5 min-w-0">
+                        <span className="h-8 w-8 rounded-sm bg-surface border border-hairline text-ink-secondary flex items-center justify-center shrink-0">
+                          <Icon size={14} />
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="text-xs font-semibold text-ink truncate pr-6">
+                            {res.title}
+                          </h3>
+                          <p className="text-[11px] text-ink-secondary line-clamp-2 mt-0.5 leading-relaxed">
+                            {res.summary}
+                          </p>
+                          <div className="flex items-center gap-2 mt-2 text-[10px] text-ink-tertiary">
+                            <span className="capitalize">{res.categoryKey}</span>
+                            <span>•</span>
+                            <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                              {res.costPence !== null ? formatGbp(res.costPence) : 'No fee'}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-1 items-end shrink-0">
+                        <button
+                          onClick={() => toggleBookmark(res.id)}
+                          className="p-1 text-ink-tertiary hover:text-danger hover:bg-danger-soft rounded-xs border border-transparent hover:border-danger/10 transition-colors duration-100 cursor-pointer"
+                          title="Remove bookmark"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                        <a
+                          href={res.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-1 text-ink-tertiary hover:text-accent hover:bg-accent-soft rounded-xs border border-transparent hover:border-accent/10 transition-colors duration-100 mt-1"
+                          title="View source"
+                        >
+                          <ExternalLink size={12} />
+                        </a>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
@@ -217,7 +338,7 @@ function StatTile({
   label,
 }: { icon: LucideIcon; value: string; label: string }) {
   return (
-    <Card className="p-4 flex items-center gap-3">
+    <Card className="p-4 flex items-center gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 cursor-default">
       <span className="h-9 w-9 shrink-0 rounded-sm bg-accent-soft text-accent flex items-center justify-center">
         <Icon size={17} />
       </span>

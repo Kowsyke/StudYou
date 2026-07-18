@@ -8,7 +8,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          'bg-accent-solid text-white shadow-md [background-image:var(--accent-gradient)] hover:[background-image:var(--accent-gradient-hover)] active:bg-accent-solid-pressed active:[background-image:none]',
+          'sheen bg-accent-solid text-white shadow-md [background-image:var(--accent-gradient)] hover:[background-image:var(--accent-gradient-hover)] active:bg-accent-solid-pressed active:[background-image:none]',
         secondary:
           'bg-surface text-ink border border-hairline-strong shadow-sm hover:bg-surface-secondary',
         ghost: 'text-ink-secondary hover:bg-surface-secondary hover:text-ink',

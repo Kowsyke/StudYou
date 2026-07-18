@@ -6,7 +6,9 @@ import {
   BookOpen,
   CheckCircle2,
   Circle,
+  CircleUser,
   GraduationCap,
+  Heart,
   LayoutDashboard,
   Map as MapIcon,
   Search as SearchIcon,
@@ -52,7 +54,7 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
       open={open}
       onOpenChange={setOpen}
       label="Global search"
-      contentClassName="palette-in fixed top-[18vh] left-1/2 w-[min(480px,90vw)] z-50 bg-surface rounded-lg border border-hairline-strong shadow-overlay overflow-hidden"
+      contentClassName="glass-reflect palette-in fixed top-[18vh] left-1/2 -translate-x-1/2 w-[min(480px,90vw)] z-50 bg-surface rounded-lg border border-hairline-strong shadow-overlay overflow-hidden"
       overlayClassName="fixed inset-0 bg-black/40 backdrop-blur-[4px] z-40"
     >
       <div className="flex items-center gap-3 px-4 border-b border-hairline">
@@ -76,8 +78,14 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
               <PaletteItem onSelect={() => go('/journey')} icon={<MapIcon size={15} />}>
                 My journey
               </PaletteItem>
+              <PaletteItem onSelect={() => go('/shortlisted')} icon={<Heart size={15} />}>
+                Shortlisted
+              </PaletteItem>
               <PaletteItem onSelect={() => go('/universities')} icon={<GraduationCap size={15} />}>
                 Universities
+              </PaletteItem>
+              <PaletteItem onSelect={() => go('/profile')} icon={<CircleUser size={15} />}>
+                My profile
               </PaletteItem>
               <PaletteItem onSelect={() => go('/settings')} icon={<SlidersHorizontal size={15} />}>
                 Settings

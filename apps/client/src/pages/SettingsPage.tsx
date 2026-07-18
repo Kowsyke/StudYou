@@ -1,16 +1,18 @@
 import { motion } from 'framer-motion'
-import { Moon, Sun } from 'lucide-react'
+import { Download, Moon, Sun, Trash2 } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { QueryError } from '../components/QueryError'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Input, Label, Select } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
+import { Switch } from '../components/ui/switch'
 import { hasNoJourney, useJourney, useUpdateSettings } from '../hooks/useJourney'
 import { useCountries } from '../hooks/useMeta'
 import { apiErrorMessage } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
+import { DUE_SOON_OPTIONS, clearLocalData, usePreferencesStore } from '../store/preferencesStore'
 import { type Theme, useThemeStore } from '../store/themeStore'
 import { toast } from '../store/toastStore'
 
@@ -52,6 +54,10 @@ function ThemeToggle() {
 export function SettingsPage() {
   const user = useAuthStore((s) => s.user)
   const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
+
+  // Admins have their own settings inside the admin panel; the student
+  // settings page depends on a journey which admins do not have.
+  if (user?.role === 'admin') return <Navigate to="/admin/settings" replace />
   const { data: countries } = useCountries()
   const updateSettings = useUpdateSettings()
 
@@ -151,11 +157,49 @@ export function SettingsPage() {
 
       <Card className="max-w-xl mb-5">
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>Choose how StudYou looks. Saved on this device.</CardDescription>
+          <CardTitle>Account</CardTitle>
+          <CardDescription>Who you are signed in as.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex flex-wrap items-center gap-x-8 gap-y-2">
+          <div>
+            <p className="text-caption text-ink-tertiary">Name</p>
+            <p className="text-body font-semibold text-ink">{user?.fullName}</p>
+          </div>
+          <div className="min-w-0">
+            <p className="text-caption text-ink-tertiary">Email</p>
+            <p className="text-body font-semibold text-ink truncate">{user?.email}</p>
+          </div>
+          <div>
+            <p className="text-caption text-ink-tertiary">Role</p>
+            <p className="text-body font-semibold text-ink capitalize">{user?.role}</p>
+          </div>
+          <Link to="/profile" className="ml-auto text-xs font-medium text-accent hover:underline">
+            Edit avatar and shortlist
+          </Link>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-xl mb-5">
+        <CardHeader>
+          <CardTitle>Appearance</CardTitle>
+          <CardDescription>
+            Choose how StudYou looks and moves. Saved on this device.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
           <ThemeToggle />
+          <MotionAndDensity />
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-xl mb-5">
+        <CardHeader>
+          <CardTitle>Planning</CardTitle>
+          <CardDescription>How StudYou flags what is coming up.</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-4">
+          <DueSoonPicker />
+          <HomeCurrencyToggle />
         </CardContent>
       </Card>
 
@@ -221,6 +265,60 @@ export function SettingsPage() {
         </CardContent>
       </Card>
 
+      <Card className="max-w-xl mt-5">
+        <CardHeader>
+          <CardTitle>Your data</CardTitle>
+          <CardDescription>
+            Everything StudYou stores on this device stays on this device.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2.5">
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={() => {
+              const payload = {
+                exportedAt: new Date().toISOString(),
+                account: { name: user?.fullName, email: user?.email, role: user?.role },
+                journey: overview.journey,
+                progress: {
+                  percentComplete: overview.percentComplete,
+                  budget: overview.budget,
+                  upcomingDeadlines: overview.upcomingDeadlines,
+                },
+                localPreferences: JSON.parse(localStorage.getItem('studyou_prefs') ?? '{}'),
+                profileChoices: JSON.parse(localStorage.getItem('studyou_profile') ?? '{}'),
+              }
+              const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                type: 'application/json',
+              })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = 'studyou-export.json'
+              a.click()
+              URL.revokeObjectURL(url)
+              toast.success('Export downloaded.')
+            }}
+          >
+            <Download size={13} />
+            Export my data
+          </Button>
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => {
+              clearLocalData()
+              toast.success('Local data cleared.')
+              setTimeout(() => window.location.reload(), 600)
+            }}
+          >
+            <Trash2 size={13} />
+            Clear local data
+          </Button>
+        </CardContent>
+      </Card>
+
       {confirming && (
         <div
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px] flex items-center justify-center px-4"
@@ -235,7 +333,7 @@ export function SettingsPage() {
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="confirm-title"
-            className="bg-surface rounded-lg border border-hairline shadow-overlay p-6 w-[400px] max-w-full flex flex-col gap-4"
+            className="glass-reflect bg-surface rounded-lg border border-hairline shadow-overlay p-6 w-[400px] max-w-full flex flex-col gap-4"
           >
             <h2 id="confirm-title" className="text-body-lg font-bold text-ink">
               Recalculate your roadmap?
@@ -255,5 +353,82 @@ export function SettingsPage() {
         </div>
       )}
     </div>
+  )
+}
+
+function MotionAndDensity() {
+  const reduceMotion = usePreferencesStore((s) => s.reduceMotion)
+  const setReduceMotion = usePreferencesStore((s) => s.setReduceMotion)
+  const compactCards = usePreferencesStore((s) => s.compactCards)
+  const setCompactCards = usePreferencesStore((s) => s.setCompactCards)
+
+  return (
+    <>
+      <Switch
+        id="pref-motion"
+        checked={reduceMotion}
+        onChange={setReduceMotion}
+        label="Reduce motion"
+        hint="Turns off page transitions and ambient animation, on top of your system setting."
+      />
+      <Switch
+        id="pref-compact"
+        checked={compactCards}
+        onChange={setCompactCards}
+        label="Compact cards"
+        hint="Fits more universities and resources on screen with tighter cards."
+      />
+    </>
+  )
+}
+
+function DueSoonPicker() {
+  const dueSoonDays = usePreferencesStore((s) => s.dueSoonDays)
+  const setDueSoonDays = usePreferencesStore((s) => s.setDueSoonDays)
+
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <span>
+        <span className="block text-body font-medium text-ink">Due soon window</span>
+        <span className="block text-caption text-ink-tertiary mt-0.5">
+          Deadlines inside this window get the amber flag on your dashboard.
+        </span>
+      </span>
+      <fieldset
+        className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0 shrink-0"
+        aria-label="Due soon window"
+      >
+        {DUE_SOON_OPTIONS.map((days) => (
+          <button
+            key={days}
+            type="button"
+            aria-pressed={dueSoonDays === days}
+            onClick={() => setDueSoonDays(days)}
+            className={`px-3 py-1.5 rounded-[6px] text-caption font-semibold transition-colors duration-[120ms] tabular-nums ${
+              dueSoonDays === days
+                ? 'bg-surface text-ink shadow-sm'
+                : 'text-ink-secondary hover:text-ink'
+            }`}
+          >
+            {days}d
+          </button>
+        ))}
+      </fieldset>
+    </div>
+  )
+}
+
+function HomeCurrencyToggle() {
+  const showHomeCurrency = usePreferencesStore((s) => s.showHomeCurrency)
+  const setShowHomeCurrency = usePreferencesStore((s) => s.setShowHomeCurrency)
+
+  return (
+    <Switch
+      id="pref-currency"
+      checked={showHomeCurrency}
+      onChange={setShowHomeCurrency}
+      label="Show home currency"
+      hint="Displays approximate amounts in your home currency next to GBP."
+    />
   )
 }

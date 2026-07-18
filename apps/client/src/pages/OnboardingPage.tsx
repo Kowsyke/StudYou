@@ -8,6 +8,8 @@ import { useCreateJourney } from '../hooks/useJourney'
 import { apiErrorMessage } from '../lib/api'
 import { cn } from '../lib/utils'
 
+import { UkGeoMap } from '../components/UkGeoMap'
+
 const swift = [0.16, 1, 0.3, 1] as const
 
 const courseLevels = [
@@ -33,8 +35,6 @@ const courseLevels = [
   },
 ]
 
-// Common UK intake months as quick picks, with the date input for
-// anything else. Values are computed from fixed academic dates.
 const intakePresets = [
   { label: 'September 2026', value: '2026-09-21' },
   { label: 'January 2027', value: '2027-01-18' },
@@ -43,13 +43,29 @@ const intakePresets = [
 
 const budgetPresets = [3000, 4000, 5500, 7000]
 
+const majorPresets = [
+  'Computer Science',
+  'Business & Finance',
+  'Medicine & Health',
+  'Engineering',
+  'Law',
+]
+
 export function OnboardingPage() {
   const navigate = useNavigate()
   const createJourney = useCreateJourney()
   const [courseLevel, setCourseLevel] = useState('Undergraduate')
+  const [major, setMajor] = useState('')
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([])
   const [intakeDate, setIntakeDate] = useState('')
   const [budgetGbp, setBudgetGbp] = useState('')
   const [error, setError] = useState<string | null>(null)
+
+  const toggleRegion = (region: string) => {
+    setSelectedRegions((prev) =>
+      prev.includes(region) ? prev.filter((r) => r !== region) : [...prev, region],
+    )
+  }
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -59,6 +75,8 @@ export function OnboardingPage() {
         intakeDate,
         courseLevel,
         budgetPence: Math.round(Number(budgetGbp || '0') * 100),
+        major: major || undefined,
+        regions: selectedRegions.length > 0 ? selectedRegions : undefined,
       },
       {
         onSuccess: () => navigate('/'),
@@ -69,6 +87,8 @@ export function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-canvas py-10 px-4 [background:radial-gradient(circle_at_50%_0%,var(--surface-secondary)_0%,var(--canvas)_60%)]">
+      <div className="ambient ambient-a" aria-hidden="true" />
+      <div className="ambient ambient-b" aria-hidden="true" />
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -132,7 +152,77 @@ export function OnboardingPage() {
 
           <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
             <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
-              2. When do you want to start?
+              2. What is your major or subject of interest?
+            </h2>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {majorPresets.map((preset) => {
+                const active = major === preset
+                return (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setMajor(preset)}
+                    className={cn(
+                      'text-xs font-semibold px-3 py-1.5 rounded-full border transition-all duration-[120ms]',
+                      active
+                        ? 'border-transparent text-white shadow-sm bg-accent-solid [background-image:var(--accent-gradient)]'
+                        : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
+                    )}
+                  >
+                    {preset}
+                  </button>
+                )
+              })}
+            </div>
+            <Label htmlFor="major-input">Or type your custom major / subject</Label>
+            <Input
+              id="major-input"
+              type="text"
+              placeholder="e.g. Psychology, Fine Art, Dental Surgery"
+              value={major}
+              onChange={(e) => setMajor(e.target.value)}
+              className="max-w-md mt-1"
+            />
+          </section>
+
+          <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center">
+            <div className="w-full text-left">
+              <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-1">
+                3. Preferred regions in the UK
+              </h2>
+              <p className="text-xs text-ink-secondary mb-4">
+                Click on the regions where you would like to study. Leave empty to show all regions.
+              </p>
+            </div>
+            <div className="w-full flex justify-center py-2 bg-surface-secondary/50 rounded-md border border-hairline max-w-[380px]">
+              <UkGeoMap selected={selectedRegions} counts={{}} onToggle={toggleRegion} />
+            </div>
+            <div className="w-full text-left mt-3">
+              {selectedRegions.length > 0 ? (
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-medium text-accent">
+                    {selectedRegions.length} region{selectedRegions.length > 1 ? 's' : ''} selected:{' '}
+                    {selectedRegions.join(', ')}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedRegions([])}
+                    className="text-xs font-medium text-ink-muted hover:text-ink hover:underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              ) : (
+                <p className="text-caption text-ink-tertiary">
+                  No specific regions selected. We'll show you universities across the entire UK.
+                </p>
+              )}
+            </div>
+          </section>
+
+          <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
+            <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
+              4. When do you want to start?
             </h2>
             <div className="flex flex-wrap gap-2.5 mb-3">
               {intakePresets.map((preset) => {
@@ -168,7 +258,7 @@ export function OnboardingPage() {
 
           <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
             <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
-              3. Your process budget
+              5. Your process budget
             </h2>
             <div className="flex flex-wrap gap-2.5 mb-3">
               {budgetPresets.map((amount) => {
