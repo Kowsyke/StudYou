@@ -375,20 +375,6 @@ body {
   display: flex;
   gap: 12px;
   width: max-content;
-  animation: marquee-scroll 28s linear infinite;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-@keyframes marquee-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 /* Geographic UK map: regions lift on hover, labels sharpen, selection
@@ -486,6 +472,11 @@ body {
 
 /* Command palette drop in, 300ms swift per the motion spec. */
 .palette-in {
+  /* The palette also carries .glass-reflect, whose position: relative would
+     otherwise beat the Tailwind fixed utility (unlayered rules win over
+     utilities) and drop the palette into page flow. Pin it here so it stays
+     anchored to the viewport and never runs off the bottom of the screen. */
+  position: fixed;
   animation: palette-in 300ms var(--ease-swift);
 }
 
@@ -579,10 +570,10 @@ body {
 /* Mouse cursor follower halo */
 .cursor-halo {
   position: fixed;
-  width: 400px;
-  height: 400px;
+  width: 160px;
+  height: 160px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(0, 102, 204, 0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 102, 204, 0.08) 0%, transparent 70%);
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 1;
@@ -591,7 +582,7 @@ body {
 }
 
 .dark .cursor-halo {
-  background: radial-gradient(circle, rgba(59, 158, 255, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 158, 255, 0.12) 0%, transparent 70%);
 }
 
 /* All nonessential animation collapses when the user asks for less motion. */

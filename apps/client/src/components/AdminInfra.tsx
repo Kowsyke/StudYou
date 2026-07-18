@@ -28,7 +28,12 @@ async function pingHealth(): Promise<HealthResult> {
     } catch {}
     return { ok: res.ok, status: res.status, latencyMs, serverTime }
   } catch {
-    return { ok: false, status: 0, latencyMs: Math.round(performance.now() - started), serverTime: null }
+    return {
+      ok: false,
+      status: 0,
+      latencyMs: Math.round(performance.now() - started),
+      serverTime: null,
+    }
   }
 }
 
@@ -130,7 +135,11 @@ export function InfrastructurePanel() {
           />
           <Fact icon={<Wifi size={13} />} label="Runtime" value="Bun + Hono on Azure App Service" />
           <Fact icon={<Gauge size={13} />} label="Frontend" value="React + Vite static build" />
-          <Fact icon={<Server size={13} />} label="Deploys" value="GitHub Actions on push to main" />
+          <Fact
+            icon={<Server size={13} />}
+            label="Deploys"
+            value="GitHub Actions on push to main"
+          />
           <Fact
             icon={<ExternalLink size={13} />}
             label="Live URL"

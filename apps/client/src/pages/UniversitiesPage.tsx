@@ -237,8 +237,8 @@ export function UniversitiesPage() {
               <div>
                 <p className="text-body font-semibold text-ink">Pick a region to compare costs</p>
                 <p className="text-caption text-ink-tertiary mt-0.5 leading-relaxed">
-                  Tap regions on the map to filter the list and see typical monthly rent, living
-                  and transport costs for each one, side by side.
+                  Tap regions on the map to filter the list and see typical monthly rent, living and
+                  transport costs for each one, side by side.
                 </p>
               </div>
             </div>

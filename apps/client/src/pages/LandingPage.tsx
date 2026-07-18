@@ -166,7 +166,143 @@ export function LandingPage() {
       }
       card.addEventListener('mousemove', handleMove)
     }
+
+    // Scroll reveal sections (dim when scrolled out, bright and focused when reading)
+    const revealTargets = [
+      '.hero-container',
+      '.problem-section',
+      '.map-section',
+      '.pillars-section',
+      '.cta-section',
+    ]
+    for (const selector of revealTargets) {
+      const el = document.querySelector(selector)
+      if (!el) continue
+
+      // Fade-in / scale-up / focus when entering
+      gsap.fromTo(
+        el,
+        { opacity: 0.35, scale: 0.98, filter: 'blur(1px)' },
+        {
+          opacity: 1,
+          scale: 1,
+          filter: 'blur(0px)',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            end: 'top 40%',
+            scrub: 0.5,
+          },
+        },
+      )
+
+      // Fade-out / blur when scrolling past
+      gsap.to(el, {
+        opacity: 0.35,
+        scale: 0.98,
+        filter: 'blur(1px)',
+        scrollTrigger: {
+          trigger: el,
+          start: 'bottom 40%',
+          end: 'bottom 10%',
+          scrub: 0.5,
+        },
+      })
+    }
+
+    // Infinite GSAP marquee
+    const marqueeTrack = document.querySelector('.marquee-track')
+    if (marqueeTrack) {
+      const marqueeTween = gsap.to(marqueeTrack, {
+        xPercent: -50,
+        ease: 'none',
+        duration: 25,
+        repeat: -1,
+      })
+
+      // Speed up on scroll velocity
+      ScrollTrigger.create({
+        onUpdate: (self) => {
+          const velocity = Math.abs(self.getVelocity())
+          const targetScale = gsap.utils.mapRange(0, 2000, 1, 5, velocity)
+          gsap.to(marqueeTween, {
+            timeScale: targetScale,
+            duration: 0.2,
+            overwrite: 'auto',
+          })
+          gsap.to(marqueeTween, {
+            timeScale: 1,
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: 0.15,
+            overwrite: 'auto',
+          })
+        },
+      })
+
+      // Slow down on marquee wrapper hover
+      const marqueeWrapper = marqueeTrack.parentElement
+      if (marqueeWrapper) {
+        const handleEnter = () => {
+          gsap.to(marqueeTween, {
+            timeScale: 0.2,
+            duration: 0.5,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        }
+        const handleLeave = () => {
+          gsap.to(marqueeTween, {
+            timeScale: 1,
+            duration: 0.5,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        }
+        marqueeWrapper.addEventListener('mouseenter', handleEnter)
+        marqueeWrapper.addEventListener('mouseleave', handleLeave)
+      }
+    }
   })
+
+  const createMarqueeHoverHandlers = (idx: number) => {
+    return {
+      onMouseEnter: (e: React.MouseEvent<HTMLAnchorElement>) => {
+        gsap.to(e.currentTarget, {
+          scale: 1.15,
+          rotate: (idx % 2 === 0 ? 1 : -1) * 3,
+          boxShadow: 'var(--shadow-md)',
+          color: 'var(--accent)',
+          borderColor: 'var(--accent)',
+          zIndex: 10,
+          duration: 0.3,
+          ease: 'back.out(1.7)',
+          overwrite: 'auto',
+        })
+        const dot = e.currentTarget.querySelector('.marquee-dot')
+        if (dot) {
+          gsap.to(dot, { scale: 2.2, duration: 0.25, ease: 'power2.out', overwrite: 'auto' })
+        }
+      },
+      onMouseLeave: (e: React.MouseEvent<HTMLAnchorElement>) => {
+        gsap.to(e.currentTarget, {
+          scale: 1,
+          rotate: 0,
+          boxShadow: 'var(--shadow-sm)',
+          color: 'var(--ink-secondary)',
+          borderColor: 'var(--border)',
+          zIndex: 1,
+          duration: 0.3,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        })
+        const dot = e.currentTarget.querySelector('.marquee-dot')
+        if (dot) {
+          gsap.to(dot, { scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' })
+        }
+      },
+    }
+  }
 
   if (token) return <Navigate to="/" replace />
 
@@ -204,7 +340,7 @@ export function LandingPage() {
             </div>
           </nav>
 
-          <main className="relative z-10 max-w-5xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+          <main className="hero-container relative z-10 max-w-5xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
             <div>
               <div className="hero-fade inline-flex items-center gap-1.5 bg-accent-soft text-accent text-caption font-semibold uppercase tracking-[0.05em] px-2.5 py-1 rounded-full mb-5">
                 <ShieldCheck size={12} />
@@ -261,10 +397,11 @@ export function LandingPage() {
                   to="/register"
                   tabIndex={index >= marqueeItems.length ? -1 : 0}
                   className="marquee-chip shrink-0 inline-flex items-center gap-1.5 text-caption font-semibold text-ink-secondary bg-surface border border-hairline rounded-full px-3 py-1.5 shadow-sm"
+                  {...createMarqueeHoverHandlers(index)}
                 >
                   <span
                     aria-hidden="true"
-                    className="h-1.5 w-1.5 rounded-full"
+                    className="marquee-dot h-1.5 w-1.5 rounded-full"
                     style={{
                       background: 'var(--aurora)',
                       backgroundPosition: `${(index % marqueeItems.length) * 8}% 50%`,
@@ -477,7 +614,7 @@ function InteractiveMapSection() {
   }, [activeRegionKey])
 
   return (
-    <section className="relative z-10 max-w-5xl mx-auto px-6 py-20 border-t border-hairline bg-surface/20">
+    <section className="map-section relative z-10 max-w-5xl mx-auto px-6 py-20 border-t border-hairline bg-surface/20">
       <div className="text-center mb-12">
         <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-tertiary mb-3">
           Explore UK Geography
@@ -607,7 +744,7 @@ function PillarsSection() {
 
 function ClosingCta() {
   return (
-    <section className="relative z-10 max-w-5xl mx-auto px-6 py-16">
+    <section className="cta-section relative z-10 max-w-5xl mx-auto px-6 py-16">
       <div className="relative overflow-hidden rounded-xl border border-hairline-strong p-10 sm:p-14 text-center">
         <div
           className="absolute inset-0 opacity-[0.14]"
