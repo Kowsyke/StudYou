@@ -1,4 +1,4 @@
-import type { AdminUser, ApiResponse, BugReport, ReportStatus } from '@studyou/types'
+import type { AdminNote, AdminUser, ApiResponse, BugReport, ReportStatus } from '@studyou/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../lib/api'
 
@@ -57,5 +57,43 @@ export function useSubmitReport() {
       if (!data.data) throw new Error(data.error ?? 'Failed to send report')
       return data.data
     },
+  })
+}
+
+export function useAdminNotes() {
+  return useQuery({
+    queryKey: ['admin-notes'],
+    queryFn: async () => {
+      const { data } = await api.get<ApiResponse<AdminNote[]>>('/admin/notes')
+      return data.data ?? []
+    },
+  })
+}
+
+export function useCreateAdminNote() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: {
+      title: string
+      content: string
+      priority: 'low' | 'medium' | 'high'
+      category: 'bug' | 'feature' | 'data' | 'general'
+      author: string
+    }) => {
+      const { data } = await api.post<ApiResponse<AdminNote>>('/admin/notes', input)
+      if (!data.data) throw new Error(data.error ?? 'Failed to create note')
+      return data.data
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-notes'] }),
+  })
+}
+
+export function useDeleteAdminNote() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      await api.delete(`/admin/notes/${id}`)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-notes'] }),
   })
 }

@@ -1,6 +1,15 @@
-import { bugReports, journeyTasks, journeys, stages, taskTemplates, users } from '@studyou/db'
+import {
+  adminNotes,
+  bugReports,
+  journeyTasks,
+  journeys,
+  stages,
+  taskTemplates,
+  users,
+} from '@studyou/db'
 import type {
   AdminAnalytics,
+  AdminNote,
   AdminUser,
   ApiResponse,
   BugReport,
@@ -44,8 +53,8 @@ adminRoutes.get('/analytics', async (c) => {
   const [userTotals] = await db
     .select({
       total: sql<number>`count(*)::int`,
-      // Active means a request in the last five minutes.
       active: sql<number>`count(*) filter (where ${users.lastSeenAt} > now() - interval '5 minutes')::int`,
+      activeToday: sql<number>`count(*) filter (where ${users.lastSeenAt} > now() - interval '24 hours')::int`,
       newThisWeek: sql<number>`count(*) filter (where ${users.createdAt} > now() - interval '7 days')::int`,
       suspended: sql<number>`count(*) filter (where ${users.suspended})::int`,
     })
@@ -89,8 +98,8 @@ adminRoutes.get('/analytics', async (c) => {
     totalUsers: userTotals?.total ?? 0,
     newThisWeek: userTotals?.newThisWeek ?? 0,
     suspendedUsers: userTotals?.suspended ?? 0,
+    activeToday: userTotals?.activeToday ?? 0,
   }
-
   const response: ApiResponse<AdminAnalytics> = { success: true, data: analytics }
   return c.json(response)
 })
@@ -213,3 +222,62 @@ adminRoutes.patch(
     return c.json({ success: true, message: 'Report updated' })
   },
 )
+
+const createNoteSchema = z.object({
+  title: z.string().min(1).max(200),
+  content: z.string().min(1).max(5000),
+  priority: z.enum(['low', 'medium', 'high']),
+  category: z.enum(['bug', 'feature', 'data', 'general']),
+  author: z.string().min(1).max(100),
+})
+
+adminRoutes.get('/notes', async (c) => {
+  const rows = await db.select().from(adminNotes).orderBy(desc(adminNotes.createdAt))
+  const data: AdminNote[] = rows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    content: r.content,
+    priority: r.priority as 'low' | 'medium' | 'high',
+    category: r.category as 'bug' | 'feature' | 'data' | 'general',
+    author: r.author,
+    createdAt: r.createdAt.toISOString(),
+  }))
+  const response: ApiResponse<AdminNote[]> = { success: true, data }
+  return c.json(response)
+})
+
+adminRoutes.post('/notes', validate('json', createNoteSchema), async (c) => {
+  const body = c.req.valid('json')
+  const [row] = await db
+    .insert(adminNotes)
+    .values({
+      title: body.title,
+      content: body.content,
+      priority: body.priority,
+      category: body.category,
+      author: body.author,
+    })
+    .returning()
+
+  const data: AdminNote = {
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    priority: row.priority as 'low' | 'medium' | 'high',
+    category: row.category as 'bug' | 'feature' | 'data' | 'general',
+    author: row.author,
+    createdAt: row.createdAt.toISOString(),
+  }
+  const response: ApiResponse<AdminNote> = { success: true, data }
+  return c.json(response, 201)
+})
+
+adminRoutes.delete('/notes/:id', validate('param', idParamSchema), async (c) => {
+  const { id } = c.req.valid('param')
+  const [deleted] = await db
+    .delete(adminNotes)
+    .where(eq(adminNotes.id, id))
+    .returning({ id: adminNotes.id })
+  if (!deleted) return c.json({ success: false, error: 'Note not found' }, 404)
+  return c.json({ success: true, message: 'Note deleted' })
+})

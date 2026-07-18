@@ -6,6 +6,20 @@ const THEME_KEY = 'studyou_theme'
 const ACCENT_KEY = 'studyou_accent_preset'
 
 export type Theme = 'light' | 'dark'
+// What the user picked. 'system' follows the operating system setting.
+export type ThemePreference = 'light' | 'dark' | 'system'
+
+function systemTheme(): Theme {
+  try {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  } catch {
+    return 'dark'
+  }
+}
+
+function resolveTheme(pref: ThemePreference): Theme {
+  return pref === 'system' ? systemTheme() : pref
+}
 
 export interface AccentPreset {
   key: string
@@ -89,12 +103,12 @@ export const ACCENT_PRESETS: Record<string, AccentPreset> = {
   },
 }
 
-function loadTheme(): Theme {
+function loadPreference(): ThemePreference {
   try {
-    return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'
-  } catch {
-    return 'dark'
-  }
+    const raw = localStorage.getItem(THEME_KEY)
+    if (raw === 'light' || raw === 'dark' || raw === 'system') return raw
+  } catch {}
+  return 'dark'
 }
 
 function loadAccentPreset(): string {
@@ -124,28 +138,33 @@ function applyAccentPreset(presetKey: string) {
 }
 
 interface ThemeState {
+  // The resolved theme actually painted on the page (never 'system').
   theme: Theme
+  // The user's choice, which may be 'system'.
+  themePreference: ThemePreference
   accentPreset: string
-  setTheme: (theme: Theme) => void
+  setTheme: (preference: ThemePreference) => void
   setAccentPreset: (preset: string) => void
   fetchGlobalTheme: () => Promise<void>
 }
 
 export const useThemeStore = create<ThemeState>((set) => ({
-  theme: loadTheme(),
+  theme: resolveTheme(loadPreference()),
+  themePreference: loadPreference(),
   accentPreset: loadAccentPreset(),
-  setTheme: async (theme) => {
+  setTheme: async (preference) => {
     try {
-      localStorage.setItem(THEME_KEY, theme)
+      localStorage.setItem(THEME_KEY, preference)
     } catch {}
+    const theme = resolveTheme(preference)
     applyTheme(theme)
-    set({ theme })
+    set({ theme, themePreference: preference })
 
     const user = useAuthStore.getState().user
     if (user?.role === 'admin') {
       try {
         const accentPreset = useThemeStore.getState().accentPreset
-        await api.post('/meta/theme', { theme, accentPreset })
+        await api.post('/meta/theme', { theme: preference, accentPreset })
       } catch (e) {
         console.error('Failed to update global theme', e)
       }
@@ -161,7 +180,7 @@ export const useThemeStore = create<ThemeState>((set) => ({
     const user = useAuthStore.getState().user
     if (user?.role === 'admin') {
       try {
-        const theme = useThemeStore.getState().theme
+        const theme = useThemeStore.getState().themePreference
         await api.post('/meta/theme', { theme, accentPreset: preset })
       } catch (e) {
         console.error('Failed to update global accent preset', e)
@@ -172,17 +191,18 @@ export const useThemeStore = create<ThemeState>((set) => ({
     try {
       const response = await api.get<{
         success: boolean
-        data: { theme: Theme; accentPreset: string }
+        data: { theme: ThemePreference; accentPreset: string }
       }>('/meta/theme')
       if (response.data?.success && response.data.data) {
-        const { theme, accentPreset } = response.data.data
+        const { theme: pref, accentPreset } = response.data.data
         try {
-          localStorage.setItem(THEME_KEY, theme)
+          localStorage.setItem(THEME_KEY, pref)
           localStorage.setItem(ACCENT_KEY, accentPreset)
         } catch {}
+        const theme = resolveTheme(pref)
         applyTheme(theme)
         applyAccentPreset(accentPreset)
-        set({ theme, accentPreset })
+        set({ theme, themePreference: pref, accentPreset })
       }
     } catch (e) {
       console.error('Failed to fetch global theme', e)
@@ -190,6 +210,17 @@ export const useThemeStore = create<ThemeState>((set) => ({
   },
 }))
 
-// Apply persisted states before hydration
-applyTheme(loadTheme())
+// Apply persisted states before hydration.
+applyTheme(resolveTheme(loadPreference()))
 applyAccentPreset(loadAccentPreset())
+
+// When the choice is 'system', follow live OS theme changes.
+try {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (useThemeStore.getState().themePreference === 'system') {
+      const theme = systemTheme()
+      applyTheme(theme)
+      useThemeStore.setState({ theme })
+    }
+  })
+} catch {}

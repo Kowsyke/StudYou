@@ -1,25 +1,26 @@
 import type { University } from '@studyou/types'
-import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowUpRight,
   Check,
   ExternalLink,
   GraduationCap,
-  Heart,
   LayoutGrid,
   Plus,
   RotateCcw,
   Search,
   SearchX,
-  X,
 } from 'lucide-react'
 import { useMemo, useState } from 'react'
+import { useEffect } from 'react'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
+import { SwipeDeck } from '../components/SwipeDeck'
 import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
 import { Input, Select } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
+import { useJourney } from '../hooks/useJourney'
 import { useRegionCosts } from '../hooks/useMeta'
 import { type UniversityFilters, useUniversities } from '../hooks/useUniversities'
 import { formatGbpWhole } from '../lib/format'
@@ -49,6 +50,17 @@ export function UniversitiesPage() {
   const { data: allUniversities } = useUniversities(defaultFilters)
   const compactCards = usePreferencesStore((s) => s.compactCards)
   const { data: regionCosts } = useRegionCosts()
+  const { data: overview } = useJourney()
+
+  useEffect(() => {
+    if (overview?.journey?.regions) {
+      setFilters((f) => ({
+        ...f,
+        regions: overview.journey.regions ?? [],
+      }))
+    }
+  }, [overview])
+
   const gridClass = compactCards
     ? 'grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3'
     : 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'
@@ -122,45 +134,16 @@ export function UniversitiesPage() {
               No regions selected, showing the whole UK.
             </p>
           )}
-
-          {filters.regions.length > 0 && (regionCosts ?? []).length > 0 && (
-            <div className="mt-3 flex flex-col gap-1.5 max-w-[340px]">
-              {(regionCosts ?? [])
-                .filter((rc) => filters.regions.includes(rc.region))
-                .slice(0, 4)
-                .map((rc) => (
-                  <div
-                    key={rc.region}
-                    className="bg-surface/60 border border-hairline rounded-md px-2.5 py-1.5 flex flex-col gap-0.5"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-semibold text-ink text-xs">{rc.region}</span>
-                      <span className="text-micro text-ink-muted capitalize">
-                        {rc.costLevel} cost
-                      </span>
-                    </div>
-                    <div className="text-caption text-ink-tertiary flex flex-wrap gap-x-2 gap-y-0.5 mt-0.5 leading-snug">
-                      <span>
-                        • Rent: {formatGbpWhole(rc.monthlyRentMinGbp)}-
-                        {formatGbpWhole(rc.monthlyRentMaxGbp)}
-                      </span>
-                      <span>• Living: {formatGbpWhole(rc.monthlyLivingGbp)}</span>
-                      <span>• Pass: {formatGbpWhole(rc.transportPassGbp)}</span>
-                    </div>
-                  </div>
-                ))}
-            </div>
-          )}
         </div>
 
         <div className="flex-1 min-w-0 flex flex-col gap-3">
-          <div className="relative max-w-80">
+          <div className="relative">
             <Search
-              size={14}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
+              size={15}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary"
             />
             <Input
-              className="pl-8"
+              className="pl-9 h-10"
               placeholder="Search universities or cities..."
               value={filters.search}
               onChange={(e) => setFilters({ ...filters, search: e.target.value })}
@@ -215,6 +198,51 @@ export function UniversitiesPage() {
             {(universities ?? []).length} universities in this view. Every link goes to the official
             university page, for international and home students.
           </p>
+
+          {/* Fills the space beside the map: living costs for the picked regions,
+              or a short prompt to pick one when nothing is selected yet. */}
+          {filters.regions.length > 0 &&
+          (regionCosts ?? []).some((rc) => filters.regions.includes(rc.region)) ? (
+            <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {(regionCosts ?? [])
+                .filter((rc) => filters.regions.includes(rc.region))
+                .slice(0, 6)
+                .map((rc) => (
+                  <div
+                    key={rc.region}
+                    className="bg-surface/60 border border-hairline rounded-md px-3 py-2 flex flex-col gap-0.5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-ink text-xs">{rc.region}</span>
+                      <span className="text-micro text-ink-muted capitalize">
+                        {rc.costLevel} cost
+                      </span>
+                    </div>
+                    <div className="text-caption text-ink-tertiary flex flex-col gap-0.5 mt-0.5 leading-snug">
+                      <span>
+                        Rent: {formatGbpWhole(rc.monthlyRentMinGbp)} to{' '}
+                        {formatGbpWhole(rc.monthlyRentMaxGbp)}
+                      </span>
+                      <span>Living: {formatGbpWhole(rc.monthlyLivingGbp)} per month</span>
+                      <span>Transport pass: {formatGbpWhole(rc.transportPassGbp)}</span>
+                    </div>
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <div className="mt-1 rounded-lg border border-dashed border-hairline-strong bg-surface/40 px-4 py-5 flex items-start gap-3">
+              <span className="mt-0.5 h-8 w-8 shrink-0 rounded-full bg-accent-soft flex items-center justify-center text-accent">
+                <GraduationCap size={16} />
+              </span>
+              <div>
+                <p className="text-body font-semibold text-ink">Pick a region to compare costs</p>
+                <p className="text-caption text-ink-tertiary mt-0.5 leading-relaxed">
+                  Tap regions on the map to filter the list and see typical monthly rent, living
+                  and transport costs for each one, side by side.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -447,174 +475,5 @@ function UniversityCard({
         </a>
       </div>
     </article>
-  )
-}
-
-/* Tinder style deck: drag right to shortlist, left to skip. The two
-   buttons perform the same actions for keyboard users. */
-function SwipeDeck({
-  deck,
-  total,
-  onShortlist,
-  onSkip,
-  onReset,
-}: {
-  deck: University[]
-  total: number
-  onShortlist: (u: University) => void
-  onSkip: (u: University) => void
-  onReset: () => void
-}) {
-  const top = deck[0]
-
-  if (!top) {
-    return (
-      <EmptyState
-        icon={RotateCcw}
-        title="You have seen every match"
-        body="Every university in this filter has been shortlisted or skipped. Reset the skipped pile or change your filters."
-        action={
-          <Button variant="secondary" onClick={onReset}>
-            <RotateCcw size={14} />
-            Reset skipped
-          </Button>
-        }
-      />
-    )
-  }
-
-  return (
-    <div className="flex flex-col items-center gap-5">
-      <p className="text-caption text-ink-tertiary">
-        {total - deck.length + 1} of {total} in this filter. Drag right to shortlist, left to skip.
-      </p>
-      <div className="relative w-[340px] h-[300px]">
-        {deck
-          .slice(0, 3)
-          .reverse()
-          .map((u, index, visible) => {
-            const position = visible.length - 1 - index
-            return position === 0 ? (
-              <SwipeCard key={u.id} university={u} onShortlist={onShortlist} onSkip={onSkip} />
-            ) : (
-              <div
-                key={u.id}
-                aria-hidden="true"
-                className="absolute inset-0 bg-surface border border-hairline rounded-lg shadow-md"
-                style={{
-                  transform: `translateY(${position * 10}px) scale(${1 - position * 0.04})`,
-                  zIndex: -position,
-                  opacity: 1 - position * 0.25,
-                }}
-              />
-            )
-          })}
-      </div>
-      <div className="flex items-center gap-3">
-        <Button variant="secondary" onClick={() => onSkip(top)}>
-          <X size={14} />
-          Skip
-        </Button>
-        <button
-          onClick={() => onShortlist(top)}
-          aria-label={`Shortlist ${top.name}`}
-          className="group sheen inline-flex items-center gap-2 h-9 px-4 rounded-full text-body font-semibold bg-surface text-danger border border-hairline-strong shadow-sm transition-all duration-[120ms] hover:border-danger hover:shadow-md active:scale-[0.96]"
-        >
-          <Heart
-            size={16}
-            className="transition-all duration-200 fill-transparent group-hover:fill-current group-hover:scale-110 group-active:scale-125"
-          />
-          Shortlist
-        </button>
-      </div>
-    </div>
-  )
-}
-
-function SwipeCard({
-  university: u,
-  onShortlist,
-  onSkip,
-}: {
-  university: University
-  onShortlist: (u: University) => void
-  onSkip: (u: University) => void
-}) {
-  const x = useMotionValue(0)
-  const rotate = useTransform(x, [-200, 200], [-9, 9])
-  const shortlistOpacity = useTransform(x, [40, 140], [0, 1])
-  const skipOpacity = useTransform(x, [-140, -40], [1, 0])
-
-  return (
-    <motion.div
-      drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.9}
-      style={{ x, rotate }}
-      onDragEnd={(_, info) => {
-        if (info.offset.x > 120) onShortlist(u)
-        else if (info.offset.x < -120) onSkip(u)
-      }}
-      whileDrag={{ scale: 1.02 }}
-      className="absolute inset-0 bg-surface border border-hairline rounded-lg shadow-lg p-5 flex flex-col gap-3 cursor-grab active:cursor-grabbing select-none"
-    >
-      <motion.span
-        style={{ opacity: shortlistOpacity }}
-        className="absolute top-4 right-4 inline-flex items-center gap-1 text-caption font-bold uppercase tracking-[0.05em] text-danger border-2 border-danger rounded-sm px-2 py-1 rotate-6"
-      >
-        <Heart size={12} className="fill-current" />
-        Shortlist
-      </motion.span>
-      <motion.span
-        style={{ opacity: skipOpacity }}
-        className="absolute top-4 left-4 text-caption font-bold uppercase tracking-[0.05em] text-danger border-2 border-danger rounded-sm px-2 py-1 -rotate-6"
-      >
-        Skip
-      </motion.span>
-
-      <span className="text-caption font-bold text-accent bg-accent-soft rounded-xs px-1.5 py-0.5 tabular-nums self-start">
-        #{u.rank}
-      </span>
-      <div>
-        <h3 className="text-body-lg font-bold text-ink leading-snug">{u.name}</h3>
-        <p className="text-caption text-ink-tertiary mt-1">
-          {u.city}, {u.region}
-        </p>
-      </div>
-      {u.russellGroup && (
-        <span className="text-micro font-semibold uppercase tracking-[0.05em] text-category-housing bg-category-housing-soft rounded-xs px-1.5 py-0.5 self-start">
-          Russell Group
-        </span>
-      )}
-      <p className="text-body text-ink-secondary leading-relaxed grow">{u.notes}</p>
-      {u.tuitionIntlMinGbp !== null && u.tuitionIntlMaxGbp !== null && (
-        <p className="text-caption text-ink-secondary tabular-nums">
-          {formatGbpWhole(u.tuitionIntlMinGbp)} to {formatGbpWhole(u.tuitionIntlMaxGbp)} per year
-          international, indicative.
-        </p>
-      )}
-      <div className="flex items-center gap-3 border-t border-hairline pt-3 text-xs font-medium">
-        <a
-          href={u.internationalUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
-          onPointerDownCapture={(e) => e.stopPropagation()}
-        >
-          International
-          <ExternalLink size={10} />
-        </a>
-        <a
-          href={u.ugAdmissionsUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs ml-auto"
-          onPointerDownCapture={(e) => e.stopPropagation()}
-        >
-          Apply
-          <ExternalLink size={10} />
-        </a>
-      </div>
-    </motion.div>
   )
 }

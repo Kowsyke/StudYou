@@ -13,7 +13,8 @@
       "playwright-report",
       "test-results",
       "research",
-      "design"
+      "design",
+      "apps/client/src/lib/gsap"
     ]
   },
   "formatter": {

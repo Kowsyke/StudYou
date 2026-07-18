@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { Activity, ExternalLink, Server } from 'lucide-react'
+import { Activity, Clock, Database, ExternalLink, Gauge, Server, Wifi } from 'lucide-react'
 import { CardContent, CardDescription, CardHeader, CardKicker, CardTitle } from './ui/card'
 
 const AZURE_APP = 'studyou-app-7097'
@@ -10,6 +10,7 @@ interface HealthResult {
   ok: boolean
   status: number
   latencyMs: number
+  serverTime: string | null
 }
 
 // Genuine liveness: times a real request to the API health endpoint. No
@@ -19,14 +20,32 @@ async function pingHealth(): Promise<HealthResult> {
   const started = performance.now()
   try {
     const res = await fetch('/health', { cache: 'no-store' })
-    return { ok: res.ok, status: res.status, latencyMs: Math.round(performance.now() - started) }
+    const latencyMs = Math.round(performance.now() - started)
+    let serverTime: string | null = null
+    try {
+      const body = (await res.json()) as { timestamp?: string }
+      serverTime = body?.timestamp ?? null
+    } catch {}
+    return { ok: res.ok, status: res.status, latencyMs, serverTime }
   } catch {
-    return { ok: false, status: 0, latencyMs: Math.round(performance.now() - started) }
+    return { ok: false, status: 0, latencyMs: Math.round(performance.now() - started), serverTime: null }
   }
 }
 
+// A latency reading is only meaningful in bands; call them plainly.
+function latencyLabel(ms: number): string {
+  if (ms < 150) return 'Fast'
+  if (ms < 500) return 'Normal'
+  return 'Slow'
+}
+
 export function InfrastructurePanel() {
-  const { data: health, isPending } = useQuery({
+  const {
+    data: health,
+    isPending,
+    dataUpdatedAt,
+    isFetching,
+  } = useQuery({
     queryKey: ['api-health'],
     queryFn: pingHealth,
     refetchInterval: 15_000,
@@ -34,19 +53,21 @@ export function InfrastructurePanel() {
   })
 
   const up = health?.ok ?? false
+  const lastChecked =
+    dataUpdatedAt > 0 ? new Date(dataUpdatedAt).toLocaleTimeString([], { hour12: false }) : null
 
   return (
     <div className="aurora-card rounded-lg shadow-md mb-8 print:hidden">
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
-        <div>
+      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
           <CardKicker>Infrastructure</CardKicker>
           <CardTitle className="text-body font-semibold">Deployment and health</CardTitle>
           <CardDescription>
-            Live status from the API health endpoint. Detailed compute and network metrics live in
-            the Azure portal.
+            Live status measured from the API health endpoint every 15 seconds. Detailed compute and
+            network metrics live in the Azure portal.
           </CardDescription>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 shrink-0">
           <a
             href={LIVE_URL}
             target="_blank"
@@ -68,61 +89,128 @@ export function InfrastructurePanel() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-md bg-canvas border border-hairline">
-          <div className="space-y-1">
-            <p className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary">
-              API status
-            </p>
-            <div className="flex items-center gap-2">
-              <span className="relative flex h-2.5 w-2.5">
-                {up && (
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
-                )}
-                <span
-                  className={`relative inline-flex rounded-full h-2.5 w-2.5 ${up ? 'bg-positive' : 'bg-danger'}`}
-                />
-              </span>
-              <span className="text-[20px] font-bold text-ink leading-none">
-                {isPending ? 'Checking' : up ? 'Online' : 'Down'}
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary">
-              Health check latency
-            </p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-[20px] font-bold text-ink leading-none tabular-nums">
-                {health ? `${health.latencyMs} ms` : '—'}
-              </span>
-              <Activity size={14} className="text-ink-tertiary" />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary">
-              Response code
-            </p>
-            <span className="text-[20px] font-bold text-ink leading-none tabular-nums">
-              {health ? health.status || 'no reply' : '—'}
-            </span>
-          </div>
+        {/* Metric tiles reflow 2 up on phones, 4 up on wide screens, so
+            nothing overflows or crowds as the window resizes. */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <MetricTile
+            icon={<Wifi size={14} />}
+            label="API status"
+            value={isPending ? 'Checking' : up ? 'Online' : 'Down'}
+            accent={up ? 'positive' : isPending ? 'muted' : 'danger'}
+            dot={!isPending}
+            dotUp={up}
+          />
+          <MetricTile
+            icon={<Activity size={14} />}
+            label="Latency"
+            value={health ? `${health.latencyMs} ms` : 'n/a'}
+            hint={health ? latencyLabel(health.latencyMs) : undefined}
+          />
+          <MetricTile
+            icon={<Gauge size={14} />}
+            label="Response code"
+            value={health ? String(health.status || 'no reply') : 'n/a'}
+          />
+          <MetricTile
+            icon={<Clock size={14} />}
+            label="Last checked"
+            value={lastChecked ?? 'n/a'}
+            hint={isFetching ? 'refreshing' : 'auto every 15s'}
+          />
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-caption text-ink-tertiary border-t border-hairline pt-3.5">
-          <span>
-            Web app: <strong className="text-ink-secondary">{AZURE_APP}</strong>
-          </span>
-          <span>
-            Database: <strong className="text-ink-secondary">{AZURE_DB} (Sweden Central)</strong>
-          </span>
-          <span>
-            Deploys via <strong className="text-ink-secondary">GitHub Actions</strong> on push to
-            main
-          </span>
-        </div>
+        {/* Honest, static facts about where and how this runs. Reflows from a
+            single column up to three as space allows. */}
+        <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 border-t border-hairline pt-4">
+          <Fact icon={<Server size={13} />} label="Web app" value={AZURE_APP} />
+          <Fact
+            icon={<Database size={13} />}
+            label="Database"
+            value={`${AZURE_DB}, Sweden Central`}
+          />
+          <Fact icon={<Wifi size={13} />} label="Runtime" value="Bun + Hono on Azure App Service" />
+          <Fact icon={<Gauge size={13} />} label="Frontend" value="React + Vite static build" />
+          <Fact icon={<Server size={13} />} label="Deploys" value="GitHub Actions on push to main" />
+          <Fact
+            icon={<ExternalLink size={13} />}
+            label="Live URL"
+            value={LIVE_URL.replace('https://', '')}
+          />
+        </dl>
       </CardContent>
+    </div>
+  )
+}
+
+function MetricTile({
+  icon,
+  label,
+  value,
+  hint,
+  accent = 'default',
+  dot = false,
+  dotUp = false,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+  hint?: string
+  accent?: 'default' | 'positive' | 'danger' | 'muted'
+  dot?: boolean
+  dotUp?: boolean
+}) {
+  const valueColor =
+    accent === 'positive'
+      ? 'text-positive'
+      : accent === 'danger'
+        ? 'text-danger'
+        : accent === 'muted'
+          ? 'text-ink-tertiary'
+          : 'text-ink'
+  return (
+    <div className="rounded-md bg-canvas border border-hairline p-3 flex flex-col gap-1.5 min-w-0">
+      <p className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary flex items-center gap-1.5">
+        <span className="text-ink-tertiary">{icon}</span>
+        <span className="truncate">{label}</span>
+      </p>
+      <div className="flex items-center gap-2 min-w-0">
+        {dot && (
+          <span className="relative flex h-2.5 w-2.5 shrink-0">
+            {dotUp && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
+            )}
+            <span
+              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dotUp ? 'bg-positive' : 'bg-danger'}`}
+            />
+          </span>
+        )}
+        <span className={`text-lg font-bold leading-none tabular-nums truncate ${valueColor}`}>
+          {value}
+        </span>
+      </div>
+      {hint && <p className="text-micro text-ink-tertiary leading-none">{hint}</p>}
+    </div>
+  )
+}
+
+function Fact({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode
+  label: string
+  value: string
+}) {
+  return (
+    <div className="flex items-start gap-2 min-w-0">
+      <span className="mt-0.5 text-ink-tertiary shrink-0">{icon}</span>
+      <div className="min-w-0">
+        <dt className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary">
+          {label}
+        </dt>
+        <dd className="text-caption text-ink-secondary font-medium break-words">{value}</dd>
+      </div>
     </div>
   )
 }

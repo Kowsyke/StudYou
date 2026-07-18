@@ -44,3 +44,16 @@ export type DbBugReport = typeof bugReports.$inferSelect
 
 export type DbUser = typeof users.$inferSelect
 export type NewDbUser = typeof users.$inferInsert
+
+export const adminNotes = pgTable('admin_notes', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  priority: text('priority').notNull().default('medium'),
+  category: text('category').notNull().default('general'),
+  author: text('author').notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+})
+
+export type DbAdminNote = typeof adminNotes.$inferSelect
+export type NewDbAdminNote = typeof adminNotes.$inferInsert

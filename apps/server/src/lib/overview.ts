@@ -127,6 +127,7 @@ export async function buildOverview(userId: string): Promise<JourneyOverview | n
       budgetPence: journey.budgetPence,
       major: journey.major,
       regions: journey.regions ? journey.regions.split(',') : [],
+      educationCompleted: journey.educationCompleted,
       createdAt: journey.createdAt.toISOString(),
     },
     stages: stageProgress,

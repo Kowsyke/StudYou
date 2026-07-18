@@ -18,6 +18,7 @@ import { Link, Navigate } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
 import { Card, CardContent, CardHeader, CardKicker } from '../components/ui/card'
+import { Select } from '../components/ui/input'
 import { ProgressBar, ProgressRing } from '../components/ui/progress'
 import { CardSkeleton, Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney } from '../hooks/useJourney'
@@ -26,6 +27,7 @@ import { daysLeftLabel, formatDate, formatGbp, formatHome } from '../lib/format'
 import { useAuthStore } from '../store/authStore'
 import { useBookmarkStore, useBookmarkedIds } from '../store/bookmarkStore'
 import { usePreferencesStore } from '../store/preferencesStore'
+import { toast } from '../store/toastStore'
 
 export function DashboardPage() {
   const user = useAuthStore((s) => s.user)
@@ -41,6 +43,17 @@ export function DashboardPage() {
   const bookmarkedIds = useBookmarkedIds()
   const { toggleBookmark } = useBookmarkStore()
   const bookmarkedResources = (resources ?? []).filter((r) => bookmarkedIds.includes(r.id))
+  const unbookmarkedResources = useMemo(() => {
+    return (resources ?? []).filter((r) => !bookmarkedIds.includes(r.id))
+  }, [resources, bookmarkedIds])
+
+  const getTaskCategoryKey = (taskId: string) => {
+    for (const stage of overview?.stages ?? []) {
+      const task = stage.tasks.find((t) => t.id === taskId)
+      if (task) return task.categoryKey
+    }
+    return null
+  }
 
   if (error && hasNoJourney(error)) return <Navigate to="/onboarding" replace />
 
@@ -204,6 +217,19 @@ export function DashboardPage() {
                       <p className="text-caption text-ink-tertiary">
                         Target: {formatDate(d.targetDate)}
                       </p>
+                      {(() => {
+                        const catKey = getTaskCategoryKey(d.taskId)
+                        if (!catKey) return null
+                        return (
+                          <Link
+                            to={`/resources?category=${catKey}`}
+                            className="inline-flex items-center gap-1 text-[11px] font-medium text-accent hover:underline mt-1"
+                          >
+                            <ExternalLink size={10} />
+                            View {catKey} resources
+                          </Link>
+                        )
+                      })()}
                     </div>
                     <span
                       className={`text-micro font-semibold px-1.5 py-0.5 rounded-xs shrink-0 ${
@@ -256,9 +282,31 @@ export function DashboardPage() {
                 Bookmarked Resources
               </h2>
             </div>
-            <span className="text-caption text-ink-tertiary">
-              {bookmarkedResources.length} saved
-            </span>
+            <div className="flex items-center gap-2">
+              {unbookmarkedResources.length > 0 && (
+                <Select
+                  value=""
+                  onChange={(e) => {
+                    const id = e.target.value
+                    if (id) {
+                      toggleBookmark(id)
+                      toast.success('Bookmark added!')
+                    }
+                  }}
+                  className="text-xs h-8 px-2 py-1 w-[160px] bg-surface text-ink border-hairline-strong rounded-sm"
+                >
+                  <option value="">+ Bookmark resource</option>
+                  {unbookmarkedResources.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.title}
+                    </option>
+                  ))}
+                </Select>
+              )}
+              <span className="text-caption text-ink-tertiary shrink-0">
+                {bookmarkedResources.length} saved
+              </span>
+            </div>
           </CardHeader>
           <CardContent className="pt-4">
             {bookmarkedResources.length === 0 ? (

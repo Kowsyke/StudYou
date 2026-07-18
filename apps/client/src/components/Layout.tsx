@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import {
   BarChart3,
   BookOpen,
@@ -23,9 +23,10 @@ import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-do
 import { useSubmitReport } from '../hooks/useAdmin'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
-import { avatarGradients, initialsOf, useProfileStore } from '../store/profileStore'
+import { useProfileStore } from '../store/profileStore'
 import { toast } from '../store/toastStore'
 import { CommandPalette } from './CommandPalette'
+import { Avatar } from './ui/avatar'
 
 const swift = [0.16, 1, 0.3, 1] as const
 
@@ -35,7 +36,6 @@ const studentNav = [
   { to: '/shortlisted', label: 'Shortlisted', icon: Heart },
   { to: '/universities', label: 'Universities', icon: GraduationCap },
   { to: '/resources', label: 'Resources', icon: BookOpen },
-  { to: '/settings', label: 'Settings', icon: SlidersHorizontal },
 ]
 
 const adminNav = [
@@ -132,7 +132,25 @@ export function Layout() {
           </button>
         </div>
 
-        {user?.role !== 'admin' && <AboutSupportTrigger onOpen={() => setAboutOpen(true)} />}
+        {user?.role !== 'admin' && (
+          <div className="px-3 pb-3 space-y-0.5">
+            <AboutSupportTrigger onOpen={() => setAboutOpen(true)} />
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                cn(
+                  'w-full flex items-center gap-2.5 px-2.5 h-9 rounded-sm text-body transition-colors duration-[120ms]',
+                  isActive
+                    ? 'bg-accent-soft text-accent font-semibold'
+                    : 'text-ink-secondary hover:bg-surface-secondary hover:text-ink',
+                )
+              }
+            >
+              <SlidersHorizontal size={15} />
+              Settings
+            </NavLink>
+          </div>
+        )}
 
         <ProfileBlock
           onSignOut={() => {
@@ -144,17 +162,14 @@ export function Layout() {
 
       <main className="flex-1 min-w-0 ml-[260px] relative z-[1]">
         <div className="max-w-5xl mx-auto px-10 py-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={location.pathname.startsWith('/admin') ? '/admin' : location.pathname}
-              initial={{ opacity: 0, y: 4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: swift }}
-            >
-              <Outlet />
-            </motion.div>
-          </AnimatePresence>
+          <motion.div
+            key={location.pathname.startsWith('/admin') ? '/admin' : location.pathname}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: swift }}
+          >
+            <Outlet />
+          </motion.div>
           <footer className="mt-12 pb-4 text-caption text-ink-tertiary text-center leading-relaxed">
             StudYou provides guidance and signposting only. It is not legal or immigration advice.
             Always confirm details on official sources such as gov.uk.
@@ -170,15 +185,13 @@ export function Layout() {
 
 function AboutSupportTrigger({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="px-3 pb-3">
-      <button
-        onClick={onOpen}
-        className="w-full flex items-center gap-2.5 px-2.5 h-9 rounded-sm text-body text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors duration-[120ms]"
-      >
-        <LifeBuoy size={15} />
-        About and support
-      </button>
-    </div>
+    <button
+      onClick={onOpen}
+      className="w-full flex items-center gap-2.5 px-2.5 h-9 rounded-sm text-body text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors duration-[120ms]"
+    >
+      <LifeBuoy size={15} />
+      About and support
+    </button>
   )
 }
 
@@ -211,8 +224,7 @@ function AboutSupportDialog({ open, onClose }: { open: boolean; onClose: () => v
         if (event.key === 'Escape') onClose()
       }}
     >
-      <motion.dialog
-        open
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.25, ease: [0.65, 0, 0.35, 1] }}
@@ -288,16 +300,15 @@ function AboutSupportDialog({ open, onClose }: { open: boolean; onClose: () => v
             </button>
           </div>
         </form>
-      </motion.dialog>
+      </motion.div>
     </div>
   )
 }
 
-/* The profile block opens a small menu with profile, settings and sign
-   out, in the pattern of the dashboard reference K supplied. */
+/* The profile block opens a small menu with the profile link and sign
+   out. Settings lives in the sidebar footer, not here. */
 function ProfileBlock({ onSignOut }: { onSignOut: () => void }) {
   const user = useAuthStore((s) => s.user)
-  const avatarHue = useProfileStore((s) => s.avatarHue)
   const shortlistCount = useProfileStore((s) => s.shortlistIds.length)
   const [open, setOpen] = useState(false)
 
@@ -331,14 +342,6 @@ function ProfileBlock({ onSignOut }: { onSignOut: () => void }) {
                 )}
               </Link>
             )}
-            <Link
-              to={user?.role === 'admin' ? '/admin/settings' : '/settings'}
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2.5 px-3.5 h-9 text-body text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors duration-[120ms]"
-            >
-              <SlidersHorizontal size={15} />
-              Settings
-            </Link>
             <button
               onClick={onSignOut}
               className="w-full flex items-center gap-2.5 px-3.5 h-9 text-body text-ink-secondary hover:bg-danger-soft hover:text-danger transition-colors duration-[120ms] border-t border-hairline"
@@ -356,13 +359,7 @@ function ProfileBlock({ onSignOut }: { onSignOut: () => void }) {
         aria-haspopup="menu"
         className="w-full px-4 py-3.5 flex items-center gap-3 hover:bg-surface-secondary transition-colors duration-[120ms] text-left"
       >
-        <span
-          className="h-8 w-8 shrink-0 rounded-md text-white text-caption font-extrabold flex items-center justify-center shadow-sm"
-          style={{ backgroundImage: avatarGradients[avatarHue] }}
-          aria-hidden="true"
-        >
-          {initialsOf(user?.fullName)}
-        </span>
+        <Avatar fullName={user?.fullName} size={32} />
         <span className="min-w-0 flex-1">
           <span className="block text-body font-semibold truncate">{user?.fullName}</span>
           <span className="block text-caption text-ink-tertiary capitalize">{user?.role}</span>

@@ -24,11 +24,12 @@ import { Button } from '../components/ui/button'
 import { Input, Select } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useCategories } from '../hooks/useMeta'
-import { type ResourceFilters, useResources } from '../hooks/useResources'
+import { type ResourceFilters, useDeleteResource, useResources } from '../hooks/useResources'
 import { formatDate, formatGbp } from '../lib/format'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
 import { useBookmarkStore } from '../store/bookmarkStore'
+import { toast } from '../store/toastStore'
 
 const defaultFilters: ResourceFilters = { search: '', category: '', sort: 'title', order: 'asc' }
 
@@ -66,7 +67,7 @@ const CORE_KEYWORDS = [
 
 export function ResourcesPage() {
   const [searchParams] = useSearchParams()
-  const [viewMode, setViewMode] = useState<'grid' | 'tree'>('tree')
+  const [viewMode, setViewMode] = useState<'grid' | 'tree'>('grid')
   const [filters, setFilters] = useState<ResourceFilters>({
     ...defaultFilters,
     search: searchParams.get('search') ?? '',
@@ -84,7 +85,24 @@ export function ResourcesPage() {
     if (fromPalette !== null) {
       setFilters((f) => ({ ...f, search: fromPalette }))
     }
-  }, [searchParams])
+
+    const categoryParam = searchParams.get('category')
+    const resourceIdParam = searchParams.get('resourceId')
+
+    if (categoryParam) {
+      setActiveCategory(categoryParam)
+      setViewMode('tree')
+    }
+
+    if (resources && resourceIdParam) {
+      const match = resources.find((r) => r.id === resourceIdParam)
+      if (match) {
+        setSelectedResource(match)
+        setActiveCategory(match.categoryKey)
+        setViewMode('tree')
+      }
+    }
+  }, [searchParams, resources])
 
   const gridClass = 'grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4'
 
@@ -298,6 +316,7 @@ function KnowledgeTreeCanvas({
   selectedResource,
   setSelectedResource,
 }: KnowledgeTreeCanvasProps) {
+  const deleteResource = useDeleteResource()
   // Center coordinates of expanded canvas
   const centerX = 500
   const centerY = 330
@@ -859,13 +878,39 @@ function KnowledgeTreeCanvas({
                     <ExternalLink size={11} />
                   </a>
                   {user?.role === 'admin' && (
-                    <Link
-                      to={`/admin/kb?id=${activeResource.id}`}
-                      className="px-3 h-8 rounded-sm bg-surface border border-hairline-strong hover:bg-surface-secondary text-ink flex items-center justify-center text-xs font-semibold transition-colors duration-150 shrink-0"
-                      title="Edit in admin console"
-                    >
-                      Edit
-                    </Link>
+                    <>
+                      <Link
+                        to={`/admin/kb?id=${activeResource.id}`}
+                        className="px-2.5 h-8 rounded-sm bg-surface border border-hairline-strong hover:bg-surface-secondary text-ink flex items-center justify-center text-xs font-semibold transition-colors duration-150 shrink-0"
+                        title="Edit in admin console"
+                      >
+                        Edit
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          if (
+                            window.confirm(
+                              `Are you sure you want to delete "${activeResource.title}"?`,
+                            )
+                          ) {
+                            try {
+                              await deleteResource.mutateAsync(activeResource.id)
+                              toast.success('Resource deleted.')
+                              setSelectedResource(null)
+                              setHoveredResource(null)
+                            } catch (err) {
+                              toast.error('Failed to delete.')
+                            }
+                          }
+                        }}
+                        disabled={deleteResource.isPending}
+                        className="px-2.5 h-8 rounded-sm bg-danger-soft hover:bg-danger text-danger hover:text-white flex items-center justify-center text-xs font-semibold transition-all duration-150 shrink-0 disabled:opacity-50"
+                        title="Delete resource"
+                      >
+                        Delete
+                      </button>
+                    </>
                   )}
                 </div>
               </motion.div>
@@ -882,6 +927,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
   const { toggleBookmark, isBookmarked } = useBookmarkStore()
   const bookmarked = isBookmarked(resource.id)
   const user = useAuthStore((s) => s.user)
+  const deleteResource = useDeleteResource()
 
   return (
     <article className="aurora-card relative rounded-md shadow-sm p-4 flex flex-col gap-3 group">
@@ -916,12 +962,31 @@ function ResourceCard({ resource }: { resource: Resource }) {
         </span>
         <div className="flex items-center gap-3">
           {user?.role === 'admin' && (
-            <Link
-              to={`/admin/kb?id=${resource.id}`}
-              className="inline-flex items-center gap-1 text-accent font-semibold hover:underline rounded-xs"
-            >
-              Edit
-            </Link>
+            <>
+              <Link
+                to={`/admin/kb?id=${resource.id}`}
+                className="inline-flex items-center gap-1 text-accent font-semibold hover:underline rounded-xs"
+              >
+                Edit
+              </Link>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (window.confirm(`Are you sure you want to delete "${resource.title}"?`)) {
+                    try {
+                      await deleteResource.mutateAsync(resource.id)
+                      toast.success('Resource deleted.')
+                    } catch (err) {
+                      toast.error('Failed to delete.')
+                    }
+                  }
+                }}
+                disabled={deleteResource.isPending}
+                className="inline-flex items-center gap-1 text-danger font-semibold hover:underline rounded-xs disabled:opacity-50"
+              >
+                Delete
+              </button>
+            </>
           )}
           <a
             href={resource.sourceUrl}

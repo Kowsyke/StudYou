@@ -4,6 +4,7 @@ interface UkGeoMapProps {
   selected: string[]
   counts: Record<string, number>
   onToggle: (region: string) => void
+  onHover?: (region: string | null) => void
 }
 
 /*
@@ -12,7 +13,7 @@ interface UkGeoMapProps {
   accent. Every region is keyboard operable: tab to it, space or enter
   toggles. Styling lives in index.css under .geo-region.
 */
-export function UkGeoMap({ selected, counts, onToggle }: UkGeoMapProps) {
+export function UkGeoMap({ selected, counts, onToggle, onHover }: UkGeoMapProps) {
   return (
     <svg
       viewBox={UK_MAP_VIEWBOX}
@@ -41,6 +42,8 @@ export function UkGeoMap({ selected, counts, onToggle }: UkGeoMapProps) {
                 onToggle(geo.region)
               }
             }}
+            onMouseEnter={() => onHover?.(geo.region)}
+            onMouseLeave={() => onHover?.(null)}
           >
             {geo.paths.map((d) => (
               <path key={d.slice(0, 24)} d={d} />

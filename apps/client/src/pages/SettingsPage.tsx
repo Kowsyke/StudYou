@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Download, Moon, Sun, Trash2 } from 'lucide-react'
+import { Download, Monitor, Moon, Sun, Trash2 } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { QueryError } from '../components/QueryError'
@@ -13,16 +13,17 @@ import { useCountries } from '../hooks/useMeta'
 import { apiErrorMessage } from '../lib/api'
 import { useAuthStore } from '../store/authStore'
 import { DUE_SOON_OPTIONS, clearLocalData, usePreferencesStore } from '../store/preferencesStore'
-import { type Theme, useThemeStore } from '../store/themeStore'
+import { type ThemePreference, useThemeStore } from '../store/themeStore'
 import { toast } from '../store/toastStore'
 
-const themeOptions: { value: Theme; label: string; icon: typeof Sun }[] = [
+const themeOptions: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
   { value: 'light', label: 'Light', icon: Sun },
   { value: 'dark', label: 'Dark', icon: Moon },
+  { value: 'system', label: 'System', icon: Monitor },
 ]
 
 function ThemeToggle() {
-  const theme = useThemeStore((s) => s.theme)
+  const themePreference = useThemeStore((s) => s.themePreference)
   const setTheme = useThemeStore((s) => s.setTheme)
 
   return (
@@ -31,7 +32,7 @@ function ThemeToggle() {
       aria-label="Appearance"
     >
       {themeOptions.map((option) => {
-        const active = theme === option.value
+        const active = themePreference === option.value
         return (
           <button
             key={option.value}
@@ -158,7 +159,6 @@ export function SettingsPage() {
       <Card className="max-w-xl mb-5">
         <CardHeader>
           <CardTitle>Account</CardTitle>
-          <CardDescription>Who you are signed in as.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-x-8 gap-y-2">
           <div>

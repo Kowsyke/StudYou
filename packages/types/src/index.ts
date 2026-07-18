@@ -109,6 +109,7 @@ export interface Journey {
   budgetPence: number
   major?: string | null
   regions?: string[] | null
+  educationCompleted?: string | null
   createdAt: string
 }
 
@@ -183,6 +184,17 @@ export interface AdminAnalytics {
   totalUsers: number
   newThisWeek: number
   suspendedUsers: number
+  activeToday: number
+}
+
+export interface AdminNote {
+  id: string
+  title: string
+  content: string
+  priority: 'low' | 'medium' | 'high'
+  category: 'bug' | 'feature' | 'data' | 'general'
+  author: string
+  createdAt: string
 }
 
 export const UK_REGIONS = [

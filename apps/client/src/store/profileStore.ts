@@ -19,9 +19,13 @@ export const avatarGradients: Record<AvatarHue, string> = {
 
 interface ProfileState {
   avatarHue: AvatarHue
+  // A data URL of an uploaded photo, or null to fall back to the gradient
+  // initials. Stored inline so no file backend is needed.
+  avatarImage: string | null
   shortlistIds: string[]
   appliedIds: string[]
   setAvatarHue: (hue: AvatarHue) => void
+  setAvatarImage: (dataUrl: string | null) => void
   toggleShortlist: (id: string) => void
   removeFromShortlist: (id: string) => void
   toggleApplied: (id: string) => void
@@ -30,6 +34,7 @@ interface ProfileState {
 
 interface StoredProfile {
   avatarHue: AvatarHue
+  avatarImage: string | null
   shortlistIds: string[]
   appliedIds: string[]
 }
@@ -43,6 +48,7 @@ function load(): StoredProfile {
         avatarHue: AVATAR_HUES.includes(parsed.avatarHue as AvatarHue)
           ? (parsed.avatarHue as AvatarHue)
           : 'ocean',
+        avatarImage: typeof parsed.avatarImage === 'string' ? parsed.avatarImage : null,
         shortlistIds: Array.isArray(parsed.shortlistIds) ? parsed.shortlistIds : [],
         appliedIds: Array.isArray(parsed.appliedIds) ? parsed.appliedIds : [],
       }
@@ -50,7 +56,7 @@ function load(): StoredProfile {
   } catch {
     // Fall through to defaults.
   }
-  return { avatarHue: 'ocean', shortlistIds: [], appliedIds: [] }
+  return { avatarHue: 'ocean', avatarImage: null, shortlistIds: [], appliedIds: [] }
 }
 
 function persist(state: StoredProfile) {
@@ -61,12 +67,24 @@ function persist(state: StoredProfile) {
   }
 }
 
+function snapshot(g: ProfileState): StoredProfile {
+  return {
+    avatarHue: g.avatarHue,
+    avatarImage: g.avatarImage,
+    shortlistIds: g.shortlistIds,
+    appliedIds: g.appliedIds,
+  }
+}
+
 export const useProfileStore = create<ProfileState>((set, get) => ({
   ...load(),
   setAvatarHue: (hue) => {
     set({ avatarHue: hue })
-    const { avatarHue, shortlistIds, appliedIds } = get()
-    persist({ avatarHue, shortlistIds, appliedIds })
+    persist(snapshot(get()))
+  },
+  setAvatarImage: (dataUrl) => {
+    set({ avatarImage: dataUrl })
+    persist(snapshot(get()))
   },
   toggleShortlist: (id) => {
     set((s) => ({
@@ -74,16 +92,14 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         ? s.shortlistIds.filter((x) => x !== id)
         : [...s.shortlistIds, id],
     }))
-    const { avatarHue, shortlistIds, appliedIds } = get()
-    persist({ avatarHue, shortlistIds, appliedIds })
+    persist(snapshot(get()))
   },
   removeFromShortlist: (id) => {
     set((s) => ({
       shortlistIds: s.shortlistIds.filter((x) => x !== id),
       appliedIds: s.appliedIds.filter((x) => x !== id),
     }))
-    const { avatarHue, shortlistIds, appliedIds } = get()
-    persist({ avatarHue, shortlistIds, appliedIds })
+    persist(snapshot(get()))
   },
   toggleApplied: (id) => {
     set((s) => ({
@@ -91,13 +107,11 @@ export const useProfileStore = create<ProfileState>((set, get) => ({
         ? s.appliedIds.filter((x) => x !== id)
         : [...s.appliedIds, id],
     }))
-    const { avatarHue, shortlistIds, appliedIds } = get()
-    persist({ avatarHue, shortlistIds, appliedIds })
+    persist(snapshot(get()))
   },
   clearShortlist: () => {
     set({ shortlistIds: [], appliedIds: [] })
-    const { avatarHue } = get()
-    persist({ avatarHue, shortlistIds: [], appliedIds: [] })
+    persist(snapshot(get()))
   },
 }))
 

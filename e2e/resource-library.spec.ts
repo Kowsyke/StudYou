@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
   await page.fill('#password', 'StudentPass123')
   await page.getByRole('button', { name: 'Sign in' }).click()
   await expect(page.getByRole('heading', { name: /Hello, Demo/ })).toBeVisible()
-  await page.getByRole('link', { name: 'Resources' }).click()
+  await page.getByRole('link', { name: 'Resources', exact: true }).click()
   await expect(page.getByRole('heading', { name: /Resource Library/i })).toBeVisible()
   // Let the page settle before interacting: clicking within the first few
   // hundred milliseconds of the mount can race React StrictMode's dev only

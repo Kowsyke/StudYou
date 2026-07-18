@@ -1,0 +1,6 @@
+declare module '*/lib/gsap/index.js'
+declare module '*/lib/gsap/ScrollTrigger.js'
+declare module '*/lib/gsap/ScrollSmoother.js'
+declare module '*/lib/gsap/SplitText.js'
+declare module '*/lib/gsap/Draggable.js'
+declare module '*/lib/gsap/InertiaPlugin.js'

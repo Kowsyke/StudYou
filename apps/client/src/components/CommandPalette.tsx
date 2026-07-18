@@ -54,17 +54,17 @@ export function CommandPalette({ open, setOpen }: CommandPaletteProps) {
       open={open}
       onOpenChange={setOpen}
       label="Global search"
-      contentClassName="glass-reflect palette-in fixed top-[18vh] left-1/2 -translate-x-1/2 w-[min(480px,90vw)] z-50 bg-surface rounded-lg border border-hairline-strong shadow-overlay overflow-hidden"
+      contentClassName="glass-reflect palette-in fixed top-[12vh] left-1/2 -translate-x-1/2 w-[min(480px,90vw)] max-h-[76vh] flex flex-col z-50 bg-surface rounded-lg border border-hairline-strong shadow-overlay overflow-hidden"
       overlayClassName="fixed inset-0 bg-black/40 backdrop-blur-[4px] z-40"
     >
-      <div className="flex items-center gap-3 px-4 border-b border-hairline">
+      <div className="flex items-center gap-3 px-4 border-b border-hairline shrink-0">
         <SearchIcon size={16} className="text-ink-tertiary shrink-0" />
         <Command.Input
           placeholder="Jump to a task, resource or page..."
           className="w-full h-12 text-sm bg-transparent focus:outline-none placeholder:text-ink-tertiary text-ink"
         />
       </div>
-      <Command.List className="max-h-[50vh] overflow-y-auto py-2">
+      <Command.List className="flex-1 min-h-0 overflow-y-auto py-2">
         <Command.Empty className="py-8 text-center text-body text-ink-tertiary">
           No results found.
         </Command.Empty>

@@ -30,6 +30,7 @@ interface CreateJourneyInput {
   budgetPence: number
   major?: string
   regions?: string[]
+  educationCompleted?: string
 }
 
 export function useCreateJourney() {

@@ -8,6 +8,7 @@ import {
   Download,
   ExternalLink,
   Filter,
+  Monitor,
   Moon,
   Pencil,
   Plus,
@@ -34,6 +35,7 @@ import {
 } from '../components/ui/card'
 import { Input, Label, Select, Textarea } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
+import { useAdminNotes, useCreateAdminNote, useDeleteAdminNote } from '../hooks/useAdmin'
 import { useChartTokens } from '../hooks/useChartTokens'
 import { useAnalytics, useCategories } from '../hooks/useMeta'
 import { useDeleteResource, useResources, useSaveResource } from '../hooks/useResources'
@@ -54,7 +56,7 @@ export function AdminPage() {
     | 'reports'
     | 'settings'
     | 'notes'
-  const { theme, setTheme, accentPreset, setAccentPreset } = useThemeStore()
+  const { themePreference, setTheme, accentPreset, setAccentPreset } = useThemeStore()
 
   // For exporting Knowledge Base resources
   const { data: resources } = useResources({
@@ -166,7 +168,7 @@ export function AdminPage() {
           />
         ) : (
           <>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
               <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
                 <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
                   Active now
@@ -179,15 +181,24 @@ export function AdminPage() {
                     <span
                       className={cn(
                         'relative inline-flex rounded-full h-2.5 w-2.5',
-                        analytics.activeUsers > 0 ? 'bg-positive' : 'bg-ink-tertiary',
+                        analytics.activeUsers > 0 ? 'bg-positive' : 'bg-ink-muted',
                       )}
                     />
                   </span>
-                  <p className="text-[22px] leading-none font-bold text-ink tabular-nums">
+                  <p className="text-title3 font-bold text-ink tabular-nums">
                     {analytics.activeUsers}
                   </p>
                 </div>
                 <p className="text-micro text-ink-tertiary mt-1">Seen in the last 5 minutes</p>
+              </div>
+              <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
+                <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
+                  Active today
+                </p>
+                <p className="text-title3 font-bold text-ink mt-1 tabular-nums">
+                  {analytics.activeToday}
+                </p>
+                <p className="text-micro text-ink-tertiary mt-1">Seen in the last 24 hours</p>
               </div>
               <StatTile label="Total users" value={analytics.totalUsers} />
               <StatTile label="New this week" value={analytics.newThisWeek} />
@@ -290,6 +301,25 @@ export function AdminPage() {
               </Card>
             </div>
 
+            <Card className="mb-6 bg-accent-soft/20 border-accent/20">
+              <CardContent className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-body font-bold text-ink">Azure App Service Analytics</h4>
+                  <p className="text-caption text-ink-secondary mt-1">
+                    Access compute metrics, response times, memory usage, and server-side log
+                    analytics in the Azure Portal.
+                  </p>
+                </div>
+                <Button
+                  onClick={() => window.open('https://portal.azure.com', '_blank')}
+                  className="sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]"
+                >
+                  <ExternalLink size={14} className="mr-1.5" />
+                  Azure Server Analytics
+                </Button>
+              </CardContent>
+            </Card>
+
             <InfrastructurePanel />
           </>
         ))}
@@ -312,7 +342,7 @@ export function AdminPage() {
                 <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
                 <div className="flex gap-2">
                   <Button
-                    variant={theme === 'light' ? 'primary' : 'secondary'}
+                    variant={themePreference === 'light' ? 'primary' : 'secondary'}
                     size="sm"
                     className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
                     onClick={() => setTheme('light')}
@@ -321,13 +351,22 @@ export function AdminPage() {
                     Light
                   </Button>
                   <Button
-                    variant={theme === 'dark' ? 'primary' : 'secondary'}
+                    variant={themePreference === 'dark' ? 'primary' : 'secondary'}
                     size="sm"
                     className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
                     onClick={() => setTheme('dark')}
                   >
                     <Moon size={14} />
                     Dark
+                  </Button>
+                  <Button
+                    variant={themePreference === 'system' ? 'primary' : 'secondary'}
+                    size="sm"
+                    className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                    onClick={() => setTheme('system')}
+                  >
+                    <Monitor size={14} />
+                    System
                   </Button>
                 </div>
               </div>
@@ -591,67 +630,74 @@ function KnowledgeBaseManager() {
 
   return (
     <section>
-      <div className="flex flex-col md:flex-row gap-3 mb-4 items-center justify-between">
+      <div className="mb-4">
         <h2 className="text-body-lg font-semibold tracking-tight">Knowledge base</h2>
-        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full md:w-auto">
-          <div className="relative w-full sm:w-60">
-            <Search
-              size={13}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
-            />
-            <Input
-              className="pl-8 text-xs h-8"
-              placeholder="Search entries..."
-              value={tableSearch}
-              onChange={(e) => setTableSearch(e.target.value)}
-            />
-            {tableSearch && (
-              <button
-                onClick={() => setTableSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-caption text-ink-tertiary hover:text-ink"
-              >
-                Clear
-              </button>
-            )}
-          </div>
+        <p className="text-caption text-ink-tertiary mt-0.5">
+          Showing {filteredAndSortedResources.length} of {(resources ?? []).length} entries. Add,
+          edit and organize the resources students see.
+        </p>
+      </div>
 
-          <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-            <span className="text-caption text-ink-secondary flex items-center gap-1 shrink-0">
-              <Filter size={11} />
-              Filter:
-            </span>
-            <div className="flex gap-0.5 bg-surface-secondary p-0.5 rounded-sm border border-hairline shrink-0">
+      {/* Dedicated, organized toolbar above the table and the add resource form:
+          search on the left, category filter on the right. */}
+      <div className="mb-4 rounded-lg border border-hairline bg-surface-secondary/40 p-3 flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
+        <div className="relative w-full lg:w-72">
+          <Search
+            size={13}
+            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
+          />
+          <Input
+            className="pl-8 text-xs h-8"
+            placeholder="Search entries..."
+            value={tableSearch}
+            onChange={(e) => setTableSearch(e.target.value)}
+          />
+          {tableSearch && (
+            <button
+              onClick={() => setTableSearch('')}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-caption text-ink-tertiary hover:text-ink"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1.5 overflow-x-auto">
+          <span className="text-caption text-ink-secondary flex items-center gap-1 shrink-0">
+            <Filter size={11} />
+            Filter:
+          </span>
+          <div className="flex gap-0.5 bg-surface p-0.5 rounded-sm border border-hairline shrink-0">
+            <button
+              onClick={() => setTableCategory('')}
+              className={cn(
+                'text-micro font-semibold px-2 py-0.5 rounded-xs transition-colors duration-[120ms]',
+                !tableCategory
+                  ? 'bg-surface-secondary text-ink shadow-xs'
+                  : 'text-ink-secondary hover:text-ink',
+              )}
+            >
+              All
+            </button>
+            {(categories ?? []).map((cat) => (
               <button
-                onClick={() => setTableCategory('')}
+                key={cat.id}
+                onClick={() => setTableCategory(cat.key)}
                 className={cn(
                   'text-micro font-semibold px-2 py-0.5 rounded-xs transition-colors duration-[120ms]',
-                  !tableCategory
-                    ? 'bg-surface text-ink shadow-xs'
+                  tableCategory === cat.key
+                    ? 'bg-surface-secondary text-ink shadow-xs'
                     : 'text-ink-secondary hover:text-ink',
                 )}
               >
-                All
+                {cat.label}
               </button>
-              {(categories ?? []).map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setTableCategory(cat.key)}
-                  className={cn(
-                    'text-micro font-semibold px-2 py-0.5 rounded-xs transition-colors duration-[120ms]',
-                    tableCategory === cat.key
-                      ? 'bg-surface text-ink shadow-xs'
-                      : 'text-ink-secondary hover:text-ink',
-                  )}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
         <Card className="lg:col-span-3 overflow-hidden flex flex-col">
           <CardContent className="p-0 flex-1 overflow-x-auto">
             <table className="w-full text-body border-collapse">
@@ -942,101 +988,54 @@ function KnowledgeBaseManager() {
   )
 }
 
-interface AdminNote {
-  id: string
-  title: string
-  content: string
-  priority: 'high' | 'medium' | 'low'
-  category: 'bug' | 'feature' | 'data' | 'general'
-  author: string
-  createdAt: string
-}
-
 function AdminNotesManager() {
-  const [notes, setNotes] = useState<AdminNote[]>([])
+  const { data: notes = [], isPending } = useAdminNotes()
+  const createNote = useCreateAdminNote()
+  const deleteNote = useDeleteAdminNote()
+
   const [newTitle, setNewTitle] = useState('')
   const [newContent, setNewContent] = useState('')
   const [newPriority, setNewPriority] = useState<'high' | 'medium' | 'low'>('medium')
   const [newCategory, setNewCategory] = useState<'bug' | 'feature' | 'data' | 'general'>('general')
   const [newAuthor, setNewAuthor] = useState('')
 
-  useEffect(() => {
-    const saved = localStorage.getItem('studyou_admin_notes')
-    if (saved) {
-      setNotes(JSON.parse(saved))
-    } else {
-      const initialNotes: AdminNote[] = [
-        {
-          id: '1',
-          title: 'Update Oxford tuition fees',
-          content:
-            'Oxford updated their international fees for 2026. Make sure the database matches the official site values.',
-          priority: 'high',
-          category: 'data',
-          author: 'System Auto-Flag',
-          createdAt: '2026-07-17T12:00:00.000Z',
-        },
-        {
-          id: '2',
-          title: 'Review visa requirements changes',
-          content:
-            'Verify if there are any new passport submission rules for students from non-EU countries in the latest guidelines.',
-          priority: 'medium',
-          category: 'bug',
-          author: 'Admin K',
-          createdAt: '2026-07-17T15:30:00.000Z',
-        },
-        {
-          id: '3',
-          title: 'Azure CPU spikes during seeding',
-          content:
-            'Observe CPU patterns when seeding high amounts of records. B1ms instance size might need scaling up during busy months.',
-          priority: 'low',
-          category: 'general',
-          author: 'Azure Monitor',
-          createdAt: '2026-07-18T01:10:00.000Z',
-        },
-      ]
-      setNotes(initialNotes)
-      localStorage.setItem('studyou_admin_notes', JSON.stringify(initialNotes))
-    }
-  }, [])
-
-  const saveNotes = (updated: AdminNote[]) => {
-    setNotes(updated)
-    localStorage.setItem('studyou_admin_notes', JSON.stringify(updated))
-  }
-
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newTitle.trim() || !newContent.trim()) return
 
-    const newNote: AdminNote = {
-      id: crypto.randomUUID(),
-      title: newTitle,
-      content: newContent,
-      priority: newPriority,
-      category: newCategory,
-      author: newAuthor.trim() || 'Admin User',
-      createdAt: new Date().toISOString(),
-    }
-
-    const updated = [newNote, ...notes]
-    saveNotes(updated)
-
-    // Reset Form
-    setNewTitle('')
-    setNewContent('')
-    setNewPriority('medium')
-    setNewCategory('general')
-    setNewAuthor('')
-    toast.success('Note added successfully.')
+    createNote.mutate(
+      {
+        title: newTitle,
+        content: newContent,
+        priority: newPriority,
+        category: newCategory,
+        author: newAuthor.trim() || 'Admin User',
+      },
+      {
+        onSuccess: () => {
+          setNewTitle('')
+          setNewContent('')
+          setNewPriority('medium')
+          setNewCategory('general')
+          setNewAuthor('')
+          toast.success('Note added successfully.')
+        },
+        onError: (err) => {
+          toast.error(apiErrorMessage(err, 'Failed to add note'))
+        },
+      },
+    )
   }
 
   const handleDeleteNote = (id: string) => {
-    const updated = notes.filter((n) => n.id !== id)
-    saveNotes(updated)
-    toast.success('Note deleted.')
+    deleteNote.mutate(id, {
+      onSuccess: () => {
+        toast.success('Note deleted.')
+      },
+      onError: (err) => {
+        toast.error(apiErrorMessage(err, 'Failed to delete note'))
+      },
+    })
   }
 
   return (
@@ -1135,7 +1134,11 @@ function AdminNotesManager() {
           </span>
         </div>
 
-        {notes.length === 0 ? (
+        {isPending ? (
+          <div className="p-8 text-center bg-surface border border-hairline rounded-md">
+            <p className="text-body text-ink-secondary">Loading admin board...</p>
+          </div>
+        ) : notes.length === 0 ? (
           <div className="p-8 text-center bg-surface border border-hairline rounded-md">
             <p className="text-body text-ink-secondary">The admin board is clear.</p>
             <p className="text-caption text-ink-tertiary mt-1">No active notes or flags.</p>
