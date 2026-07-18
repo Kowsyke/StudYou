@@ -1,0 +1,107 @@
+[
+  {
+    "title": "HSBC International Student Account",
+    "category": "banking",
+    "summary": "A specialised current account for international students that allows you to manage daily expenses and make local payments fee-free.",
+    "costPence": null,
+    "officialUrl": "https://www.hsbc.co.uk/current-accounts/products/international-student/"
+  },
+  {
+    "title": "Barclays Student Additions Account",
+    "category": "banking",
+    "summary": "A high street bank account offering free everyday banking services and mobile app access to help students manage their money.",
+    "costPence": null,
+    "officialUrl": "https://www.barclays.co.uk/current-accounts/student-bank-account/"
+  },
+  {
+    "title": "Revolut Standard Account",
+    "category": "banking",
+    "summary": "A digital multi-currency account that lets students convert money and send international transfers with low fees and competitive exchange rates.",
+    "costPence": null,
+    "officialUrl": "https://www.revolut.com/"
+  },
+  {
+    "title": "16-25 Railcard",
+    "category": "transport",
+    "summary": "A national travel card that saves you one third on rail fares across Great Britain throughout the year.",
+    "costPence": 3000,
+    "officialUrl": "https://www.16-25railcard.co.uk/"
+  },
+  {
+    "title": "18+ Student Oyster photocard",
+    "category": "transport",
+    "summary": "A travel card for students living in London that provides thirty percent off adult-rate travelcards and bus passes.",
+    "costPence": 2000,
+    "officialUrl": "https://tfl.gov.uk/fares/free-and-discounted-travel/18-plus-student-oyster-photocard"
+  },
+  {
+    "title": "UNiDAYS",
+    "category": "discounts",
+    "summary": "A free digital platform providing verified students with exclusive discounts on fashion, technology, and food brands.",
+    "costPence": null,
+    "officialUrl": "https://www.myunidays.com/"
+  },
+  {
+    "title": "Student Beans",
+    "category": "discounts",
+    "summary": "A free student loyalty network offering digital discount codes to use at thousands of online and high street retailers.",
+    "costPence": null,
+    "officialUrl": "https://www.studentbeans.com/"
+  },
+  {
+    "title": "NHS GP Registration",
+    "category": "health",
+    "summary": "Free registration with a local doctor surgery to receive routine medical consultations and prescriptions in the UK.",
+    "costPence": null,
+    "officialUrl": "https://www.nhs.uk/nhs-services/gps/how-to-register-with-a-gp-surgery/"
+  },
+  {
+    "title": "NHS HC2 Certificate",
+    "category": "health",
+    "summary": "A certificate that helps low-income students get full support for dental care, eye tests, and prescription costs.",
+    "costPence": null,
+    "officialUrl": "https://www.nhsbsa.nhs.uk/nhs-low-income-scheme"
+  },
+  {
+    "title": "National Insurance Number",
+    "category": "documents",
+    "summary": "A unique government identifier required for any international student who wants to work part-time or pay taxes legally in the UK.",
+    "costPence": null,
+    "officialUrl": "https://www.gov.uk/apply-national-insurance-number"
+  },
+  {
+    "title": "Biometric Residence Permit",
+    "category": "documents",
+    "summary": "The identity document confirming your visa status and right to study in the UK which must be collected shortly after arrival.",
+    "costPence": null,
+    "officialUrl": "https://www.gov.uk/biometric-residence-permits/getting-your-brp"
+  },
+  {
+    "title": "Council Tax Exemption",
+    "category": "documents",
+    "summary": "A certificate obtained from your university that proves you are a full-time student and exempts your household from local council taxes.",
+    "costPence": null,
+    "officialUrl": "https://www.gov.uk/council-tax/discounts-for-full-time-students"
+  },
+  {
+    "title": "VOXI Student Plan",
+    "category": "connectivity",
+    "summary": "A flexible monthly rolling SIM plan with unlimited social media data that does not require a long-term UK contract.",
+    "costPence": null,
+    "officialUrl": "https://www.voxi.co.uk/"
+  },
+  {
+    "title": "Giffgaff Student SIM",
+    "category": "connectivity",
+    "summary": "A mobile network offering contract-free SIM cards with extra data allowances specifically for verified students.",
+    "costPence": null,
+    "officialUrl": "https://www.giffgaff.com/students"
+  },
+  {
+    "title": "TOTUM student card",
+    "category": "discounts",
+    "summary": "The NUS backed student discount card that unlocks deals across shops, food and travel.",
+    "costPence": 1499,
+    "officialUrl": "https://www.totum.com"
+  }
+]

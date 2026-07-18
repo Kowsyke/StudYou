@@ -1,0 +1,110 @@
+[
+  {
+    "region": "Scotland",
+    "monthlyRentMinGbp": 480,
+    "monthlyRentMaxGbp": 850,
+    "monthlyLivingGbp": 460,
+    "transportPassGbp": 56,
+    "mainCities": ["Edinburgh", "Glasgow", "Aberdeen", "Dundee"],
+    "costLevel": "medium"
+  },
+  {
+    "region": "Wales",
+    "monthlyRentMinGbp": 410,
+    "monthlyRentMaxGbp": 720,
+    "monthlyLivingGbp": 410,
+    "transportPassGbp": 48,
+    "mainCities": ["Cardiff", "Swansea", "Bangor", "Aberystwyth"],
+    "costLevel": "low"
+  },
+  {
+    "region": "Northern Ireland",
+    "monthlyRentMinGbp": 380,
+    "monthlyRentMaxGbp": 680,
+    "monthlyLivingGbp": 390,
+    "transportPassGbp": 45,
+    "mainCities": ["Belfast", "Derry"],
+    "costLevel": "low"
+  },
+  {
+    "region": "North East",
+    "monthlyRentMinGbp": 390,
+    "monthlyRentMaxGbp": 690,
+    "monthlyLivingGbp": 400,
+    "transportPassGbp": 48,
+    "mainCities": ["Newcastle", "Durham", "Sunderland", "Middlesbrough"],
+    "costLevel": "low"
+  },
+  {
+    "region": "North West",
+    "monthlyRentMinGbp": 430,
+    "monthlyRentMaxGbp": 780,
+    "monthlyLivingGbp": 420,
+    "transportPassGbp": 52,
+    "mainCities": ["Manchester", "Liverpool", "Lancaster", "Preston"],
+    "costLevel": "medium"
+  },
+  {
+    "region": "Yorkshire and the Humber",
+    "monthlyRentMinGbp": 410,
+    "monthlyRentMaxGbp": 730,
+    "monthlyLivingGbp": 410,
+    "transportPassGbp": 50,
+    "mainCities": ["Leeds", "Sheffield", "York", "Hull"],
+    "costLevel": "low"
+  },
+  {
+    "region": "East Midlands",
+    "monthlyRentMinGbp": 420,
+    "monthlyRentMaxGbp": 750,
+    "monthlyLivingGbp": 420,
+    "transportPassGbp": 50,
+    "mainCities": ["Nottingham", "Leicester", "Lincoln", "Derby"],
+    "costLevel": "medium"
+  },
+  {
+    "region": "West Midlands",
+    "monthlyRentMinGbp": 430,
+    "monthlyRentMaxGbp": 760,
+    "monthlyLivingGbp": 430,
+    "transportPassGbp": 52,
+    "mainCities": ["Birmingham", "Coventry", "Wolverhampton", "Stoke-on-Trent"],
+    "costLevel": "medium"
+  },
+  {
+    "region": "East of England",
+    "monthlyRentMinGbp": 500,
+    "monthlyRentMaxGbp": 920,
+    "monthlyLivingGbp": 470,
+    "transportPassGbp": 60,
+    "mainCities": ["Cambridge", "Norwich", "Colchester", "Luton"],
+    "costLevel": "high"
+  },
+  {
+    "region": "London",
+    "monthlyRentMinGbp": 780,
+    "monthlyRentMaxGbp": 1650,
+    "monthlyLivingGbp": 680,
+    "transportPassGbp": 115,
+    "mainCities": ["London", "Croydon", "Uxbridge", "Kingston"],
+    "costLevel": "very high"
+  },
+  {
+    "region": "South East",
+    "monthlyRentMinGbp": 540,
+    "monthlyRentMaxGbp": 1000,
+    "monthlyLivingGbp": 490,
+    "transportPassGbp": 65,
+    "mainCities": ["Oxford", "Brighton", "Southampton", "Reading"],
+    "costLevel": "high"
+  },
+  {
+    "region": "South West",
+    "monthlyRentMinGbp": 500,
+    "monthlyRentMaxGbp": 920,
+    "monthlyLivingGbp": 460,
+    "transportPassGbp": 60,
+    "mainCities": ["Bristol", "Exeter", "Bath", "Plymouth"],
+    "costLevel": "high"
+  }
+]

@@ -22,6 +22,34 @@
       "when": 1784303429025,
       "tag": "0002_green_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1784317765319,
+      "tag": "0003_worried_psynapse",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1784331863050,
+      "tag": "0004_overconfident_champions",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1784343014286,
+      "tag": "0005_slim_robbie_robertson",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1784380857825,
+      "tag": "0006_cynical_captain_marvel",
+      "breakpoints": true
     }
   ]
 }

@@ -45,7 +45,7 @@
     "tuitionIntlMaxGbp": 33960,
     "tuitionHomeGbp": 9535,
     "scholarshipsUrl": "https://www.st-andrews.ac.uk/study/fees-and-funding/undergraduate/scholarships",
-    "accommodationUrl": null
+    "accommodationUrl": "https://www.st-andrews.ac.uk/accommodation"
   },
   {
     "rank": 4,
@@ -253,7 +253,7 @@
     "tuitionIntlMaxGbp": 34000,
     "tuitionHomeGbp": 9535,
     "scholarshipsUrl": "https://www.ed.ac.uk/student-funding/undergraduate",
-    "accommodationUrl": null
+    "accommodationUrl": "https://www.ed.ac.uk/undergraduate/accommodation"
   },
   {
     "rank": 17,
@@ -332,7 +332,7 @@
     "tuitionIntlMinGbp": 21000,
     "tuitionIntlMaxGbp": 28000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.york.ac.uk/funding",
     "accommodationUrl": "https://www.york.ac.uk/study/accommodation/"
   },
   {
@@ -412,8 +412,8 @@
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 23000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.essex.ac.uk/scholarships",
+    "accommodationUrl": "https://www.essex.ac.uk/life/accommodation"
   },
   {
     "rank": 27,
@@ -476,7 +476,7 @@
     "tuitionIntlMinGbp": 23000,
     "tuitionIntlMaxGbp": 33000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.manchester.ac.uk/study/undergraduate/fees-and-funding",
     "accommodationUrl": "https://www.manchester.ac.uk/study/accommodation/"
   },
   {
@@ -492,8 +492,8 @@
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 23500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.hw.ac.uk/scholarships",
+    "accommodationUrl": "https://www.hw.ac.uk/accommodation"
   },
   {
     "rank": 32,
@@ -524,7 +524,7 @@
     "tuitionIntlMinGbp": 19000,
     "tuitionIntlMaxGbp": 25000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://le.ac.uk/scholarships",
     "accommodationUrl": "https://le.ac.uk/accommodation"
   },
   {
@@ -540,7 +540,7 @@
     "tuitionIntlMinGbp": 21000,
     "tuitionIntlMaxGbp": 28000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.nottingham.ac.uk/funding",
     "accommodationUrl": "https://www.nottingham.ac.uk/accommodation/"
   },
   {
@@ -556,7 +556,7 @@
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 23000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.swansea.ac.uk/scholarships",
     "accommodationUrl": "https://www.swansea.ac.uk/accommodation/"
   },
   {
@@ -588,7 +588,7 @@
     "tuitionIntlMinGbp": 17000,
     "tuitionIntlMaxGbp": 20000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.mmu.ac.uk/scholarships",
     "accommodationUrl": "https://www.mmu.ac.uk/accommodation"
   },
   {
@@ -604,7 +604,7 @@
     "tuitionIntlMinGbp": 16200,
     "tuitionIntlMaxGbp": 19200,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.port.ac.uk/scholarships-and-bursaries",
     "accommodationUrl": "https://www.port.ac.uk/student-life/accommodation"
   },
   {
@@ -636,7 +636,7 @@
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 22500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.aston.ac.uk/scholarships",
     "accommodationUrl": "https://www.aston.ac.uk/accommodation"
   },
   {
@@ -652,7 +652,7 @@
     "tuitionIntlMinGbp": 19000,
     "tuitionIntlMaxGbp": 25000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.reading.ac.uk/scholarships",
     "accommodationUrl": "https://www.reading.ac.uk/ready-to-study/accommodation"
   },
   {
@@ -717,7 +717,7 @@
     "tuitionIntlMaxGbp": 26000,
     "tuitionHomeGbp": 9535,
     "scholarshipsUrl": "https://www.royalholloway.ac.uk/studying-here/fees-and-funding/undergraduate/scholarships-and-bursaries/",
-    "accommodationUrl": null
+    "accommodationUrl": "https://www.royalholloway.ac.uk/accommodation"
   },
   {
     "rank": 46,
@@ -732,7 +732,7 @@
     "tuitionIntlMinGbp": 21000,
     "tuitionIntlMaxGbp": 28000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.ncl.ac.uk/scholarships",
     "accommodationUrl": "https://www.ncl.ac.uk/accommodation/"
   },
   {
@@ -764,7 +764,7 @@
     "tuitionIntlMinGbp": 16000,
     "tuitionIntlMaxGbp": 19000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.aber.ac.uk/scholarships",
     "accommodationUrl": "https://www.aber.ac.uk/en/accommodation/"
   },
   {
@@ -780,7 +780,7 @@
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 22500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.keele.ac.uk/scholarships",
     "accommodationUrl": "https://www.keele.ac.uk/accommodation/"
   },
   {
@@ -860,7 +860,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.uwl.ac.uk/scholarships",
     "accommodationUrl": "https://www.uwl.ac.uk/accommodation"
   },
   {
@@ -876,7 +876,7 @@
     "tuitionIntlMinGbp": 16500,
     "tuitionIntlMaxGbp": 19500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.bangor.ac.uk/scholarships",
     "accommodationUrl": "https://www.bangor.ac.uk/accommodation"
   },
   {
@@ -892,7 +892,7 @@
     "tuitionIntlMinGbp": 17750,
     "tuitionIntlMaxGbp": 18250,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.ljmu.ac.uk/scholarships",
     "accommodationUrl": "https://www.ljmu.ac.uk/accommodation"
   },
   {
@@ -956,7 +956,7 @@
     "tuitionIntlMinGbp": 15500,
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.harper-adams.ac.uk/undergraduate/fees-and-funding",
     "accommodationUrl": "https://www.harper-adams.ac.uk/accommodation/"
   },
   {
@@ -972,7 +972,7 @@
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 19500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://aub.ac.uk/scholarships",
     "accommodationUrl": "https://aub.ac.uk/accommodation"
   },
   {
@@ -1020,7 +1020,7 @@
     "tuitionIntlMinGbp": 15250,
     "tuitionIntlMaxGbp": 17250,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.abertay.ac.uk/scholarships",
     "accommodationUrl": "https://www.abertay.ac.uk/life/accommodation/"
   },
   {
@@ -1053,7 +1053,7 @@
     "tuitionIntlMaxGbp": 21500,
     "tuitionHomeGbp": 9535,
     "scholarshipsUrl": "https://www.stir.ac.uk/scholarships/",
-    "accommodationUrl": null
+    "accommodationUrl": "https://www.stir.ac.uk/accommodation"
   },
   {
     "rank": 67,
@@ -1068,8 +1068,8 @@
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.sunderland.ac.uk/scholarships",
+    "accommodationUrl": "https://www.sunderland.ac.uk/student-life/accommodation"
   },
   {
     "rank": 68,
@@ -1084,8 +1084,8 @@
     "tuitionIntlMinGbp": 16000,
     "tuitionIntlMaxGbp": 19000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.plymouth.ac.uk/scholarships",
+    "accommodationUrl": "https://www.plymouth.ac.uk/accommodation"
   },
   {
     "rank": 69,
@@ -1100,7 +1100,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.cardiffmet.ac.uk/scholarships",
     "accommodationUrl": "https://www.cardiffmet.ac.uk/accommodation/"
   },
   {
@@ -1132,7 +1132,7 @@
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 24000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.gold.ac.uk/scholarships",
     "accommodationUrl": "https://www.gold.ac.uk/accommodation/"
   },
   {
@@ -1164,7 +1164,7 @@
     "tuitionIntlMinGbp": 16500,
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://norwichuni.ac.uk/study/fees-and-funding",
     "accommodationUrl": "https://norwichuni.ac.uk/accommodation/"
   },
   {
@@ -1180,7 +1180,7 @@
     "tuitionIntlMinGbp": 15500,
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.rgu.ac.uk/scholarships",
     "accommodationUrl": "https://www.rgu.ac.uk/accommodation"
   },
   {
@@ -1196,8 +1196,8 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.bathspa.ac.uk/scholarships",
+    "accommodationUrl": "https://www.bathspa.ac.uk/accommodation"
   },
   {
     "rank": 76,
@@ -1212,8 +1212,8 @@
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.stmarys.ac.uk/scholarships",
+    "accommodationUrl": "https://www.stmarys.ac.uk/accommodation"
   },
   {
     "rank": 77,
@@ -1244,7 +1244,7 @@
     "tuitionIntlMinGbp": 16500,
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.falmouth.ac.uk/money",
     "accommodationUrl": "https://www.falmouth.ac.uk/accommodation/"
   },
   {
@@ -1308,8 +1308,8 @@
     "tuitionIntlMinGbp": 16000,
     "tuitionIntlMaxGbp": 19000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "scholarshipsUrl": "https://www.hull.ac.uk/scholarships",
+    "accommodationUrl": "https://www.hull.ac.uk/accommodation"
   },
   {
     "rank": 83,
@@ -1324,7 +1324,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.solent.ac.uk/scholarships",
     "accommodationUrl": "https://www.solent.ac.uk/accommodation"
   },
   {
@@ -1389,7 +1389,7 @@
     "tuitionIntlMaxGbp": 16200,
     "tuitionHomeGbp": 9535,
     "scholarshipsUrl": null,
-    "accommodationUrl": null
+    "accommodationUrl": "https://www.chester.ac.uk/student-life/accommodation"
   },
   {
     "rank": 88,
@@ -1404,7 +1404,7 @@
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.marjon.ac.uk/funding",
     "accommodationUrl": "https://www.marjon.ac.uk/accommodation/"
   },
   {
@@ -1436,7 +1436,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17000,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.leedsbeckett.ac.uk/scholarships",
     "accommodationUrl": "https://www.leedsbeckett.ac.uk/accommodation/"
   },
   {
@@ -1516,7 +1516,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.shu.ac.uk/scholarships",
     "accommodationUrl": "https://www.shu.ac.uk/accommodation/"
   },
   {
@@ -1564,7 +1564,7 @@
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.uclan.ac.uk/scholarships",
     "accommodationUrl": "https://www.uclan.ac.uk/accommodation/"
   },
   {
@@ -1580,7 +1580,7 @@
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9535,
-    "scholarshipsUrl": null,
+    "scholarshipsUrl": "https://www.bolton.ac.uk/scholarships",
     "accommodationUrl": "https://www.bolton.ac.uk/accommodation"
   },
   {
@@ -1605,14 +1605,14 @@
     "city": "Leicester",
     "region": "East Midlands",
     "website": "https://www.dmu.ac.uk",
-    "internationalUrl": "https://www.dmu.ac.uk/study/international-students",
-    "ugAdmissionsUrl": "https://www.dmu.ac.uk/study/undergraduate",
+    "internationalUrl": "https://www.dmu.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.dmu.ac.uk/study",
     "russellGroup": false,
     "notes": "A vibrant city-centre campus known for its exceptional focus on employability through its DMU Works scheme, diverse student body, and global learning opportunities.",
     "tuitionIntlMinGbp": 15250,
     "tuitionIntlMaxGbp": 16800,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.dmu.ac.uk/study/international-students/fees-and-funding/scholarships.aspx",
+    "scholarshipsUrl": "https://www.dmu.ac.uk/scholarships",
     "accommodationUrl": "https://www.dmu.ac.uk/study/accommodation"
   },
   {
@@ -1638,13 +1638,13 @@
     "region": "South East",
     "website": "https://www.brighton.ac.uk",
     "internationalUrl": "https://www.brighton.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.brighton.ac.uk/applying/index.aspx",
+    "ugAdmissionsUrl": "https://www.brighton.ac.uk/courses",
     "russellGroup": false,
     "notes": "A creative and professional university located in the vibrant coastal city of Brighton, focusing on hands-on practice, entrepreneurship, and community projects.",
     "tuitionIntlMinGbp": 15900,
     "tuitionIntlMaxGbp": 18900,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.brighton.ac.uk/applying/funding-and-fees/scholarships/index.aspx",
+    "scholarshipsUrl": "https://www.brighton.ac.uk/scholarships",
     "accommodationUrl": "https://www.brighton.ac.uk/accommodation-and-locations"
   },
   {
@@ -1654,7 +1654,7 @@
     "region": "London",
     "website": "https://www.mdx.ac.uk",
     "internationalUrl": "https://www.mdx.ac.uk/study-with-us/international",
-    "ugAdmissionsUrl": "https://www.mdx.ac.uk/study-with-us/how-to-apply",
+    "ugAdmissionsUrl": "https://www.mdx.ac.uk/study",
     "russellGroup": false,
     "notes": "Based in Hendon, North London, Middlesex combines high-tech campus facilities with a global outlook, having international campuses in Dubai, Mauritius, and Malta.",
     "tuitionIntlMinGbp": 15800,
@@ -1677,7 +1677,7 @@
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9250,
     "scholarshipsUrl": "https://www.westminster.ac.uk/study/fees-and-funding/scholarships",
-    "accommodationUrl": "https://www.westminster.ac.uk/study/student-life/accommodation"
+    "accommodationUrl": "https://www.westminster.ac.uk/accommodation"
   },
   {
     "rank": 106,
@@ -1686,7 +1686,7 @@
     "region": "London",
     "website": "https://www.roehampton.ac.uk",
     "internationalUrl": "https://www.roehampton.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.roehampton.ac.uk/undergraduate-courses/how-to-apply",
+    "ugAdmissionsUrl": "https://www.roehampton.ac.uk/study",
     "russellGroup": false,
     "notes": "The only traditional parkland college campus in London, offering a supportive, collegiate community in Southwest London alongside growing career-focused courses.",
     "tuitionIntlMinGbp": 14500,
@@ -1724,7 +1724,7 @@
     "tuitionIntlMinGbp": 14200,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.winchester.ac.uk/study/undergraduate/fees-and-funding/scholarships",
+    "scholarshipsUrl": "https://www.winchester.ac.uk/scholarships",
     "accommodationUrl": "https://www.winchester.ac.uk/accommodation"
   },
   {
@@ -1733,15 +1733,15 @@
     "city": "Wolverhampton",
     "region": "West Midlands",
     "website": "https://www.wlv.ac.uk",
-    "internationalUrl": "https://www.wlv.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.wlv.ac.uk/apply/how-to-apply",
+    "internationalUrl": "https://www.wlv.ac.uk",
+    "ugAdmissionsUrl": "https://www.wlv.ac.uk",
     "russellGroup": false,
     "notes": "Known as the Opportunity University, Wolverhampton offers excellent facilities, professional accreditations, and strong ties to Midlands industries.",
     "tuitionIntlMinGbp": 14450,
     "tuitionIntlMaxGbp": 16000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.wlv.ac.uk/international/fees-funding-and-scholarships/scholarships",
-    "accommodationUrl": "https://www.wlv.ac.uk/university-life/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 110,
@@ -1749,14 +1749,14 @@
     "city": "Paisley",
     "region": "Scotland",
     "website": "https://www.uws.ac.uk",
-    "internationalUrl": "https://www.uws.ac.uk/study/international-students",
-    "ugAdmissionsUrl": "https://www.uws.ac.uk/study/how-to-apply",
+    "internationalUrl": "https://www.uws.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.uws.ac.uk/study",
     "russellGroup": false,
     "notes": "A highly modern Scottish university spread across four campuses in Southwest Scotland and a London campus, offering excellent career-focused education.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 1820,
-    "scholarshipsUrl": "https://www.uws.ac.uk/study/international-students/fees-funding/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.uws.ac.uk/university-life/accommodation"
   },
   {
@@ -1766,7 +1766,7 @@
     "region": "South East",
     "website": "https://www.canterbury.ac.uk",
     "internationalUrl": "https://www.canterbury.ac.uk/study-here/international",
-    "ugAdmissionsUrl": "https://www.canterbury.ac.uk/study-here/applying",
+    "ugAdmissionsUrl": "https://www.canterbury.ac.uk/study",
     "russellGroup": false,
     "notes": "Located in the historic city of Canterbury, CCCU is highly regarded for public sector education, healthcare, teaching, and creative arts.",
     "tuitionIntlMinGbp": 14500,
@@ -1781,14 +1781,14 @@
     "city": "York",
     "region": "Yorkshire and the Humber",
     "website": "https://www.yorksj.ac.uk",
-    "internationalUrl": "https://www.yorksj.ac.uk/study/international",
-    "ugAdmissionsUrl": "https://www.yorksj.ac.uk/study/undergraduate/how-to-apply",
+    "internationalUrl": "https://www.yorksj.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.yorksj.ac.uk/study",
     "russellGroup": false,
     "notes": "A friendly, community-oriented university located in the heart of historic York, known for excellent student support and a gorgeous urban campus.",
     "tuitionIntlMinGbp": 14000,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.yorksj.ac.uk/study/international/fees-and-funding/scholarships",
+    "scholarshipsUrl": "https://www.yorksj.ac.uk/scholarships",
     "accommodationUrl": "https://www.yorksj.ac.uk/accommodation"
   },
   {
@@ -1798,14 +1798,14 @@
     "region": "Yorkshire and the Humber",
     "website": "https://www.leedstrinity.ac.uk",
     "internationalUrl": "https://www.leedstrinity.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.leedstrinity.ac.uk/study/undergraduate/how-to-apply",
+    "ugAdmissionsUrl": "https://www.leedstrinity.ac.uk/study",
     "russellGroup": false,
     "notes": "A close-knit campus university in Horsforth near Leeds, famous for embedding professional work placements in every single undergraduate degree.",
     "tuitionIntlMinGbp": 14250,
     "tuitionIntlMaxGbp": 15750,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.leedstrinity.ac.uk/study/fees-and-finance/scholarships-and-bursaries",
-    "accommodationUrl": "https://www.leedstrinity.ac.uk/student-life/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.leedstrinity.ac.uk/accommodation"
   },
   {
     "rank": 114,
@@ -1820,7 +1820,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 16900,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.northampton.ac.uk/international/fees-and-funding/scholarships",
+    "scholarshipsUrl": "https://www.northampton.ac.uk/scholarships",
     "accommodationUrl": "https://www.northampton.ac.uk/student-life/accommodation"
   },
   {
@@ -1829,15 +1829,15 @@
     "city": "Wrexham",
     "region": "Wales",
     "website": "https://wrexham.ac.uk",
-    "internationalUrl": "https://wrexham.ac.uk/international",
-    "ugAdmissionsUrl": "https://wrexham.ac.uk/study/applying-to-wrexham",
+    "internationalUrl": "https://wrexham.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://wrexham.ac.uk/study",
     "russellGroup": false,
-    "notes": "Formerly Glyndŵr University, it is a Welsh university situated in Wrexham, offering practical, industry-focused courses and small class sizes.",
+    "notes": "Formerly Glynd\u0175r University, it is a Welsh university situated in Wrexham, offering practical, industry-focused courses and small class sizes.",
     "tuitionIntlMinGbp": 13250,
     "tuitionIntlMaxGbp": 14750,
     "tuitionHomeGbp": 9000,
-    "scholarshipsUrl": "https://wrexham.ac.uk/international/scholarships-and-funding",
-    "accommodationUrl": "https://wrexham.ac.uk/student-life/accommodation"
+    "scholarshipsUrl": "https://wrexham.ac.uk/fees-and-funding",
+    "accommodationUrl": "https://wrexham.ac.uk/accommodation"
   },
   {
     "rank": 116,
@@ -1868,7 +1868,7 @@
     "tuitionIntlMinGbp": 14250,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.cumbria.ac.uk/study/international-students/scholarships",
+    "scholarshipsUrl": "https://www.cumbria.ac.uk/scholarships",
     "accommodationUrl": "https://www.cumbria.ac.uk/student-life/accommodation"
   },
   {
@@ -1884,8 +1884,8 @@
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.beds.ac.uk/international/fees-and-scholarships/scholarships",
-    "accommodationUrl": "https://www.beds.ac.uk/studentlife/accommodation"
+    "scholarshipsUrl": "https://www.beds.ac.uk/scholarships",
+    "accommodationUrl": "https://www.beds.ac.uk/accommodation"
   },
   {
     "rank": 119,
@@ -1900,7 +1900,7 @@
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.bucks.ac.uk/international/fees-and-scholarships",
+    "scholarshipsUrl": "https://www.bucks.ac.uk/study/fees-and-funding",
     "accommodationUrl": "https://www.bucks.ac.uk/life/accommodation"
   },
   {
@@ -1909,14 +1909,14 @@
     "city": "London",
     "region": "London",
     "website": "https://www.ravensbourne.ac.uk",
-    "internationalUrl": "https://www.ravensbourne.ac.uk/study-here/international-students",
-    "ugAdmissionsUrl": "https://www.ravensbourne.ac.uk/study-here/how-apply",
+    "internationalUrl": "https://www.ravensbourne.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.ravensbourne.ac.uk/study",
     "russellGroup": false,
     "notes": "A specialist digital media and design institution located on the Greenwich Peninsula, offering outstanding industry links and highly creative vocational courses.",
     "tuitionIntlMinGbp": 16500,
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.ravensbourne.ac.uk/study-here/fees-and-funding",
+    "scholarshipsUrl": "https://www.ravensbourne.ac.uk/scholarships",
     "accommodationUrl": "https://www.ravensbourne.ac.uk/student-life/accommodation"
   },
   {
@@ -1932,7 +1932,7 @@
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 17500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.londonmet.ac.uk/international/scholarships-and-funding",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.londonmet.ac.uk/accommodation"
   },
   {
@@ -1948,7 +1948,7 @@
     "tuitionIntlMinGbp": 16500,
     "tuitionIntlMaxGbp": 21000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.bbk.ac.uk/fees-and-financial-support/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.bbk.ac.uk/student-services/accommodation"
   },
   {
@@ -1957,15 +1957,15 @@
     "city": "Inverness",
     "region": "Scotland",
     "website": "https://www.uhi.ac.uk",
-    "internationalUrl": "https://www.uhi.ac.uk/en/study-at-uhi/international",
-    "ugAdmissionsUrl": "https://www.uhi.ac.uk/en/study-at-uhi/how-to-apply",
+    "internationalUrl": "https://www.uhi.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.uhi.ac.uk/courses",
     "russellGroup": false,
     "notes": "A federal university covering the Highlands and Islands of Scotland, offering unique courses in marine science, archaeology, and Gaelic studies.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 1820,
-    "scholarshipsUrl": "https://www.uhi.ac.uk/en/study-at-uhi/international/scholarships",
-    "accommodationUrl": "https://www.uhi.ac.uk/en/student-life/accommodation"
+    "scholarshipsUrl": "https://www.uhi.ac.uk/scholarships",
+    "accommodationUrl": "https://www.uhi.ac.uk/accommodation"
   },
   {
     "rank": 124,
@@ -1974,14 +1974,14 @@
     "region": "South West",
     "website": "https://www.hartpury.ac.uk",
     "internationalUrl": "https://www.hartpury.ac.uk/university/international",
-    "ugAdmissionsUrl": "https://www.hartpury.ac.uk/university/apply",
+    "ugAdmissionsUrl": "https://www.hartpury.ac.uk/courses",
     "russellGroup": false,
     "notes": "A specialist university focusing on equine, animal, agriculture, and sports sciences, set on a massive 360-hectare estate in Gloucestershire.",
     "tuitionIntlMinGbp": 15000,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.hartpury.ac.uk/university/international/fees-and-funding",
-    "accommodationUrl": "https://www.hartpury.ac.uk/university/facilities/accommodation"
+    "scholarshipsUrl": "https://www.hartpury.ac.uk/scholarships",
+    "accommodationUrl": "https://www.hartpury.ac.uk/accommodation"
   },
   {
     "rank": 125,
@@ -1990,14 +1990,14 @@
     "region": "East Midlands",
     "website": "https://www.bishopg.ac.uk",
     "internationalUrl": "https://www.bishopg.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.bishopg.ac.uk/undergraduate/apply",
+    "ugAdmissionsUrl": "https://www.bishopg.ac.uk/study",
     "russellGroup": false,
     "notes": "A small, historic university located in Lincoln, celebrated for its teaching training heritage, friendly atmosphere, and highly supportive staff.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 14500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.bishopg.ac.uk/international/fees-scholarships",
-    "accommodationUrl": "https://www.bishopg.ac.uk/student-life/accommodation"
+    "scholarshipsUrl": "https://www.bishopg.ac.uk/scholarships",
+    "accommodationUrl": "https://www.bishopg.ac.uk/accommodation"
   },
   {
     "rank": 126,
@@ -2005,14 +2005,14 @@
     "city": "Worcester",
     "region": "West Midlands",
     "website": "https://www.worcester.ac.uk",
-    "internationalUrl": "https://www.worcester.ac.uk/study/international-students",
-    "ugAdmissionsUrl": "https://www.worcester.ac.uk/study/how-to-apply",
+    "internationalUrl": "https://www.worcester.ac.uk/international",
+    "ugAdmissionsUrl": "https://www.worcester.ac.uk/courses",
     "russellGroup": false,
     "notes": "Known for its inclusive community, the University of Worcester is a leader in nurse training, physical education, and environmental sustainability.",
     "tuitionIntlMinGbp": 14700,
     "tuitionIntlMaxGbp": 16200,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.worcester.ac.uk/study/international-students/fees-scholarships/scholarships",
+    "scholarshipsUrl": "https://www.worcester.ac.uk/scholarships",
     "accommodationUrl": "https://www.worcester.ac.uk/life/accommodation"
   },
   {
@@ -2028,7 +2028,7 @@
     "tuitionIntlMinGbp": 14800,
     "tuitionIntlMaxGbp": 16000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.aup.ac.uk/international/fees-scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.aup.ac.uk/student-life/accommodation"
   },
   {
@@ -2038,14 +2038,14 @@
     "region": "Yorkshire and the Humber",
     "website": "https://www.leeds-art.ac.uk",
     "internationalUrl": "https://www.leeds-art.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.leeds-art.ac.uk/study/how-to-apply",
+    "ugAdmissionsUrl": "https://www.leeds-art.ac.uk/study",
     "russellGroup": false,
     "notes": "The only specialist arts university in the North of England, offering state-of-the-art resources and a highly collaborative creative environment.",
     "tuitionIntlMinGbp": 15500,
     "tuitionIntlMaxGbp": 17000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.leeds-art.ac.uk/international/funding-scholarships",
-    "accommodationUrl": "https://www.leeds-art.ac.uk/student-life/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 129,
@@ -2054,14 +2054,14 @@
     "region": "South West",
     "website": "https://www.rau.ac.uk",
     "internationalUrl": "https://www.rau.ac.uk/study/international-students",
-    "ugAdmissionsUrl": "https://www.rau.ac.uk/study/undergraduate/apply",
+    "ugAdmissionsUrl": "https://www.rau.ac.uk/courses",
     "russellGroup": false,
     "notes": "Founded in 1845 as the first agricultural college in the English-speaking world, it is a global hub for farming, agribusiness, and land management.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.rau.ac.uk/study/fees-and-funding/scholarships",
-    "accommodationUrl": "https://www.rau.ac.uk/student-life/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.rau.ac.uk/accommodation"
   },
   {
     "rank": 130,
@@ -2076,7 +2076,7 @@
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.ucb.ac.uk/international/fees-and-funding/scholarships",
+    "scholarshipsUrl": "https://www.ucb.ac.uk/scholarships",
     "accommodationUrl": "https://www.ucb.ac.uk/student-life/accommodation"
   },
   {
@@ -2102,14 +2102,14 @@
     "region": "London",
     "website": "https://www.bpp.com",
     "internationalUrl": "https://www.bpp.com/international",
-    "ugAdmissionsUrl": "https://www.bpp.com/undergraduate",
+    "ugAdmissionsUrl": "https://www.bpp.com/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Law and Accountancy and strong student outcomes.",
     "tuitionIntlMinGbp": 14000,
     "tuitionIntlMaxGbp": 16000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.bpp.com/scholarships",
-    "accommodationUrl": "https://www.bpp.com/accommodation"
+    "scholarshipsUrl": "https://www.bpp.com/funding",
+    "accommodationUrl": null
   },
   {
     "rank": 133,
@@ -2117,15 +2117,15 @@
     "city": "Guildford",
     "region": "South East",
     "website": "https://www.law.ac.uk",
-    "internationalUrl": "https://www.law.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.law.ac.uk/undergraduate",
+    "internationalUrl": "https://www.law.ac.uk",
+    "ugAdmissionsUrl": "https://www.law.ac.uk",
     "russellGroup": false,
     "notes": "Specialist institution located in Guildford, highly recognized for its excellence in Law and Criminology and strong student outcomes.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16800,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.law.ac.uk/scholarships",
-    "accommodationUrl": "https://www.law.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 134,
@@ -2149,14 +2149,14 @@
     "city": "London",
     "region": "London",
     "website": "https://www.trinitylaban.ac.uk",
-    "internationalUrl": "https://www.trinitylaban.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.trinitylaban.ac.uk/undergraduate",
+    "internationalUrl": "https://www.trinitylaban.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://www.trinitylaban.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Music Performance and Contemporary Dance and strong student outcomes.",
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 24000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.trinitylaban.ac.uk/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.trinitylaban.ac.uk/accommodation"
   },
   {
@@ -2166,7 +2166,7 @@
     "region": "London",
     "website": "https://www.gsmd.ac.uk",
     "internationalUrl": "https://www.gsmd.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.gsmd.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.gsmd.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Acting and Classical Music and strong student outcomes.",
     "tuitionIntlMinGbp": 20000,
@@ -2197,15 +2197,15 @@
     "city": "London",
     "region": "London",
     "website": "https://www.ram.ac.uk",
-    "internationalUrl": "https://www.ram.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.ram.ac.uk/undergraduate",
+    "internationalUrl": "https://www.ram.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://www.ram.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Vocal Studies and Musical Theatre and strong student outcomes.",
     "tuitionIntlMinGbp": 23000,
     "tuitionIntlMaxGbp": 29000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.ram.ac.uk/scholarships",
-    "accommodationUrl": "https://www.ram.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 139,
@@ -2229,8 +2229,8 @@
     "city": "Glasgow",
     "region": "Scotland",
     "website": "https://www.rcs.ac.uk",
-    "internationalUrl": "https://www.rcs.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.rcs.ac.uk/undergraduate",
+    "internationalUrl": "https://www.rcs.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://www.rcs.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Glasgow, highly recognized for its excellence in Drama & Theatre and Scottish Music and strong student outcomes.",
     "tuitionIntlMinGbp": 18500,
@@ -2278,14 +2278,14 @@
     "region": "North West",
     "website": "https://www.lipa.ac.uk",
     "internationalUrl": "https://www.lipa.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.lipa.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.lipa.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Liverpool, highly recognized for its excellence in Sound Technology and Dance & Acting and strong student outcomes.",
     "tuitionIntlMinGbp": 16500,
     "tuitionIntlMaxGbp": 18500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.lipa.ac.uk/scholarships",
-    "accommodationUrl": "https://www.lipa.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 144,
@@ -2300,7 +2300,7 @@
     "tuitionIntlMinGbp": 16000,
     "tuitionIntlMaxGbp": 18000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.nscd.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.nscd.ac.uk/funding",
     "accommodationUrl": "https://www.nscd.ac.uk/accommodation"
   },
   {
@@ -2309,15 +2309,15 @@
     "city": "Beaconsfield",
     "region": "South East",
     "website": "https://www.nfts.co.uk",
-    "internationalUrl": "https://www.nfts.co.uk/international",
-    "ugAdmissionsUrl": "https://www.nfts.co.uk/undergraduate",
+    "internationalUrl": "https://www.nfts.co.uk",
+    "ugAdmissionsUrl": "https://www.nfts.co.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Beaconsfield, highly recognized for its excellence in Cinematography and Screenwriting and strong student outcomes.",
     "tuitionIntlMinGbp": 22000,
     "tuitionIntlMaxGbp": 32000,
     "tuitionHomeGbp": 9250,
     "scholarshipsUrl": "https://www.nfts.co.uk/scholarships",
-    "accommodationUrl": "https://www.nfts.co.uk/accommodation"
+    "accommodationUrl": null
   },
   {
     "rank": 146,
@@ -2326,13 +2326,13 @@
     "region": "South East",
     "website": "https://www.buckingham.ac.uk",
     "internationalUrl": "https://www.buckingham.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.buckingham.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.buckingham.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Buckingham, highly recognized for its excellence in Medicine and Two-Year Law and strong student outcomes.",
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 22000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.buckingham.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.buckingham.ac.uk/study/fees-and-funding",
     "accommodationUrl": "https://www.buckingham.ac.uk/accommodation"
   },
   {
@@ -2342,14 +2342,14 @@
     "region": "West Midlands",
     "website": "https://arden.ac.uk",
     "internationalUrl": "https://arden.ac.uk/international",
-    "ugAdmissionsUrl": "https://arden.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://arden.ac.uk/apply",
     "russellGroup": false,
     "notes": "Specialist institution located in Coventry, highly recognized for its excellence in Online Business and Healthcare Mgmt and strong student outcomes.",
     "tuitionIntlMinGbp": 12500,
     "tuitionIntlMaxGbp": 14000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://arden.ac.uk/scholarships",
-    "accommodationUrl": "https://arden.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 148,
@@ -2357,7 +2357,7 @@
     "city": "London",
     "region": "London",
     "website": "https://www.hult.edu",
-    "internationalUrl": "https://www.hult.edu/international",
+    "internationalUrl": "https://www.hult.edu",
     "ugAdmissionsUrl": "https://www.hult.edu/undergraduate",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Entrepreneurship and Global Business and strong student outcomes.",
@@ -2422,14 +2422,14 @@
     "region": "Northern Ireland",
     "website": "https://www.stmarys-belfast.ac.uk",
     "internationalUrl": "https://www.stmarys-belfast.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.stmarys-belfast.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.stmarys-belfast.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Belfast, highly recognized for its excellence in Liberal Arts and Teacher Training and strong student outcomes.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.stmarys-belfast.ac.uk/scholarships",
-    "accommodationUrl": "https://www.stmarys-belfast.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 153,
@@ -2476,7 +2476,7 @@
     "tuitionIntlMinGbp": 19500,
     "tuitionIntlMaxGbp": 23000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://courtauld.ac.uk/scholarships",
+    "scholarshipsUrl": "https://courtauld.ac.uk/study/fees-and-funding",
     "accommodationUrl": "https://courtauld.ac.uk/accommodation"
   },
   {
@@ -2501,14 +2501,14 @@
     "city": "Liverpool",
     "region": "North West",
     "website": "https://www.lstmed.ac.uk",
-    "internationalUrl": "https://www.lstmed.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.lstmed.ac.uk/undergraduate",
+    "internationalUrl": "https://www.lstmed.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://www.lstmed.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Liverpool, highly recognized for its excellence in Tropical Medicine and Global Health and strong student outcomes.",
     "tuitionIntlMinGbp": 19000,
     "tuitionIntlMaxGbp": 24000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.lstmed.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.lstmed.ac.uk/study/fees-and-funding",
     "accommodationUrl": "https://www.lstmed.ac.uk/accommodation"
   },
   {
@@ -2518,13 +2518,13 @@
     "region": "Wales",
     "website": "https://www.rwcmd.ac.uk",
     "internationalUrl": "https://www.rwcmd.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.rwcmd.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.rwcmd.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Cardiff, highly recognized for its excellence in Acting and Opera Studies and strong student outcomes.",
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 23500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.rwcmd.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.rwcmd.ac.uk/fees-and-funding",
     "accommodationUrl": "https://www.rwcmd.ac.uk/accommodation"
   },
   {
@@ -2532,16 +2532,16 @@
     "name": "Bristol Old Vic Theatre School",
     "city": "Bristol",
     "region": "South West",
-    "website": "https://www.botvs.co.uk",
-    "internationalUrl": "https://www.botvs.co.uk/international",
-    "ugAdmissionsUrl": "https://www.botvs.co.uk/undergraduate",
+    "website": "https://www.oldvic.ac.uk",
+    "internationalUrl": "https://www.oldvic.ac.uk",
+    "ugAdmissionsUrl": "https://www.oldvic.ac.uk",
     "russellGroup": false,
     "notes": "Specialist institution located in Bristol, highly recognized for its excellence in Acting and Production Arts and strong student outcomes.",
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 19500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.botvs.co.uk/scholarships",
-    "accommodationUrl": "https://www.botvs.co.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 160,
@@ -2566,13 +2566,13 @@
     "region": "London",
     "website": "https://www.centralschoolofballet.co.uk",
     "internationalUrl": "https://www.centralschoolofballet.co.uk/international",
-    "ugAdmissionsUrl": "https://www.centralschoolofballet.co.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.centralschoolofballet.co.uk/apply",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Classical Ballet and strong student outcomes.",
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 19500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.centralschoolofballet.co.uk/scholarships",
+    "scholarshipsUrl": "https://www.centralschoolofballet.co.uk/study/fees-and-funding",
     "accommodationUrl": "https://www.centralschoolofballet.co.uk/accommodation"
   },
   {
@@ -2588,8 +2588,8 @@
     "tuitionIntlMinGbp": 17500,
     "tuitionIntlMaxGbp": 19500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.rambertschool.org.uk/scholarships",
-    "accommodationUrl": "https://www.rambertschool.org.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 163,
@@ -2597,15 +2597,15 @@
     "city": "London",
     "region": "London",
     "website": "https://www.rca.ac.uk",
-    "internationalUrl": "https://www.rca.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.rca.ac.uk/undergraduate",
+    "internationalUrl": "https://www.rca.ac.uk/study/international-students",
+    "ugAdmissionsUrl": "https://www.rca.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Fine Art and Automotive Design and strong student outcomes.",
     "tuitionIntlMinGbp": 25000,
     "tuitionIntlMaxGbp": 34000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.rca.ac.uk/scholarships",
-    "accommodationUrl": "https://www.rca.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.rca.ac.uk/students/accommodation"
   },
   {
     "rank": 164,
@@ -2613,15 +2613,15 @@
     "city": "London",
     "region": "London",
     "website": "https://www.london.edu",
-    "internationalUrl": "https://www.london.edu/international",
-    "ugAdmissionsUrl": "https://www.london.edu/undergraduate",
+    "internationalUrl": "https://www.london.edu",
+    "ugAdmissionsUrl": "https://www.london.edu/apply",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in MBA and Finance Masters and strong student outcomes.",
     "tuitionIntlMinGbp": 32000,
     "tuitionIntlMaxGbp": 48000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.london.edu/scholarships",
-    "accommodationUrl": "https://www.london.edu/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 165,
@@ -2629,15 +2629,15 @@
     "city": "London",
     "region": "London",
     "website": "https://www.icr.ac.uk",
-    "internationalUrl": "https://www.icr.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.icr.ac.uk/undergraduate",
+    "internationalUrl": "https://www.icr.ac.uk",
+    "ugAdmissionsUrl": "https://www.icr.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Oncology Research and Cancer Biology and strong student outcomes.",
     "tuitionIntlMinGbp": 22000,
     "tuitionIntlMaxGbp": 28000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.icr.ac.uk/scholarships",
-    "accommodationUrl": "https://www.icr.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 166,
@@ -2662,14 +2662,14 @@
     "region": "West Midlands",
     "website": "https://www.bcu.ac.uk/conservatoire",
     "internationalUrl": "https://www.bcu.ac.uk/conservatoire/international",
-    "ugAdmissionsUrl": "https://www.bcu.ac.uk/conservatoire/undergraduate",
+    "ugAdmissionsUrl": "https://www.bcu.ac.uk/conservatoire/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Birmingham, highly recognized for its excellence in Acting and Jazz Performance and strong student outcomes.",
     "tuitionIntlMinGbp": 18000,
     "tuitionIntlMaxGbp": 23000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.bcu.ac.uk/conservatoire/scholarships",
-    "accommodationUrl": "https://www.bcu.ac.uk/conservatoire/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 168,
@@ -2726,7 +2726,7 @@
     "region": "London",
     "website": "https://www.escapestudios.ac.uk",
     "internationalUrl": "https://www.escapestudios.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.escapestudios.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.escapestudios.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in VFX Production and 3D Animation and strong student outcomes.",
     "tuitionIntlMinGbp": 16500,
@@ -2757,15 +2757,15 @@
     "city": "Manchester",
     "region": "North West",
     "website": "https://ua92.ac.uk",
-    "internationalUrl": "https://ua92.ac.uk/international",
-    "ugAdmissionsUrl": "https://ua92.ac.uk/undergraduate",
+    "internationalUrl": "https://ua92.ac.uk",
+    "ugAdmissionsUrl": "https://ua92.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Manchester, highly recognized for its excellence in Sports Business and Computer Science and strong student outcomes.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://ua92.ac.uk/scholarships",
-    "accommodationUrl": "https://ua92.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 174,
@@ -2790,14 +2790,14 @@
     "region": "North West",
     "website": "https://www.ucm.ac.im",
     "internationalUrl": "https://www.ucm.ac.im/international",
-    "ugAdmissionsUrl": "https://www.ucm.ac.im/undergraduate",
+    "ugAdmissionsUrl": "https://www.ucm.ac.im",
     "russellGroup": false,
     "notes": "Specialist institution located in Douglas, highly recognized for its excellence in Business Admin and Cyber Security and strong student outcomes.",
     "tuitionIntlMinGbp": 11000,
     "tuitionIntlMaxGbp": 12500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.ucm.ac.im/scholarships",
-    "accommodationUrl": "https://www.ucm.ac.im/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 176,
@@ -2805,15 +2805,15 @@
     "city": "St Helier",
     "region": "South West",
     "website": "https://www.highlands.ac.je",
-    "internationalUrl": "https://www.highlands.ac.je/international",
-    "ugAdmissionsUrl": "https://www.highlands.ac.je/undergraduate",
+    "internationalUrl": "https://www.highlands.ac.je",
+    "ugAdmissionsUrl": "https://www.highlands.ac.je",
     "russellGroup": false,
     "notes": "Specialist institution located in St Helier, highly recognized for its excellence in Childcare and Construction management and strong student outcomes.",
     "tuitionIntlMinGbp": 11000,
     "tuitionIntlMaxGbp": 12500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.highlands.ac.je/scholarships",
-    "accommodationUrl": "https://www.highlands.ac.je/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 177,
@@ -2821,15 +2821,15 @@
     "city": "St Peter Port",
     "region": "South West",
     "website": "https://www.guernseycollege.ac.gg",
-    "internationalUrl": "https://www.guernseycollege.ac.gg/international",
-    "ugAdmissionsUrl": "https://www.guernseycollege.ac.gg/undergraduate",
+    "internationalUrl": "https://www.guernseycollege.ac.gg",
+    "ugAdmissionsUrl": "https://www.guernseycollege.ac.gg/study",
     "russellGroup": false,
     "notes": "Specialist institution located in St Peter Port, highly recognized for its excellence in Creative Arts and Business Studies and strong student outcomes.",
     "tuitionIntlMinGbp": 11000,
     "tuitionIntlMaxGbp": 12500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.guernseycollege.ac.gg/scholarships",
-    "accommodationUrl": "https://www.guernseycollege.ac.gg/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 178,
@@ -2854,14 +2854,14 @@
     "region": "South East",
     "website": "https://www.escg.ac.uk",
     "internationalUrl": "https://www.escg.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.escg.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.escg.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Hastings, highly recognized for its excellence in Health Studies and Graphic Design and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.escg.ac.uk/scholarships",
-    "accommodationUrl": "https://www.escg.ac.uk/accommodation"
+    "scholarshipsUrl": "https://www.escg.ac.uk/study/fees-and-funding",
+    "accommodationUrl": "https://www.escg.ac.uk/study/accommodation"
   },
   {
     "rank": 180,
@@ -2869,15 +2869,15 @@
     "city": "Yeovil",
     "region": "South West",
     "website": "https://www.yeovil.ac.uk",
-    "internationalUrl": "https://www.yeovil.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.yeovil.ac.uk/undergraduate",
+    "internationalUrl": "https://www.yeovil.ac.uk",
+    "ugAdmissionsUrl": "https://www.yeovil.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Yeovil, highly recognized for its excellence in Engineering and Computing and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.yeovil.ac.uk/scholarships",
-    "accommodationUrl": "https://www.yeovil.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 181,
@@ -2885,14 +2885,14 @@
     "city": "Grimsby",
     "region": "Yorkshire and the Humber",
     "website": "https://grimsby.ac.uk",
-    "internationalUrl": "https://grimsby.ac.uk/international",
-    "ugAdmissionsUrl": "https://grimsby.ac.uk/undergraduate",
+    "internationalUrl": "https://grimsby.ac.uk",
+    "ugAdmissionsUrl": "https://grimsby.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Grimsby, highly recognized for its excellence in Media Production and Animal Management and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://grimsby.ac.uk/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://grimsby.ac.uk/accommodation"
   },
   {
@@ -2902,14 +2902,14 @@
     "region": "Yorkshire and the Humber",
     "website": "https://ucleeds.ac.uk",
     "internationalUrl": "https://ucleeds.ac.uk/international",
-    "ugAdmissionsUrl": "https://ucleeds.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://ucleeds.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Leeds, highly recognized for its excellence in Creative Arts and Leadership Management and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://ucleeds.ac.uk/scholarships",
-    "accommodationUrl": "https://ucleeds.ac.uk/accommodation"
+    "scholarshipsUrl": "https://ucleeds.ac.uk/funding",
+    "accommodationUrl": null
   },
   {
     "rank": 183,
@@ -2917,14 +2917,14 @@
     "city": "Blackpool",
     "region": "North West",
     "website": "https://www.blackpool.ac.uk",
-    "internationalUrl": "https://www.blackpool.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.blackpool.ac.uk/undergraduate",
+    "internationalUrl": "https://www.blackpool.ac.uk/international-students",
+    "ugAdmissionsUrl": "https://www.blackpool.ac.uk",
     "russellGroup": false,
     "notes": "Specialist institution located in Blackpool, highly recognized for its excellence in Marine Engineering and Aerospace Technology and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.blackpool.ac.uk/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.blackpool.ac.uk/accommodation"
   },
   {
@@ -2934,14 +2934,14 @@
     "region": "North East",
     "website": "https://www.ncl-coll.ac.uk",
     "internationalUrl": "https://www.ncl-coll.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.ncl-coll.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.ncl-coll.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Newcastle, highly recognized for its excellence in Aviation Studies and Digital Arts and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.ncl-coll.ac.uk/scholarships",
-    "accommodationUrl": "https://www.ncl-coll.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 185,
@@ -2950,13 +2950,13 @@
     "region": "South West",
     "website": "https://www.cornwall.ac.uk",
     "internationalUrl": "https://www.cornwall.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.cornwall.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.cornwall.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in St Austell, highly recognized for its excellence in Marine Biology and Equine Studies and strong student outcomes.",
     "tuitionIntlMinGbp": 11500,
     "tuitionIntlMaxGbp": 13500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.cornwall.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.cornwall.ac.uk/funding",
     "accommodationUrl": "https://www.cornwall.ac.uk/accommodation"
   },
   {
@@ -2981,14 +2981,14 @@
     "city": "Plumpton",
     "region": "South East",
     "website": "https://www.plumpton.ac.uk",
-    "internationalUrl": "https://www.plumpton.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.plumpton.ac.uk/undergraduate",
+    "internationalUrl": "https://www.plumpton.ac.uk",
+    "ugAdmissionsUrl": "https://www.plumpton.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Plumpton, highly recognized for its excellence in Viticulture and Agricultural Machinery and strong student outcomes.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.plumpton.ac.uk/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.plumpton.ac.uk/accommodation"
   },
   {
@@ -2997,15 +2997,15 @@
     "city": "Preston",
     "region": "North West",
     "website": "https://www.myerscough.ac.uk",
-    "internationalUrl": "https://www.myerscough.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.myerscough.ac.uk/undergraduate",
+    "internationalUrl": "https://www.myerscough.ac.uk",
+    "ugAdmissionsUrl": "https://www.myerscough.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Preston, highly recognized for its excellence in Motorsport Technology and Golf Management and strong student outcomes.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.myerscough.ac.uk/scholarships",
-    "accommodationUrl": "https://www.myerscough.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": "https://www.myerscough.ac.uk/students/accommodation"
   },
   {
     "rank": 189,
@@ -3013,14 +3013,14 @@
     "city": "York",
     "region": "Yorkshire and the Humber",
     "website": "https://www.askham-bryan.ac.uk",
-    "internationalUrl": "https://www.askham-bryan.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.askham-bryan.ac.uk/undergraduate",
+    "internationalUrl": "https://www.askham-bryan.ac.uk/study/international",
+    "ugAdmissionsUrl": "https://www.askham-bryan.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in York, highly recognized for its excellence in Equine management and Animal Conservation and strong student outcomes.",
     "tuitionIntlMinGbp": 13000,
     "tuitionIntlMaxGbp": 15000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.askham-bryan.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.askham-bryan.ac.uk/study/fees-and-funding",
     "accommodationUrl": "https://www.askham-bryan.ac.uk/accommodation"
   },
   {
@@ -3036,7 +3036,7 @@
     "tuitionIntlMinGbp": 13000,
     "tuitionIntlMaxGbp": 15000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.reaseheath.ac.uk/scholarships",
+    "scholarshipsUrl": "https://www.reaseheath.ac.uk/fees-and-funding",
     "accommodationUrl": "https://www.reaseheath.ac.uk/accommodation"
   },
   {
@@ -3046,14 +3046,14 @@
     "region": "South East",
     "website": "https://www.sparsholt.ac.uk",
     "internationalUrl": "https://www.sparsholt.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.sparsholt.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.sparsholt.ac.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Winchester, highly recognized for its excellence in Fishery Management and Zoo Biology and strong student outcomes.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.sparsholt.ac.uk/scholarships",
-    "accommodationUrl": "https://www.sparsholt.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 192,
@@ -3077,15 +3077,15 @@
     "city": "Wakefield",
     "region": "Yorkshire and the Humber",
     "website": "https://www.capa.college",
-    "internationalUrl": "https://www.capa.college/international",
-    "ugAdmissionsUrl": "https://www.capa.college/undergraduate",
+    "internationalUrl": "https://www.capa.college",
+    "ugAdmissionsUrl": "https://www.capa.college",
     "russellGroup": false,
     "notes": "Specialist institution located in Wakefield, highly recognized for its excellence in Musical Theatre and Dance Performance and strong student outcomes.",
     "tuitionIntlMinGbp": 13500,
     "tuitionIntlMaxGbp": 15000,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.capa.college/scholarships",
-    "accommodationUrl": "https://www.capa.college/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 194,
@@ -3093,15 +3093,15 @@
     "city": "Bristol",
     "region": "South West",
     "website": "https://dbsinstitute.ac.uk",
-    "internationalUrl": "https://dbsinstitute.ac.uk/international",
-    "ugAdmissionsUrl": "https://dbsinstitute.ac.uk/undergraduate",
+    "internationalUrl": "https://dbsinstitute.ac.uk",
+    "ugAdmissionsUrl": "https://dbsinstitute.ac.uk",
     "russellGroup": false,
     "notes": "Specialist institution located in Bristol, highly recognized for its excellence in Sound Design and Electronic Music and strong student outcomes.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://dbsinstitute.ac.uk/scholarships",
-    "accommodationUrl": "https://dbsinstitute.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 195,
@@ -3109,15 +3109,15 @@
     "city": "Wakefield",
     "region": "Yorkshire and the Humber",
     "website": "https://academyoflivetechnology.co.uk",
-    "internationalUrl": "https://academyoflivetechnology.co.uk/international",
-    "ugAdmissionsUrl": "https://academyoflivetechnology.co.uk/undergraduate",
+    "internationalUrl": "https://academyoflivetechnology.co.uk/international-students",
+    "ugAdmissionsUrl": "https://academyoflivetechnology.co.uk/courses",
     "russellGroup": false,
     "notes": "Specialist institution located in Wakefield, highly recognized for its excellence in Live Event Production and Stage Pyrotechnics and strong student outcomes.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://academyoflivetechnology.co.uk/scholarships",
-    "accommodationUrl": "https://academyoflivetechnology.co.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 196,
@@ -3142,13 +3142,13 @@
     "region": "South East",
     "website": "https://www.bimm.ac.uk",
     "internationalUrl": "https://www.bimm.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.bimm.ac.uk/undergraduate",
+    "ugAdmissionsUrl": "https://www.bimm.ac.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in Brighton, highly recognized for its excellence in Popular Music Performance and Music Business and strong student outcomes.",
     "tuitionIntlMinGbp": 14750,
     "tuitionIntlMaxGbp": 16750,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.bimm.ac.uk/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.bimm.ac.uk/accommodation"
   },
   {
@@ -3173,15 +3173,15 @@
     "city": "London",
     "region": "London",
     "website": "https://www.spurgeons.ac.uk",
-    "internationalUrl": "https://www.spurgeons.ac.uk/international",
-    "ugAdmissionsUrl": "https://www.spurgeons.ac.uk/undergraduate",
+    "internationalUrl": "https://www.spurgeons.ac.uk",
+    "ugAdmissionsUrl": "https://www.spurgeons.ac.uk",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Christian Theology and Pastoral Counseling and strong student outcomes.",
     "tuitionIntlMinGbp": 13000,
     "tuitionIntlMaxGbp": 14500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.spurgeons.ac.uk/scholarships",
-    "accommodationUrl": "https://www.spurgeons.ac.uk/accommodation"
+    "scholarshipsUrl": null,
+    "accommodationUrl": null
   },
   {
     "rank": 200,
@@ -3189,14 +3189,14 @@
     "city": "London",
     "region": "London",
     "website": "https://www.lccm.org.uk",
-    "internationalUrl": "https://www.lccm.org.uk/international",
-    "ugAdmissionsUrl": "https://www.lccm.org.uk/undergraduate",
+    "internationalUrl": "https://www.lccm.org.uk",
+    "ugAdmissionsUrl": "https://www.lccm.org.uk/study",
     "russellGroup": false,
     "notes": "Specialist institution located in London, highly recognized for its excellence in Commercial Music and Music Business and strong student outcomes.",
     "tuitionIntlMinGbp": 14500,
     "tuitionIntlMaxGbp": 16500,
     "tuitionHomeGbp": 9250,
-    "scholarshipsUrl": "https://www.lccm.org.uk/scholarships",
+    "scholarshipsUrl": null,
     "accommodationUrl": "https://www.lccm.org.uk/accommodation"
   }
 ]

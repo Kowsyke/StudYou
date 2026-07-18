@@ -53,6 +53,8 @@ export const journeys = pgTable('journeys', {
   intakeDate: date('intake_date').notNull(),
   courseLevel: text('course_level').notNull(),
   budgetPence: integer('budget_pence').notNull().default(0),
+  major: text('major'),
+  regions: text('regions'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 })
 

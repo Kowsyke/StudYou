@@ -26,3 +26,11 @@ export const exchangeRates = pgTable('exchange_rates', {
 export type DbCountry = typeof countries.$inferSelect
 export type DbCategory = typeof categories.$inferSelect
 export type DbExchangeRate = typeof exchangeRates.$inferSelect
+
+export const globalSettings = pgTable('global_settings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  key: text('key').notNull().unique(),
+  value: text('value').notNull(),
+})
+
+export type DbGlobalSetting = typeof globalSettings.$inferSelect

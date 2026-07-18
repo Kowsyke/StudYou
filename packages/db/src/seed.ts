@@ -3,6 +3,9 @@ import bcrypt from 'bcryptjs'
 import { config } from 'dotenv'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import postgres from 'postgres'
+import arrivalEssentials from './data/arrival-essentials.json'
+import regionCostData from './data/region-costs.json'
+import scholarshipData from './data/scholarships.json'
 import universityData from './data/universities.json'
 import {
   categories,
@@ -10,6 +13,7 @@ import {
   exchangeRates,
   journeyTasks,
   journeys,
+  regionCosts,
   resources,
   stages,
   taskTemplates,
@@ -109,12 +113,132 @@ async function ensureUniversities() {
   console.log(`Upserted ${universityData.length} universities.`)
 }
 
+// Research sprint outputs become knowledge base rows: scholarships file
+// under finance, arrival essentials mapped onto the existing categories.
+// Idempotent by title, so re-running a refreshed research file updates
+// summaries and links without duplicating rows.
+async function ensureResearchResources() {
+  const { and, eq } = await import('drizzle-orm')
+  const [uk] = await db.select({ id: countries.id }).from(countries).where(eq(countries.code, 'GB'))
+  if (!uk) return
+  const categoryRows = await db.select().from(categories)
+  const catByKey = new Map(categoryRows.map((c) => [c.key, c.id]))
+  const essentialCategory: Record<string, string> = {
+    banking: 'finance',
+    discounts: 'arrival',
+    transport: 'arrival',
+    connectivity: 'arrival',
+    health: 'health',
+    documents: 'documents',
+  }
+
+  const rows: {
+    title: string
+    summary: string
+    categoryKey: string
+    costPence: number | null
+    sourceUrl: string
+  }[] = []
+  for (const sch of scholarshipData) {
+    rows.push({
+      title: `${sch.name} (${sch.level})`,
+      summary: `${sch.covers} Open to: ${sch.openToRegions}. Provider: ${sch.provider}.`,
+      categoryKey: 'finance',
+      costPence: null,
+      sourceUrl: sch.officialUrl,
+    })
+  }
+  for (const item of arrivalEssentials) {
+    rows.push({
+      title: item.title,
+      summary: item.summary,
+      categoryKey: essentialCategory[item.category] ?? 'arrival',
+      costPence: item.costPence ?? null,
+      sourceUrl: item.officialUrl,
+    })
+  }
+
+  let created = 0
+  let updated = 0
+  for (const row of rows) {
+    const categoryId = catByKey.get(row.categoryKey)
+    if (!categoryId) continue
+    const [existing] = await db
+      .select({ id: resources.id })
+      .from(resources)
+      .where(and(eq(resources.title, row.title), eq(resources.countryId, uk.id)))
+    if (existing) {
+      await db
+        .update(resources)
+        .set({
+          summary: row.summary,
+          categoryId,
+          costPence: row.costPence,
+          sourceUrl: row.sourceUrl,
+          lastUpdated: DATA_STAMP,
+        })
+        .where(eq(resources.id, existing.id))
+      updated += 1
+    } else {
+      await db.insert(resources).values({
+        countryId: uk.id,
+        categoryId,
+        title: row.title,
+        summary: row.summary,
+        costPence: row.costPence,
+        deadlineDaysBeforeIntake: null,
+        sourceUrl: row.sourceUrl,
+        lastUpdated: DATA_STAMP,
+      })
+      created += 1
+    }
+  }
+  console.log(`Research resources: ${created} created, ${updated} updated.`)
+}
+
+// Regional cost of living rows, upserted per country and region.
+async function ensureRegionCosts() {
+  const { eq, sql } = await import('drizzle-orm')
+  const [uk] = await db.select({ id: countries.id }).from(countries).where(eq(countries.code, 'GB'))
+  if (!uk) return
+  await db
+    .insert(regionCosts)
+    .values(
+      regionCostData.map((r) => ({
+        countryId: uk.id,
+        region: r.region,
+        monthlyRentMinGbp: r.monthlyRentMinGbp,
+        monthlyRentMaxGbp: r.monthlyRentMaxGbp,
+        monthlyLivingGbp: r.monthlyLivingGbp,
+        transportPassGbp: r.transportPassGbp,
+        mainCities: r.mainCities.join(', '),
+        costLevel: r.costLevel,
+        lastUpdated: DATA_STAMP,
+      })),
+    )
+    .onConflictDoUpdate({
+      target: [regionCosts.countryId, regionCosts.region],
+      set: {
+        monthlyRentMinGbp: sql`excluded.monthly_rent_min_gbp`,
+        monthlyRentMaxGbp: sql`excluded.monthly_rent_max_gbp`,
+        monthlyLivingGbp: sql`excluded.monthly_living_gbp`,
+        transportPassGbp: sql`excluded.transport_pass_gbp`,
+        mainCities: sql`excluded.main_cities`,
+        costLevel: sql`excluded.cost_level`,
+        lastUpdated: sql`excluded.last_updated`,
+      },
+    })
+  console.log(`Upserted ${regionCostData.length} region cost rows.`)
+}
+
 async function seed() {
   const existing = await db.select({ id: countries.id }).from(countries).limit(1)
   if (existing.length > 0) {
     console.log('Database already seeded, applying additive steps only.')
     await ensureEnvAdmin()
     await ensureUniversities()
+    await ensureResearchResources()
+    await ensureRegionCosts()
     await client.end()
     return
   }
@@ -678,6 +802,8 @@ async function seed() {
 
   await ensureEnvAdmin()
   await ensureUniversities()
+  await ensureResearchResources()
+  await ensureRegionCosts()
 
   console.log('Seed complete.')
   console.log('Demo accounts (development only):')

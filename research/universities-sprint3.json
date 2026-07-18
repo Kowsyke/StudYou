@@ -1,0 +1,302 @@
+[
+  {
+    "name": "University of St Andrews",
+    "kind": "accommodation",
+    "url": "https://www.st-andrews.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Bath",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "University of Bath",
+    "kind": "accommodation",
+    "url": null
+  },
+  {
+    "name": "University of Edinburgh",
+    "kind": "accommodation",
+    "url": "https://www.ed.ac.uk/undergraduate/accommodation"
+  },
+  {
+    "name": "University of York",
+    "kind": "scholarships",
+    "url": "https://www.york.ac.uk/funding"
+  },
+  {
+    "name": "University of Leeds",
+    "kind": "accommodation",
+    "url": null
+  },
+  {
+    "name": "University of Essex",
+    "kind": "scholarships",
+    "url": "https://www.essex.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Essex",
+    "kind": "accommodation",
+    "url": "https://www.essex.ac.uk/life/accommodation"
+  },
+  {
+    "name": "University of Manchester",
+    "kind": "scholarships",
+    "url": "https://www.manchester.ac.uk/study/undergraduate/fees-and-funding"
+  },
+  {
+    "name": "Heriot-Watt University",
+    "kind": "scholarships",
+    "url": "https://www.hw.ac.uk/scholarships"
+  },
+  {
+    "name": "Heriot-Watt University",
+    "kind": "accommodation",
+    "url": "https://www.hw.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Leicester",
+    "kind": "scholarships",
+    "url": "https://le.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Nottingham",
+    "kind": "scholarships",
+    "url": "https://www.nottingham.ac.uk/funding"
+  },
+  {
+    "name": "Swansea University",
+    "kind": "scholarships",
+    "url": "https://www.swansea.ac.uk/scholarships"
+  },
+  {
+    "name": "Manchester Metropolitan University",
+    "kind": "scholarships",
+    "url": "https://www.mmu.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Portsmouth",
+    "kind": "scholarships",
+    "url": "https://www.port.ac.uk/scholarships-and-bursaries"
+  },
+  {
+    "name": "Aston University",
+    "kind": "scholarships",
+    "url": "https://www.aston.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Reading",
+    "kind": "scholarships",
+    "url": "https://www.reading.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Chichester",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "Royal Holloway, University of London",
+    "kind": "accommodation",
+    "url": "https://www.royalholloway.ac.uk/accommodation"
+  },
+  {
+    "name": "Newcastle University",
+    "kind": "scholarships",
+    "url": "https://www.ncl.ac.uk/scholarships"
+  },
+  {
+    "name": "Aberystwyth University",
+    "kind": "scholarships",
+    "url": "https://www.aber.ac.uk/scholarships"
+  },
+  {
+    "name": "Keele University",
+    "kind": "scholarships",
+    "url": "https://www.keele.ac.uk/scholarships"
+  },
+  {
+    "name": "University of West London",
+    "kind": "scholarships",
+    "url": "https://www.uwl.ac.uk/scholarships"
+  },
+  {
+    "name": "Bangor University",
+    "kind": "scholarships",
+    "url": "https://www.bangor.ac.uk/scholarships"
+  },
+  {
+    "name": "Liverpool John Moores University",
+    "kind": "scholarships",
+    "url": "https://www.ljmu.ac.uk/scholarships"
+  },
+  {
+    "name": "Harper Adams University",
+    "kind": "scholarships",
+    "url": "https://www.harper-adams.ac.uk/undergraduate/fees-and-funding"
+  },
+  {
+    "name": "Arts University Bournemouth",
+    "kind": "scholarships",
+    "url": "https://aub.ac.uk/scholarships"
+  },
+  {
+    "name": "Abertay University",
+    "kind": "scholarships",
+    "url": "https://www.abertay.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Stirling",
+    "kind": "accommodation",
+    "url": "https://www.stir.ac.uk/accommodation"
+  },
+  {
+    "name": "University of Sunderland",
+    "kind": "scholarships",
+    "url": "https://www.sunderland.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Sunderland",
+    "kind": "accommodation",
+    "url": "https://www.sunderland.ac.uk/student-life/accommodation"
+  },
+  {
+    "name": "University of Plymouth",
+    "kind": "scholarships",
+    "url": "https://www.plymouth.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Plymouth",
+    "kind": "accommodation",
+    "url": "https://www.plymouth.ac.uk/accommodation"
+  },
+  {
+    "name": "Cardiff Metropolitan University",
+    "kind": "scholarships",
+    "url": "https://www.cardiffmet.ac.uk/scholarships"
+  },
+  {
+    "name": "Goldsmiths, University of London",
+    "kind": "scholarships",
+    "url": "https://www.gold.ac.uk/scholarships"
+  },
+  {
+    "name": "Norwich University of the Arts",
+    "kind": "scholarships",
+    "url": "https://norwichuni.ac.uk/study/fees-and-funding"
+  },
+  {
+    "name": "Robert Gordon University",
+    "kind": "scholarships",
+    "url": "https://www.rgu.ac.uk/scholarships"
+  },
+  {
+    "name": "Bath Spa University",
+    "kind": "scholarships",
+    "url": "https://www.bathspa.ac.uk/scholarships"
+  },
+  {
+    "name": "Bath Spa University",
+    "kind": "accommodation",
+    "url": "https://www.bathspa.ac.uk/accommodation"
+  },
+  {
+    "name": "St Mary's University, Twickenham",
+    "kind": "scholarships",
+    "url": "https://www.stmarys.ac.uk/scholarships"
+  },
+  {
+    "name": "St Mary's University, Twickenham",
+    "kind": "accommodation",
+    "url": "https://www.stmarys.ac.uk/accommodation"
+  },
+  {
+    "name": "Falmouth University",
+    "kind": "scholarships",
+    "url": "https://www.falmouth.ac.uk/money"
+  },
+  {
+    "name": "University of Hull",
+    "kind": "scholarships",
+    "url": "https://www.hull.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Hull",
+    "kind": "accommodation",
+    "url": "https://www.hull.ac.uk/accommodation"
+  },
+  {
+    "name": "Solent University",
+    "kind": "scholarships",
+    "url": "https://www.solent.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Suffolk",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "University of Chester",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "University of Chester",
+    "kind": "accommodation",
+    "url": "https://www.chester.ac.uk/student-life/accommodation"
+  },
+  {
+    "name": "Plymouth Marjon University",
+    "kind": "scholarships",
+    "url": "https://www.marjon.ac.uk/funding"
+  },
+  {
+    "name": "Liverpool Hope University",
+    "kind": "accommodation",
+    "url": null
+  },
+  {
+    "name": "Leeds Beckett University",
+    "kind": "scholarships",
+    "url": "https://www.leedsbeckett.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Huddersfield",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "University of Huddersfield",
+    "kind": "accommodation",
+    "url": null
+  },
+  {
+    "name": "Staffordshire University",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "Sheffield Hallam University",
+    "kind": "scholarships",
+    "url": "https://www.shu.ac.uk/scholarships"
+  },
+  {
+    "name": "Queen Margaret University",
+    "kind": "scholarships",
+    "url": null
+  },
+  {
+    "name": "University of Central Lancashire",
+    "kind": "scholarships",
+    "url": "https://www.uclan.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Greater Manchester",
+    "kind": "scholarships",
+    "url": "https://www.bolton.ac.uk/scholarships"
+  },
+  {
+    "name": "University of Wales Trinity Saint David",
+    "kind": "scholarships",
+    "url": null
+  }
+]

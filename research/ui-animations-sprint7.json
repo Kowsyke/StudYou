@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Dock Item Indicator Pulse",
+    "target": "Navigation Dock item",
+    "effect": "When a navigation item is active, the small dot below it grows slightly and changes color. On click, the dot temporarily expands horizontally into a pill shape before settling back.",
+    "technique": "Framer Motion animate layoutId for the active dot combined with scaleX and color interpolation.",
+    "durationMs": 200,
+    "priority": 1
+  },
+  {
+    "name": "Roadmap Node Connect Draw",
+    "target": "Course roadmap timeline path",
+    "effect": "As the student scrolls a roadmap or marks a node complete, the path connecting nodes draws forward. The line color shifts from muted grey to a vibrant brand gradient tracking the progress.",
+    "technique": "Framer Motion pathLength and stroke color animation triggered by scroll container viewport detection.",
+    "durationMs": 300,
+    "priority": 2
+  },
+  {
+    "name": "Study Timer Radial Progress",
+    "target": "Pomodoro widget circular progress bar",
+    "effect": "The circle outline fills smoothly as study time ticks, transitioning color from deep blue to bright teal. When paused, the active progress stroke dims in opacity and subtly shrinks in stroke width.",
+    "technique": "CSS transition on strokeDashoffset and opacity using Tailwind transition classes.",
+    "durationMs": 200,
+    "priority": 3
+  },
+  {
+    "name": "Task Drag Ghost Lift",
+    "target": "Kanban board cards",
+    "effect": "When a task card is grabbed, its opacity drops slightly and a subtle shadow scale offset occurs underneath it. The card tilts by two degrees in the direction of the drag to mimic inertia.",
+    "technique": "Framer Motion drag controls using layoutId and rotation transformation.",
+    "durationMs": 200,
+    "priority": 4
+  },
+  {
+    "name": "Search Command Menu Expansion",
+    "target": "Search bar dropdown",
+    "effect": "Pressing command-K triggers a container that expands downwards with a vertical scale and opacity fade. The search input field placeholder slides slightly to the right to make room for a flashing cursor indicator.",
+    "technique": "Framer Motion layout animations combined with translate-x and opacity transitions.",
+    "durationMs": 250,
+    "priority": 5
+  },
+  {
+    "name": "Notification Bell Clapper Swing",
+    "target": "Header notification icon",
+    "effect": "When a new roadmap update arrives, the bell icon rotates slightly left and right twice. The small badge at the top right of the bell fades in and scales up simultaneously.",
+    "technique": "Framer Motion keyframe rotation sequence and scale transition for the badge.",
+    "durationMs": 200,
+    "priority": 6
+  },
+  {
+    "name": "Grade Card Hover Elevation",
+    "target": "Academic performance dashboard cards",
+    "effect": "Hovering over a grade summary card causes the internal grade letter to scale up slightly and shift upwards. The card background color shifts to a warmer neutral tone while keeping the border static.",
+    "technique": "CSS transition properties for transform and background color mapping to hover states.",
+    "durationMs": 120,
+    "priority": 7
+  },
+  {
+    "name": "Dropdown Menu Item Slide",
+    "target": "Context dropdown menus",
+    "effect": "When the context menu is opened, each menu item reveals in a quick staggered sequence from top to bottom. Each list item slides up from a five pixel offset while fading in.",
+    "technique": "Framer Motion staggerChildren variants animating opacity and translateY.",
+    "durationMs": 200,
+    "priority": 8
+  },
+  {
+    "name": "File Upload Drop Zone Ring",
+    "target": "Resource upload area",
+    "effect": "Dragging a file over the drop zone causes the dashed border to shift color and scale inward slightly. A light background overlay fades in to highlight the active drop target area.",
+    "technique": "Tailwind transition utilities for scale and background color bound to drag enter events.",
+    "durationMs": 120,
+    "priority": 9
+  },
+  {
+    "name": "Task Group Toggle Accordion",
+    "target": "Roadmap module header",
+    "effect": "Clicking a module header rotates the arrow indicator ninety degrees clockwise. The list of tasks below fades in and slides down from the top header border.",
+    "technique": "Framer Motion animate presence with height scaleY and opacity properties.",
+    "durationMs": 250,
+    "priority": 10
+  }
+]

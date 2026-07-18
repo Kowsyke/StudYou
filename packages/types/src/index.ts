@@ -107,6 +107,8 @@ export interface Journey {
   intakeDate: string
   courseLevel: string
   budgetPence: number
+  major?: string | null
+  regions?: string[] | null
   createdAt: string
 }
 
@@ -177,6 +179,10 @@ export interface AdminAnalytics {
   averageCompletion: number
   stageBreakdown: StageAnalytics[]
   dropOff: { stageKey: StageKey; stageTitle: string; studentsReached: number }[]
+  activeUsers: number
+  totalUsers: number
+  newThisWeek: number
+  suspendedUsers: number
 }
 
 export const UK_REGIONS = [
@@ -214,4 +220,42 @@ export interface University {
   scholarshipsUrl: string | null
   accommodationUrl: string | null
   lastUpdated: string
+}
+
+export interface RegionCost {
+  region: string
+  monthlyRentMinGbp: number
+  monthlyRentMaxGbp: number
+  monthlyLivingGbp: number
+  transportPassGbp: number
+  mainCities: string
+  costLevel: string
+}
+
+export type ReportCategory = 'bug' | 'data' | 'idea' | 'account' | 'other'
+export type ReportStatus = 'open' | 'in_progress' | 'resolved'
+
+export interface BugReport {
+  id: string
+  userId: string | null
+  userEmail: string | null
+  userName: string | null
+  category: ReportCategory
+  message: string
+  pagePath: string | null
+  status: ReportStatus
+  adminNote: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface AdminUser {
+  id: string
+  email: string
+  fullName: string
+  role: Role
+  suspended: boolean
+  createdAt: string
+  percentComplete: number | null
+  openReports: number
 }

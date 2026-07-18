@@ -1,0 +1,162 @@
+[
+  {
+    "name": "Commonwealth PhD Scholarships",
+    "provider": "Commonwealth Scholarship Commission in the UK",
+    "level": "postgraduate",
+    "covers": "It funds full tuition fees, return airfare, a monthly living allowance, and study travel grants for doctoral research.",
+    "officialUrl": "https://cscuk.fcdo.gov.uk",
+    "openToRegions": "Least developed and fragile Commonwealth countries"
+  },
+  {
+    "name": "GREAT Scholarships",
+    "provider": "British Council and the UK Government",
+    "level": "postgraduate",
+    "covers": "It funds a minimum of ten thousand pounds towards tuition fees for a one year taught master's degree.",
+    "officialUrl": "https://study-uk.britishcouncil.org",
+    "openToRegions": "Citizens of selected eligible countries"
+  },
+  {
+    "name": "Rhodes Scholarships",
+    "provider": "The Rhodes Trust",
+    "level": "postgraduate",
+    "covers": "It funds Oxford University course fees and provides a personal living stipend for postgraduate studies.",
+    "officialUrl": "https://www.rhodeshouse.ox.ac.uk",
+    "openToRegions": "Citizens of eligible Rhodes constituencies worldwide"
+  },
+  {
+    "name": "Gates Cambridge Scholarships",
+    "provider": "Bill and Melinda Gates Foundation",
+    "level": "postgraduate",
+    "covers": "It funds the full cost of postgraduate study at the University of Cambridge, including tuition fees, a maintenance allowance, and travel.",
+    "officialUrl": "https://www.gatescambridge.org",
+    "openToRegions": "Citizens of any country outside the United Kingdom"
+  },
+  {
+    "name": "Clarendon Fund Scholarships",
+    "provider": "University of Oxford",
+    "level": "postgraduate",
+    "covers": "It funds full tuition fees and provides a generous annual grant for living costs for master's or doctoral students.",
+    "officialUrl": "https://www.ox.ac.uk/clarendon",
+    "openToRegions": "International students of all nationalities"
+  },
+  {
+    "name": "UCL Global Undergraduate Scholarship",
+    "provider": "University College London",
+    "level": "undergraduate",
+    "covers": "It funds full tuition fees, living costs, or a combination of both for the duration of an undergraduate degree.",
+    "officialUrl": "https://www.ucl.ac.uk/scholarships/ucl-global-undergraduate-scholarship",
+    "openToRegions": "International students from low income backgrounds"
+  },
+  {
+    "name": "Think Big Undergraduate Scholarships",
+    "provider": "University of Bristol",
+    "level": "undergraduate",
+    "covers": "It funds partial tuition fee discounts of up to thirteen thousand pounds per year for undergraduate studies.",
+    "officialUrl": "https://www.bristol.ac.uk/international/fees-finance/scholarships/",
+    "openToRegions": "International students classified as overseas for fee purposes"
+  },
+  {
+    "name": "Think Big Postgraduate Scholarships",
+    "provider": "University of Bristol",
+    "level": "postgraduate",
+    "covers": "It funds tuition fee discounts of up to twenty six thousand pounds per year for master's degree programmes.",
+    "officialUrl": "https://www.bristol.ac.uk/international/fees-finance/scholarships/",
+    "openToRegions": "International students classified as overseas for fee purposes"
+  },
+  {
+    "name": "Edinburgh Global Research Scholarships",
+    "provider": "University of Edinburgh",
+    "level": "postgraduate",
+    "covers": "It funds the difference between the tuition fee for a UK graduate student and the higher rate charged to overseas PhD students.",
+    "officialUrl": "https://www.ed.ac.uk",
+    "openToRegions": "International students applying for a PhD research programme"
+  },
+  {
+    "name": "Global Futures Scholarship",
+    "provider": "University of Manchester",
+    "level": "both",
+    "covers": "It funds tuition fee discounts for international students who are self-funded and holding an admission offer.",
+    "officialUrl": "https://www.manchester.ac.uk",
+    "openToRegions": "International students from eligible countries outside the UK"
+  },
+  {
+    "name": "Vice-Chancellor's International Scholarship",
+    "provider": "Cardiff University",
+    "level": "both",
+    "covers": "It funds tuition fee reductions for international students enrolling in undergraduate or postgraduate taught programmes.",
+    "officialUrl": "https://www.cardiff.ac.uk",
+    "openToRegions": "International students from eligible countries outside the UK"
+  },
+  {
+    "name": "Developing Solutions Masters Scholarship",
+    "provider": "University of Nottingham",
+    "level": "postgraduate",
+    "covers": "It funds fifty percent or one hundred percent of tuition fees for full time master's degree programmes.",
+    "officialUrl": "https://www.nottingham.ac.uk",
+    "openToRegions": "Citizens domiciled in Africa, India, or selected Commonwealth countries"
+  },
+  {
+    "name": "International Leadership Scholarship",
+    "provider": "University of Glasgow",
+    "level": "postgraduate",
+    "covers": "It funds a tuition fee discount of ten thousand pounds for international and EU students.",
+    "officialUrl": "https://www.gla.ac.uk",
+    "openToRegions": "International and EU students outside the UK"
+  },
+  {
+    "name": "President's PhD Scholarships",
+    "provider": "Imperial College London",
+    "level": "postgraduate",
+    "covers": "It funds full tuition fees, a living stipend, and a consumables fund for doctoral research.",
+    "officialUrl": "https://www.imperial.ac.uk",
+    "openToRegions": "High achieving candidates from all nationalities"
+  },
+  {
+    "name": "Chancellor's International Scholarships",
+    "provider": "University of Warwick",
+    "level": "postgraduate",
+    "covers": "It funds full payment of overseas tuition fees and a maintenance stipend for doctoral research.",
+    "officialUrl": "https://warwick.ac.uk",
+    "openToRegions": "International students assessed as overseas for fee purposes"
+  },
+  {
+    "name": "International Undergraduate Scholarship",
+    "provider": "University of Sheffield",
+    "level": "undergraduate",
+    "covers": "It funds a tuition fee discount of two thousand five hundred pounds per year for undergraduate studies.",
+    "officialUrl": "https://www.sheffield.ac.uk",
+    "openToRegions": "International students classified as overseas for fee purposes"
+  },
+  {
+    "name": "Graduate Support Scheme",
+    "provider": "London School of Economics and Political Science",
+    "level": "postgraduate",
+    "covers": "It funds needs-based financial support ranging from five thousand to fifteen thousand pounds for taught master's programmes.",
+    "officialUrl": "https://www.lse.ac.uk",
+    "openToRegions": "Diploma and taught master's applicants from all nationalities"
+  },
+  {
+    "name": "Westminster International Postgraduate Excellence Award",
+    "provider": "University of Westminster",
+    "level": "postgraduate",
+    "covers": "It funds a tuition fee waiver of three thousand pounds for high-achieving international postgraduate students.",
+    "officialUrl": "https://www.westminster.ac.uk",
+    "openToRegions": "International students from eligible countries outside the UK"
+  },
+  {
+    "name": "Chevening Scholarships",
+    "provider": "UK Foreign, Commonwealth & Development Office",
+    "level": "postgraduate",
+    "covers": "Full tuition, a living stipend and travel for a one year masters in the UK.",
+    "officialUrl": "https://www.chevening.org",
+    "openToRegions": "Over 160 countries and territories"
+  },
+  {
+    "name": "Marshall Scholarships",
+    "provider": "Marshall Aid Commemoration Commission",
+    "level": "postgraduate",
+    "covers": "Full funding for high achieving American students to study in the UK.",
+    "officialUrl": "https://www.marshallscholarship.org",
+    "openToRegions": "United States citizens"
+  }
+]
