@@ -179,8 +179,8 @@ function MetricTile({
   return (
     <div className="rounded-md bg-canvas border border-hairline p-3 flex flex-col gap-1.5 min-w-0">
       <p className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary flex items-center gap-1.5">
-        <span className="text-ink-tertiary">{icon}</span>
-        <span className="truncate">{label}</span>
+        <span className="text-ink-tertiary shrink-0">{icon}</span>
+        <span className="leading-tight">{label}</span>
       </p>
       <div className="flex items-center gap-2 min-w-0">
         {dot && (

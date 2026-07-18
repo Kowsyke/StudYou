@@ -1,7 +1,7 @@
 {
   "name": "studyou",
   "private": true,
-  "version": "0.6.1",
+  "version": "0.9.0",
   "scripts": {
     "dev": "pnpm --parallel -r --filter @studyou/server --filter @studyou/client dev",
     "build": "pnpm -r build",
