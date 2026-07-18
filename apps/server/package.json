@@ -1,6 +1,6 @@
 {
   "name": "@studyou/server",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "private": true,
   "scripts": {
     "dev": "bun --watch src/index.ts",
@@ -9,6 +9,7 @@
     "test": "bun test src"
   },
   "dependencies": {
+    "@hono/node-server": "^2.0.10",
     "@hono/zod-validator": "^0.4.3",
     "@studyou/db": "workspace:*",
     "@studyou/engine": "workspace:*",

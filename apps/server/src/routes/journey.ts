@@ -17,6 +17,8 @@ const createJourneySchema = z.object({
   courseLevel: z.string().min(1).max(60),
   budgetPence: z.number().int().min(0).max(100_000_000),
   destinationCountryCode: z.string().length(2).default('GB'),
+  major: z.string().min(1).max(100).optional().nullable(),
+  regions: z.array(z.string()).optional().nullable(),
 })
 
 const updateTaskSchema = z.object({
@@ -95,6 +97,8 @@ journeyRoutes.post('/', validate('json', createJourneySchema), async (c) => {
       intakeDate: body.intakeDate,
       courseLevel: body.courseLevel,
       budgetPence: body.budgetPence,
+      major: body.major ?? null,
+      regions: body.regions ? body.regions.join(',') : null,
     })
     .returning()
 

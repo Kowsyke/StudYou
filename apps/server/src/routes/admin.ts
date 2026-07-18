@@ -1,11 +1,33 @@
-import { journeyTasks, journeys, stages, taskTemplates, users } from '@studyou/db'
-import type { AdminAnalytics, ApiResponse, StageKey } from '@studyou/types'
-import { asc, eq, sql } from 'drizzle-orm'
+import { bugReports, journeyTasks, journeys, stages, taskTemplates, users } from '@studyou/db'
+import type {
+  AdminAnalytics,
+  AdminUser,
+  ApiResponse,
+  BugReport,
+  ReportCategory,
+  ReportStatus,
+  Role,
+  StageKey,
+} from '@studyou/types'
+import { asc, desc, eq, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
+import { z } from 'zod'
 import { db } from '../lib/db'
+import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
 import { requireRole } from '../middleware/rbac'
 import type { AppEnv } from '../types'
+
+const idParamSchema = z.object({ id: z.string().uuid('Invalid id') })
+
+const updateUserSchema = z.object({
+  suspended: z.boolean(),
+})
+
+const updateReportSchema = z.object({
+  status: z.enum(['open', 'in_progress', 'resolved']).optional(),
+  adminNote: z.string().max(1000).nullable().optional(),
+})
 
 export const adminRoutes = new Hono<AppEnv>()
 
@@ -18,6 +40,16 @@ adminRoutes.get('/analytics', async (c) => {
     .where(eq(users.role, 'student'))
 
   const [journeyCount] = await db.select({ value: sql<number>`count(*)::int` }).from(journeys)
+
+  const [userTotals] = await db
+    .select({
+      total: sql<number>`count(*)::int`,
+      // Active means a request in the last five minutes.
+      active: sql<number>`count(*) filter (where ${users.lastSeenAt} > now() - interval '5 minutes')::int`,
+      newThisWeek: sql<number>`count(*) filter (where ${users.createdAt} > now() - interval '7 days')::int`,
+      suspended: sql<number>`count(*) filter (where ${users.suspended})::int`,
+    })
+    .from(users)
 
   const breakdown = await db
     .select({
@@ -53,8 +85,131 @@ adminRoutes.get('/analytics', async (c) => {
       stageTitle: s.stageTitle,
       studentsReached: s.studentsReached,
     })),
+    activeUsers: userTotals?.active ?? 0,
+    totalUsers: userTotals?.total ?? 0,
+    newThisWeek: userTotals?.newThisWeek ?? 0,
+    suspendedUsers: userTotals?.suspended ?? 0,
   }
 
   const response: ApiResponse<AdminAnalytics> = { success: true, data: analytics }
   return c.json(response)
 })
+
+// Every account with journey completion and open report counts, newest
+// first, for the user control table.
+adminRoutes.get('/users', async (c) => {
+  const rows = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      fullName: users.fullName,
+      role: users.role,
+      suspended: users.suspended,
+      createdAt: users.createdAt,
+      totalTasks: sql<number>`count(${journeyTasks.id})::int`,
+      doneTasks: sql<number>`count(${journeyTasks.id}) filter (where ${journeyTasks.status} = 'done')::int`,
+      openReports: sql<number>`(select count(*)::int from ${bugReports} where ${bugReports.userId} = ${users.id} and ${bugReports.status} != 'resolved')`,
+    })
+    .from(users)
+    .leftJoin(journeys, eq(journeys.userId, users.id))
+    .leftJoin(journeyTasks, eq(journeyTasks.journeyId, journeys.id))
+    .groupBy(users.id)
+    .orderBy(desc(users.createdAt))
+
+  const data: AdminUser[] = rows.map((r) => ({
+    id: r.id,
+    email: r.email,
+    fullName: r.fullName,
+    role: r.role as Role,
+    suspended: r.suspended,
+    createdAt: r.createdAt.toISOString(),
+    percentComplete: r.totalTasks === 0 ? null : Math.round((r.doneTasks / r.totalTasks) * 100),
+    openReports: r.openReports,
+  }))
+  const response: ApiResponse<AdminUser[]> = { success: true, data }
+  return c.json(response)
+})
+
+// Suspend or reinstate an account. Admins cannot suspend themselves so
+// there is always a way back in.
+adminRoutes.patch(
+  '/users/:id',
+  validate('param', idParamSchema),
+  validate('json', updateUserSchema),
+  async (c) => {
+    const { id } = c.req.valid('param')
+    const { suspended } = c.req.valid('json')
+    if (id === c.get('user').sub) {
+      return c.json({ success: false, error: 'You cannot suspend your own account' }, 400)
+    }
+    const [updated] = await db
+      .update(users)
+      .set({ suspended })
+      .where(eq(users.id, id))
+      .returning({ id: users.id, suspended: users.suspended })
+    if (!updated) return c.json({ success: false, error: 'User not found' }, 404)
+    const response: ApiResponse<{ id: string; suspended: boolean }> = {
+      success: true,
+      data: updated,
+    }
+    return c.json(response)
+  },
+)
+
+adminRoutes.get('/reports', async (c) => {
+  const rows = await db
+    .select({
+      id: bugReports.id,
+      userId: bugReports.userId,
+      userEmail: users.email,
+      userName: users.fullName,
+      category: bugReports.category,
+      message: bugReports.message,
+      pagePath: bugReports.pagePath,
+      status: bugReports.status,
+      adminNote: bugReports.adminNote,
+      createdAt: bugReports.createdAt,
+      updatedAt: bugReports.updatedAt,
+    })
+    .from(bugReports)
+    .leftJoin(users, eq(bugReports.userId, users.id))
+    .orderBy(desc(bugReports.createdAt))
+
+  const data: BugReport[] = rows.map((r) => ({
+    id: r.id,
+    userId: r.userId,
+    userEmail: r.userEmail,
+    userName: r.userName,
+    category: r.category as ReportCategory,
+    message: r.message,
+    pagePath: r.pagePath,
+    status: r.status as ReportStatus,
+    adminNote: r.adminNote,
+    createdAt: r.createdAt.toISOString(),
+    updatedAt: r.updatedAt.toISOString(),
+  }))
+  const response: ApiResponse<BugReport[]> = { success: true, data }
+  return c.json(response)
+})
+
+adminRoutes.patch(
+  '/reports/:id',
+  validate('param', idParamSchema),
+  validate('json', updateReportSchema),
+  async (c) => {
+    const { id } = c.req.valid('param')
+    const body = c.req.valid('json')
+    const changes: Partial<{ status: ReportStatus; adminNote: string | null; updatedAt: Date }> = {
+      updatedAt: new Date(),
+    }
+    if (body.status !== undefined) changes.status = body.status
+    if (body.adminNote !== undefined) changes.adminNote = body.adminNote
+    const [updated] = await db
+      .update(bugReports)
+      .set(changes)
+      .where(eq(bugReports.id, id))
+      .returning({ id: bugReports.id })
+    if (!updated) return c.json({ success: false, error: 'Report not found' }, 404)
+    return c.json({ success: true, message: 'Report updated' })
+  },
+)

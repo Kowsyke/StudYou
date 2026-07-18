@@ -9,6 +9,7 @@ import {
   authRoutes,
   journeyRoutes,
   metaRoutes,
+  reportRoutes,
   resourceRoutes,
   universityRoutes,
 } from './routes'
@@ -35,6 +36,7 @@ api.route('/auth', authRoutes)
 api.route('/journey', journeyRoutes)
 api.route('/resources', resourceRoutes)
 api.route('/universities', universityRoutes)
+api.route('/reports', reportRoutes)
 api.route('/admin', adminRoutes)
 api.route('/meta', metaRoutes)
 
@@ -53,6 +55,8 @@ app.onError((err, c) => {
   console.error(`Unhandled error on ${c.req.method} ${c.req.path}:`, err)
   return c.json({ success: false, error: 'Something went wrong on our side' }, 500)
 })
+
+export { app }
 
 export default {
   port: env.port,

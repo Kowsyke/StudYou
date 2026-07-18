@@ -85,6 +85,16 @@ authRoutes.post('/login', loginLimiter, validate('json', loginSchema), async (c)
     return c.json({ success: false, error: 'Invalid email or password' }, 401)
   }
 
+  if (row.suspended) {
+    return c.json(
+      {
+        success: false,
+        error: 'This account is suspended. Contact support if you think this is a mistake.',
+      },
+      403,
+    )
+  }
+
   const user = toUser(row)
   const token = signToken({ sub: user.id, email: user.email, role: user.role })
   const response: ApiResponse<AuthPayload> = { success: true, data: { user, token } }
