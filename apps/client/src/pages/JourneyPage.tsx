@@ -1,7 +1,18 @@
+import { useGSAP } from '@gsap/react'
 import type { JourneyOverview, JourneyTask } from '@studyou/types'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Calendar, ExternalLink, Info, Sparkles } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import {
+  BookOpen,
+  Calendar,
+  ExternalLink,
+  Info,
+  PlaneLanding,
+  School,
+  Sparkles,
+  Stamp,
+  Wallet,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
@@ -9,10 +20,14 @@ import { ProgressRing } from '../components/ui/progress'
 import { Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney, useToggleTask } from '../hooks/useJourney'
 import { formatDate, formatGbp } from '../lib/format'
+import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
+import { Flip } from '../lib/gsap/Flip.js'
+import { MotionPathPlugin } from '../lib/gsap/MotionPathPlugin.js'
+import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
 import { toast } from '../store/toastStore'
 
-const swift = [0.16, 1, 0.3, 1] as const
+gsap.registerPlugin(useGSAP, Flip, DrawSVGPlugin, MotionPathPlugin)
 
 export function JourneyPage() {
   const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
@@ -29,60 +44,59 @@ export function JourneyPage() {
     }
   }, [location.hash, overview])
 
-  if (error && hasNoJourney(error)) return <Navigate to="/onboarding" replace />
-
   if (isPending) {
     return (
-      <div>
-        <Skeleton className="h-7 w-48 mb-2" />
-        <Skeleton className="h-3.5 w-96 mb-6" />
-        <div className="flex gap-4 overflow-hidden">
-          {['a', 'b', 'c', 'd', 'e'].map((key) => (
-            <div
-              key={key}
-              className="flex-none w-[220px] bg-surface-secondary rounded-md p-3 space-y-2.5 shimmer-host"
-            >
-              <Skeleton className="h-3.5 w-24 bg-surface" />
-              <Skeleton className="h-20 w-full bg-surface" />
-              <Skeleton className="h-20 w-full bg-surface" />
-            </div>
-          ))}
+      <div className="flex flex-col gap-5 py-6 max-w-4xl mx-auto">
+        <div className="flex items-center justify-between border-b border-hairline pb-4">
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-48" />
+            <Skeleton className="h-4 w-72" />
+          </div>
+          <Skeleton className="h-10 w-24" />
+        </div>
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-14 w-full" />
+          <Skeleton className="h-14 w-full" />
+          <Skeleton className="h-14 w-full" />
         </div>
       </div>
     )
   }
 
-  if (error || !overview) {
+  if (error) {
     return (
       <QueryError
-        message="Your journey could not be loaded. Check your connection and try again."
+        message={error.message || 'Failed to load journey.'}
         onRetry={() => refetch()}
         retrying={isRefetching}
       />
     )
   }
 
+  if (hasNoJourney(overview)) {
+    return <Navigate to="/onboarding" replace />
+  }
+
   const doneTotal = overview.stages.reduce((sum, s) => sum + s.done, 0)
   const taskTotal = overview.stages.reduce((sum, s) => sum + s.total, 0)
 
   return (
-    <div>
-      {/* Apple-style premium header section with progress ring */}
-      <header className="mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 p-5 rounded-lg bg-surface border border-hairline shadow-sm">
+    <div className="noise-overlay min-h-screen py-6 px-4 bg-canvas/30 rounded-lg">
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 border-b border-hairline pb-5 mb-5">
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <h1 className="text-title3 text-ink">My Journey</h1>
-            <span className="bg-accent-soft text-accent text-micro font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-              <Sparkles size={10} />
-              Sprint 8
+          <div className="flex items-center gap-1.5">
+            <span className="text-micro font-semibold uppercase tracking-[0.06em] text-accent bg-accent-soft px-2 py-0.5 rounded-full flex items-center gap-0.5">
+              <Sparkles size={11} />
+              Personalized Map
             </span>
           </div>
+          <h1 className="text-title3 text-ink font-bold text-gradient">Your Study Journey</h1>
           <p className="text-xs text-ink-secondary">
             Track official roadmap milestones and checklist details for your UK visa & departure.
           </p>
         </div>
 
-        <div className="flex items-center shrink-0 bg-surface-secondary/40 p-3 rounded-md border border-hairline">
+        <div className="flex items-center shrink-0 bg-surface-secondary/40 p-3 rounded-md border border-hairline card-lift">
           <ProgressRing
             value={overview.percentComplete}
             size={60}
@@ -91,11 +105,92 @@ export function JourneyPage() {
         </div>
       </header>
 
-      {/* Main Content Render Area */}
       <main className="min-h-[500px]">
         <WalletDeckView stages={overview.stages} />
       </main>
     </div>
+  )
+}
+
+/* ----------------- HELPER FOR SOURCE LINK DRAWING UNDERLINES ----------------- */
+function SourceLink({ url, title }: { url: string; title: string }) {
+  const underlineRef = useRef<SVGPathElement>(null)
+
+  const onEnter = () => {
+    if (underlineRef.current) {
+      gsap.fromTo(
+        underlineRef.current,
+        { drawSVG: '0%' },
+        { drawSVG: '100%', duration: 0.3, ease: 'power2.out', overwrite: 'auto' },
+      )
+    }
+  }
+
+  const onLeave = () => {
+    if (underlineRef.current) {
+      gsap.to(underlineRef.current, {
+        drawSVG: '0%',
+        duration: 0.25,
+        ease: 'power2.out',
+        overwrite: 'auto',
+      })
+    }
+  }
+
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      className="relative inline-flex items-center gap-0.5 text-accent font-semibold rounded-xs pr-1"
+    >
+      {title}
+      <ExternalLink size={10} className="shrink-0" />
+      <svg
+        className="absolute bottom-0 left-0 right-0 h-[1.5px] pointer-events-none"
+        viewBox="0 0 100 2"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          ref={underlineRef}
+          d="M0 1 L100 1"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+        />
+      </svg>
+    </a>
+  )
+}
+
+/* ----------------- HELPER FOR DRAWSVG CHECKBOX ----------------- */
+function CheckboxIcon({ done }: { done: boolean }) {
+  const pathRef = useRef<SVGPathElement>(null)
+
+  useEffect(() => {
+    if (!pathRef.current) return
+    gsap.to(pathRef.current, {
+      drawSVG: done ? '100%' : '0%',
+      duration: 0.28,
+      ease: 'power2.out',
+    })
+  }, [done])
+
+  return (
+    <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" aria-hidden="true">
+      <path
+        ref={pathRef}
+        d="M20 6L9 17l-5-5"
+        stroke="currentColor"
+        strokeWidth={4}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   )
 }
 
@@ -107,7 +202,10 @@ function WalletDeckView({
 }) {
   const [activeIdx, setActiveIdx] = useState(0)
 
-  // Stage progression colour ramp: red, orange, green, light blue, blue.
+  const deckRef = useRef<HTMLDivElement>(null)
+  // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
+  const flipStateRef = useRef<any>(null)
+
   const cardGradientStyles = [
     'from-red-500/12 to-rose-500/5 border-red-300/40',
     'from-orange-500/12 to-amber-500/5 border-orange-300/40',
@@ -116,8 +214,67 @@ function WalletDeckView({
     'from-blue-500/12 to-indigo-500/5 border-blue-300/40',
   ]
 
+  const getStageIcon = (title: string): LucideIcon => {
+    const t = title.toLowerCase()
+    if (t.includes('english') || t.includes('ielts')) return BookOpen
+    if (
+      t.includes('university') ||
+      t.includes('offer') ||
+      t.includes('ucas') ||
+      t.includes('shortlist')
+    )
+      return School
+    if (t.includes('cas') || t.includes('deposit') || t.includes('finance')) return Wallet
+    if (t.includes('visa') || t.includes('surcharge') || t.includes('tb test')) return Stamp
+    return PlaneLanding
+  }
+
+  const handleCardClick = (index: number) => {
+    if (deckRef.current) {
+      flipStateRef.current = Flip.getState(deckRef.current.querySelectorAll('.wallet-pass-card'))
+    }
+    setActiveIdx(index)
+  }
+
+  // GSAP Flip animation when selected pass card changes
+  useGSAP(() => {
+    if (flipStateRef.current && deckRef.current) {
+      Flip.from(flipStateRef.current, {
+        duration: 0.55,
+        ease: 'power3.out',
+        scale: true,
+        fade: true,
+        absolute: false,
+      })
+      flipStateRef.current = null
+    }
+
+    // Animate stage icon entrance inside active card
+    const activeIcon = document.querySelector('.wallet-pass-card-active .stage-icon-svg')
+    if (activeIcon) {
+      gsap.fromTo(
+        activeIcon,
+        { opacity: 0, scale: 0.5, x: -30, y: 20 },
+        {
+          opacity: 1,
+          scale: 1,
+          motionPath: {
+            path: [
+              { x: -30, y: 20 },
+              { x: -10, y: -10 },
+              { x: 0, y: 0 },
+            ],
+            curviness: 1.5,
+          },
+          duration: 0.7,
+          ease: 'power2.out',
+        },
+      )
+    }
+  }, [activeIdx])
+
   return (
-    <div className="flex flex-col gap-3 py-2 max-w-4xl mx-auto">
+    <div ref={deckRef} className="flex flex-col gap-3 py-2 max-w-4xl mx-auto select-none">
       <div className="flex items-center gap-2 mb-2 px-1">
         <Info size={13} className="text-accent" />
         <p className="text-caption text-ink-secondary">
@@ -129,25 +286,30 @@ function WalletDeckView({
         const isActive = activeIdx === index
         const isComplete = stageProgress.done === stageProgress.total && stageProgress.total > 0
         const gradientClass = cardGradientStyles[index % cardGradientStyles.length]
+        const StageIcon = getStageIcon(stageProgress.stage.title)
 
         return (
-          <motion.div
+          <div
             key={stageProgress.stage.id}
+            data-flip-id={`stage-${stageProgress.stage.id}`}
+            // biome-ignore lint/a11y/useSemanticElements: Wallet pass card container
+            role="button"
+            tabIndex={0}
             onClick={() => {
-              if (!isActive) setActiveIdx(index)
+              if (!isActive) handleCardClick(index)
             }}
-            style={{ originY: 0 }}
-            animate={{
-              scale: isActive ? 1 : 0.98,
-              opacity: isActive ? 1 : 0.85,
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                if (!isActive) handleCardClick(index)
+              }
             }}
-            transition={{ duration: 0.3, ease: swift }}
             className={cn(
-              'rounded-lg border bg-gradient-to-br shadow-sm transition-all duration-300',
+              'wallet-pass-card rounded-lg border bg-gradient-to-br shadow-sm transition-all duration-300 relative overflow-hidden',
               gradientClass,
               isActive
-                ? 'shadow-md border-accent/40 ring-1 ring-accent/10'
-                : 'cursor-pointer hover:border-hairline-strong hover:opacity-100',
+                ? 'wallet-pass-card-active shadow-md border-accent/40 ring-1 ring-accent/10'
+                : 'cursor-pointer hover:border-hairline-strong hover:opacity-100 opacity-85',
             )}
           >
             {/* Card header */}
@@ -155,19 +317,19 @@ function WalletDeckView({
               <div className="flex items-center gap-3 min-w-0">
                 <span
                   className={cn(
-                    'w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-xs font-bold border',
+                    'w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-bold border relative',
                     isComplete
-                      ? 'bg-positive border-positive text-white'
+                      ? 'bg-positive border-positive text-white animate-pulse'
                       : isActive
                         ? 'bg-accent text-white border-accent'
                         : 'bg-surface border-hairline-strong text-ink-secondary',
                   )}
                 >
-                  {index + 1}
+                  <StageIcon size={14} className="stage-icon-svg relative z-10" />
                 </span>
                 <div className="min-w-0">
                   <span className="text-micro font-semibold uppercase tracking-[0.05em] text-ink-tertiary block leading-none">
-                    Milestone Card
+                    Milestone Pass {index + 1}
                   </span>
                   <h3 className="text-body font-bold text-ink truncate mt-1">
                     {stageProgress.stage.title}
@@ -198,51 +360,26 @@ function WalletDeckView({
             </div>
 
             {/* Expandable tasks list inside selected card */}
-            <AnimatePresence initial={false}>
-              {isActive && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeInOut' }}
-                  className="overflow-hidden border-t border-hairline/60 bg-surface/50 backdrop-blur-xs"
-                >
-                  <div className="p-4">
-                    {stageProgress.tasks.length === 0 ? (
-                      <p className="text-caption text-ink-tertiary py-3 text-center">
-                        No checklist tasks available for this stage.
-                      </p>
-                    ) : (
-                      <motion.ul
-                        initial="hidden"
-                        animate="visible"
-                        variants={{
-                          hidden: { opacity: 0 },
-                          visible: {
-                            opacity: 1,
-                            transition: { staggerChildren: 0.05 },
-                          },
-                        }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-3"
-                      >
-                        {stageProgress.tasks.map((task) => (
-                          <motion.li
-                            key={task.id}
-                            variants={{
-                              hidden: { opacity: 0, y: 6 },
-                              visible: { opacity: 1, y: 0 },
-                            }}
-                          >
-                            <TaskCard task={task} />
-                          </motion.li>
-                        ))}
-                      </motion.ul>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+            {isActive && (
+              <div className="overflow-hidden border-t border-hairline/60 bg-surface/50 backdrop-blur-xs">
+                <div className="p-4">
+                  {stageProgress.tasks.length === 0 ? (
+                    <p className="text-caption text-ink-tertiary py-3 text-center">
+                      No checklist tasks available for this stage.
+                    </p>
+                  ) : (
+                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {stageProgress.tasks.map((task) => (
+                        <li key={task.id}>
+                          <TaskCard task={task} />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
         )
       })}
     </div>
@@ -270,57 +407,37 @@ function TaskCard({ task }: { task: JourneyTask }) {
     <div
       id={`task-${task.id}`}
       className={cn(
-        'aurora-card rounded-md shadow-xs p-3.5 flex flex-col gap-2.5 transition-all duration-200 border bg-surface',
+        'aurora-card rounded-md shadow-xs p-3.5 flex flex-col gap-2.5 transition-all duration-200 border bg-surface card-lift',
         done
           ? 'border-hairline bg-surface/60 opacity-90'
           : 'border-hairline-strong hover:shadow-sm',
       )}
     >
       <div className="flex items-start gap-3">
-        {/* Animated Tap-friendly Spring Checkbox */}
-        <motion.button
+        {/* Animated Checkbox */}
+        <button
           type="button"
           onClick={onToggle}
           disabled={toggleTask.isPending}
-          whileTap={{ scale: 0.9 }}
           className={cn(
-            'mt-px h-4.5 w-4.5 shrink-0 rounded-xs border flex items-center justify-center transition-colors duration-[120ms] cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent',
+            'mt-px h-5 w-5 shrink-0 rounded-xs border flex items-center justify-center transition-colors duration-[120ms] cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent active:scale-90',
             done
               ? 'bg-accent-solid border-accent-solid text-white shadow-xs'
               : 'border-ink-tertiary hover:border-accent bg-surface text-transparent',
           )}
           aria-label={done ? `Mark ${task.title} as pending` : `Mark ${task.title} as done`}
         >
-          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" aria-hidden="true">
-            <path
-              d="M20 6L9 17l-5-5"
-              stroke="currentColor"
-              strokeWidth={4}
-              className={cn('tick-path', done && 'ticked')}
-            />
-          </svg>
-        </motion.button>
+          <CheckboxIcon done={done} />
+        </button>
 
-        <div className="space-y-1">
+        <div className="space-y-1 min-w-0">
           <span
             className={cn(
-              'text-xs font-semibold leading-snug transition-colors duration-[120ms] block',
+              'text-xs font-semibold leading-snug transition-colors duration-[120ms] block truncate',
               done ? 'line-through text-ink-tertiary' : 'text-ink',
             )}
           >
-            {task.sourceUrl ? (
-              <a
-                href={task.sourceUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-accent hover:underline inline-flex items-center gap-1"
-              >
-                {task.title}
-                <ExternalLink size={10} className="shrink-0" />
-              </a>
-            ) : (
-              task.title
-            )}
+            {task.sourceUrl ? <SourceLink url={task.sourceUrl} title={task.title} /> : task.title}
           </span>
           <p className="text-caption text-ink-secondary leading-snug">{task.description}</p>
         </div>
@@ -340,7 +457,7 @@ function TaskCard({ task }: { task: JourneyTask }) {
       </div>
 
       <div className="flex items-center justify-between border-t border-hairline/80 pt-2 mt-auto text-micro text-ink-tertiary">
-        <span className="font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+        <span className="font-bold text-positive tabular-nums">
           {task.costPence !== null && task.costPence > 0 ? formatGbp(task.costPence) : 'Free'}
         </span>
         <span className="flex items-center gap-2">
@@ -348,17 +465,7 @@ function TaskCard({ task }: { task: JourneyTask }) {
             <Calendar size={10} />
             {formatDate(task.targetDate)}
           </span>
-          {task.sourceUrl && (
-            <a
-              href={task.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-0.5 text-accent font-medium hover:underline rounded-xs"
-            >
-              Source
-              <ExternalLink size={9} />
-            </a>
-          )}
+          {task.sourceUrl && <SourceLink url={task.sourceUrl} title="Source" />}
         </span>
       </div>
     </div>

@@ -21,21 +21,27 @@ export function Switch({ checked, onChange, label, hint, id }: SwitchProps) {
       </span>
       <button
         id={id}
+        type="button"
         role="switch"
         aria-checked={checked}
+        aria-label={label}
         onClick={() => onChange(!checked)}
         className={cn(
-          'relative h-6 w-10 shrink-0 rounded-full transition-colors duration-[200ms]',
+          'group relative h-6 w-10 shrink-0 rounded-full cursor-pointer',
+          'transition-[background-color,box-shadow,transform] duration-[200ms]',
+          'outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface',
+          'active:scale-[0.96]',
           checked
-            ? 'bg-accent-solid [background-image:var(--accent-gradient)]'
-            : 'bg-surface-secondary border border-hairline-strong',
+            ? 'bg-accent-solid [background-image:var(--accent-gradient)] hover:brightness-110'
+            : 'bg-surface-secondary border border-hairline-strong hover:border-accent',
         )}
       >
         <span
           aria-hidden="true"
           className={cn(
-            'absolute top-1/2 -translate-y-1/2 h-[18px] w-[18px] rounded-full bg-white shadow-sm transition-[left] duration-[200ms]',
-            checked ? 'left-[19px]' : 'left-[3px]',
+            'absolute top-1/2 left-[3px] h-[18px] w-[18px] -translate-y-1/2 rounded-full bg-white shadow-sm',
+            'transition-transform duration-[200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:shadow-md',
+            checked ? 'translate-x-4' : 'translate-x-0',
           )}
         />
       </button>

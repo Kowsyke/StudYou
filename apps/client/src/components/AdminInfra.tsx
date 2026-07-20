@@ -189,7 +189,7 @@ function MetricTile({
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
             )}
             <span
-              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dotUp ? 'bg-positive' : 'bg-danger'}`}
+              className={`relative inline-flex rounded-full h-2.5 w-2.5 glow-pulse ${dotUp ? 'bg-positive' : 'bg-danger'}`}
             />
           </span>
         )}

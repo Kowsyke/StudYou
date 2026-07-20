@@ -1,30 +1,65 @@
 import {
+  Activity,
   ArrowRight,
   BadgePoundSterling,
+  BookOpen,
   CalendarClock,
+  Car,
   Check,
+  Compass,
+  FileSpreadsheet,
+  FileText,
   GraduationCap,
+  HeartPulse,
+  Home,
+  Landmark,
   Map as MapIcon,
+  Shield,
   ShieldCheck,
   Sparkles,
+  Stamp,
+  Stethoscope,
+  Tag,
   Wallet,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
+import { WebGLLiquid } from '../components/ui/webgl-liquid'
 import { useAuthStore } from '../store/authStore'
 
 import { useGSAP } from '@gsap/react'
+import { CustomEase } from '../lib/gsap/CustomEase.js'
 import { Draggable } from '../lib/gsap/Draggable.js'
+import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
+import { Flip } from '../lib/gsap/Flip.js'
 import { InertiaPlugin } from '../lib/gsap/InertiaPlugin.js'
+import { MotionPathPlugin } from '../lib/gsap/MotionPathPlugin.js'
+import { Physics2DPlugin } from '../lib/gsap/Physics2DPlugin.js'
+import { ScrambleTextPlugin } from '../lib/gsap/ScrambleTextPlugin.js'
 import { ScrollSmoother } from '../lib/gsap/ScrollSmoother.js'
 import { ScrollTrigger } from '../lib/gsap/ScrollTrigger.js'
 import { SplitText } from '../lib/gsap/SplitText.js'
+import { TextPlugin } from '../lib/gsap/TextPlugin.js'
 // GSAP Imports
 import { gsap } from '../lib/gsap/index.js'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother, SplitText, Draggable, InertiaPlugin)
+gsap.registerPlugin(
+  useGSAP,
+  ScrollTrigger,
+  ScrollSmoother,
+  SplitText,
+  Draggable,
+  InertiaPlugin,
+  ScrambleTextPlugin,
+  DrawSVGPlugin,
+  TextPlugin,
+  CustomEase,
+  Physics2DPlugin,
+  MotionPathPlugin,
+  Flip,
+)
 
 const marqueeItems = [
   'IELTS booking',
@@ -68,9 +103,46 @@ const pillars = [
   },
 ]
 
+const getMarqueeIcon = (item: string) => {
+  switch (item) {
+    case 'IELTS booking':
+      return BookOpen
+    case 'UCAS application':
+      return FileText
+    case 'CAS statement':
+      return Shield
+    case 'Student visa':
+      return Stamp
+    case 'Health surcharge':
+      return Activity
+    case 'TB test':
+      return HeartPulse
+    case 'Financial proof':
+      return Wallet
+    case 'Accommodation':
+      return Home
+    case 'eVisa status':
+      return ShieldCheck
+    case 'GP registration':
+      return Stethoscope
+    case 'Bank account':
+      return Landmark
+    case 'NI number':
+      return FileSpreadsheet
+    case 'Student discounts':
+      return Tag
+    case 'Driving licence':
+      return Car
+    default:
+      return Compass
+  }
+}
+
 export function LandingPage() {
   const token = useAuthStore((s) => s.token)
   const haloRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const liquidRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const halo = haloRef.current
@@ -112,14 +184,35 @@ export function LandingPage() {
       effects: true,
     })
 
-    // Headline entrance animation
-    const split = new SplitText('.hero-headline', { type: 'words,chars' })
-    gsap.from(split.chars, {
-      opacity: 0,
-      y: 30,
-      stagger: 0.02,
-      duration: 0.7,
-      ease: 'power3.out',
+    // Scroll-driven parallax and scale of the background WebGL liquid
+    const liquid = liquidRef.current
+    if (liquid) {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!prefersReducedMotion) {
+        gsap.to(liquid, {
+          y: '12vh',
+          scale: 1.1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#smooth-content',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+          },
+        })
+      }
+    }
+
+    // ScrambleText hero decode — characters resolve from symbols
+    gsap.to('.hero-headline', {
+      duration: 1.6,
+      scrambleText: {
+        text: 'Your UK study journey, without the agencies.',
+        chars: '!<>-_\\/[]{}—=+*^?#$@%&01',
+        speed: 0.35,
+        revealDelay: 0.4,
+      },
+      delay: 0.2,
     })
 
     // Hero content elements fade in
@@ -129,8 +222,42 @@ export function LandingPage() {
       stagger: 0.12,
       duration: 0.8,
       ease: 'power3.out',
-      delay: 0.2,
+      delay: 0.4,
     })
+
+    // Magnetic CTA buttons
+    const magneticBtns = document.querySelectorAll('.magnetic-cta')
+    for (const btn of Array.from(magneticBtns)) {
+      const el = btn as HTMLElement
+      el.addEventListener('mousemove', (e: Event) => {
+        const me = e as MouseEvent
+        const rect = el.getBoundingClientRect()
+        const cx = rect.left + rect.width / 2
+        const cy = rect.top + rect.height / 2
+        const dx = (me.clientX - cx) * 0.2
+        const dy = (me.clientY - cy) * 0.2
+        gsap.to(el, {
+          x: dx,
+          y: dy,
+          rotateX: -dy * 0.5,
+          rotateY: dx * 0.5,
+          duration: 0.3,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        })
+      })
+      el.addEventListener('mouseleave', () => {
+        gsap.to(el, {
+          x: 0,
+          y: 0,
+          rotateX: 0,
+          rotateY: 0,
+          duration: 0.5,
+          ease: 'elastic.out(1,0.4)',
+          overwrite: 'auto',
+        })
+      })
+    }
 
     // Counter animations for landing stats
     const statsElements = document.querySelectorAll('.stat-counter')
@@ -182,15 +309,15 @@ export function LandingPage() {
       // Fade-in / scale-up / focus when entering
       gsap.fromTo(
         el,
-        { opacity: 0.35, scale: 0.98, filter: 'blur(1px)' },
+        { opacity: 0.45, scale: 0.98, filter: 'brightness(0.85) blur(1px)' },
         {
           opacity: 1,
           scale: 1,
-          filter: 'blur(0px)',
+          filter: 'brightness(1.05) blur(0px)',
           scrollTrigger: {
             trigger: el,
             start: 'top 85%',
-            end: 'top 40%',
+            end: 'top 45%',
             scrub: 0.5,
           },
         },
@@ -198,9 +325,9 @@ export function LandingPage() {
 
       // Fade-out / blur when scrolling past
       gsap.to(el, {
-        opacity: 0.35,
+        opacity: 0.45,
         scale: 0.98,
-        filter: 'blur(1px)',
+        filter: 'brightness(0.85) blur(1px)',
         scrollTrigger: {
           trigger: el,
           start: 'bottom 40%',
@@ -210,8 +337,10 @@ export function LandingPage() {
       })
     }
 
-    // Infinite GSAP marquee
+    // Infinite GSAP marquee (primary row)
     const marqueeTrack = document.querySelector('.marquee-track')
+    // Counter-scrolling marquee (secondary row)
+    const marqueeTrackCounter = document.querySelector('.marquee-track-counter')
     if (marqueeTrack) {
       const marqueeTween = gsap.to(marqueeTrack, {
         xPercent: -50,
@@ -220,11 +349,23 @@ export function LandingPage() {
         repeat: -1,
       })
 
-      // Speed up on scroll velocity
+      if (marqueeTrackCounter) {
+        gsap.to(marqueeTrackCounter, {
+          xPercent: 50,
+          ease: 'none',
+          duration: 30,
+          repeat: -1,
+        })
+      }
+
+      // Speed up and skew on scroll velocity
       ScrollTrigger.create({
         onUpdate: (self) => {
-          const velocity = Math.abs(self.getVelocity())
-          const targetScale = gsap.utils.mapRange(0, 2000, 1, 5, velocity)
+          const velocity = self.getVelocity()
+          const absVelocity = Math.abs(velocity)
+          const targetScale = gsap.utils.mapRange(0, 2000, 1, 5, absVelocity)
+          const targetSkew = gsap.utils.mapRange(-3000, 3000, -12, 12, velocity)
+
           gsap.to(marqueeTween, {
             timeScale: targetScale,
             duration: 0.2,
@@ -235,6 +376,20 @@ export function LandingPage() {
             duration: 0.8,
             ease: 'power2.out',
             delay: 0.15,
+            overwrite: 'auto',
+          })
+
+          // Skew the tracks dynamically
+          gsap.to([marqueeTrack, marqueeTrackCounter], {
+            skewX: targetSkew,
+            duration: 0.15,
+            overwrite: 'auto',
+          })
+          gsap.to([marqueeTrack, marqueeTrackCounter], {
+            skewX: 0,
+            duration: 0.6,
+            ease: 'power2.out',
+            delay: 0.1,
             overwrite: 'auto',
           })
         },
@@ -263,6 +418,102 @@ export function LandingPage() {
         marqueeWrapper.addEventListener('mouseleave', handleLeave)
       }
     }
+
+    // Particle canvas behind hero
+    const canvas = canvasRef.current
+    if (canvas) {
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        const resize = () => {
+          canvas.width = canvas.offsetWidth * window.devicePixelRatio
+          canvas.height = canvas.offsetHeight * window.devicePixelRatio
+          ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+        }
+        resize()
+        window.addEventListener('resize', resize)
+
+        const particles: { x: number; y: number; vx: number; vy: number }[] = []
+        const count = 50
+        const w = () => canvas.offsetWidth
+        const h = () => canvas.offsetHeight
+
+        for (let i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * w(),
+            y: Math.random() * h(),
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+          })
+        }
+
+        let mouseX = -1000
+        let mouseY = -1000
+        canvas.parentElement?.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = canvas.getBoundingClientRect()
+          mouseX = e.clientX - rect.left
+          mouseY = e.clientY - rect.top
+        })
+        canvas.parentElement?.addEventListener('mouseleave', () => {
+          mouseX = -1000
+          mouseY = -1000
+        })
+
+        const accentColor = getComputedStyle(document.documentElement)
+          .getPropertyValue('--accent')
+          .trim()
+
+        const animate = () => {
+          ctx.clearRect(0, 0, w(), h())
+          for (const p of particles) {
+            // Gentle repulsion from mouse
+            const dxm = p.x - mouseX
+            const dym = p.y - mouseY
+            const distM = Math.sqrt(dxm * dxm + dym * dym)
+            if (distM < 100 && distM > 0) {
+              const force = ((100 - distM) / 100) * 0.3
+              p.vx += (dxm / distM) * force
+              p.vy += (dym / distM) * force
+            }
+
+            p.x += p.vx
+            p.y += p.vy
+            p.vx *= 0.99
+            p.vy *= 0.99
+
+            if (p.x < 0 || p.x > w()) p.vx *= -1
+            if (p.y < 0 || p.y > h()) p.vy *= -1
+
+            ctx.beginPath()
+            ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2)
+            ctx.fillStyle = accentColor || '#0066cc'
+            ctx.globalAlpha = 0.4
+            ctx.fill()
+          }
+
+          // Connection lines
+          for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x
+              const dy = particles[i].y - particles[j].y
+              const dist = Math.sqrt(dx * dx + dy * dy)
+              if (dist < 120) {
+                ctx.beginPath()
+                ctx.moveTo(particles[i].x, particles[i].y)
+                ctx.lineTo(particles[j].x, particles[j].y)
+                ctx.strokeStyle = accentColor || '#0066cc'
+                ctx.globalAlpha = 0.06 * (1 - dist / 120)
+                ctx.lineWidth = 0.5
+                ctx.stroke()
+              }
+            }
+          }
+
+          ctx.globalAlpha = 1
+          requestAnimationFrame(animate)
+        }
+        animate()
+      }
+    }
   })
 
   const createMarqueeHoverHandlers = (idx: number) => {
@@ -279,9 +530,23 @@ export function LandingPage() {
           ease: 'back.out(1.7)',
           overwrite: 'auto',
         })
-        const dot = e.currentTarget.querySelector('.marquee-dot')
-        if (dot) {
-          gsap.to(dot, { scale: 2.2, duration: 0.25, ease: 'power2.out', overwrite: 'auto' })
+        const icon = e.currentTarget.querySelector('.marquee-icon')
+        if (icon) {
+          gsap.to(icon, {
+            rotate: 360,
+            scale: 1.25,
+            duration: 0.5,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        }
+        const underline = e.currentTarget.querySelector('.marquee-underline-path')
+        if (underline) {
+          gsap.fromTo(
+            underline,
+            { drawSVG: '0%' },
+            { drawSVG: '100%', duration: 0.3, ease: 'power2.out', overwrite: 'auto' },
+          )
         }
       },
       onMouseLeave: (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -296,9 +561,24 @@ export function LandingPage() {
           ease: 'power2.out',
           overwrite: 'auto',
         })
-        const dot = e.currentTarget.querySelector('.marquee-dot')
-        if (dot) {
-          gsap.to(dot, { scale: 1, duration: 0.25, ease: 'power2.out', overwrite: 'auto' })
+        const icon = e.currentTarget.querySelector('.marquee-icon')
+        if (icon) {
+          gsap.to(icon, {
+            rotate: 0,
+            scale: 1,
+            duration: 0.4,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
+        }
+        const underline = e.currentTarget.querySelector('.marquee-underline-path')
+        if (underline) {
+          gsap.to(underline, {
+            drawSVG: '0%',
+            duration: 0.25,
+            ease: 'power2.out',
+            overwrite: 'auto',
+          })
         }
       },
     }
@@ -309,7 +589,34 @@ export function LandingPage() {
   return (
     <>
       <div ref={haloRef} className="cursor-halo" aria-hidden="true" />
-      <div id="smooth-wrapper" className="relative min-h-screen bg-canvas overflow-x-hidden">
+
+      {/* Cinematic WebGL Liquid Animated Background */}
+      <div
+        ref={liquidRef}
+        className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0"
+      >
+        <WebGLLiquid
+          className="absolute inset-0 w-full h-full bg-transparent"
+          title=""
+          subtitle=""
+          description=""
+          colorDeep="#04050b"
+          colorMid="#134d93"
+          colorHighlight="#8cecff"
+          speed={0.6}
+          flowStrength={0.8}
+          grain={0.03}
+          contrast={1.05}
+          opacity={0.35}
+          reveal
+        />
+        {/* Scanner grid lines overlay and radial blender vignette */}
+        <div className="absolute inset-0 scanner-grid pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-canvas/40 via-canvas/70 to-canvas pointer-events-none" />
+        <div className="absolute inset-0 radial-blender pointer-events-none" />
+      </div>
+
+      <div id="smooth-wrapper" className="relative min-h-screen bg-transparent overflow-x-hidden">
         <div id="smooth-content">
           <div className="blob blob-a w-[420px] h-[420px] -top-24 -left-24" />
           <div className="blob blob-b w-[380px] h-[380px] top-[70vh] -right-32" />
@@ -341,14 +648,15 @@ export function LandingPage() {
           </nav>
 
           <main className="hero-container relative z-10 max-w-5xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+            <canvas ref={canvasRef} className="particle-canvas" />
             <div>
               <div className="hero-fade inline-flex items-center gap-1.5 bg-accent-soft text-accent text-caption font-semibold uppercase tracking-[0.05em] px-2.5 py-1 rounded-full mb-5">
                 <ShieldCheck size={12} />
                 Every step from official sources
               </div>
 
-              <h1 className="hero-headline text-title1 text-ink max-w-xl">
-                Your UK study journey, without the agencies.
+              <h1 className="hero-headline text-title1 text-ink max-w-xl scramble-active">
+                &nbsp;
               </h1>
 
               <p className="hero-fade text-body-lg text-ink-secondary max-w-md mt-5 leading-relaxed">
@@ -358,13 +666,13 @@ export function LandingPage() {
 
               <div className="hero-fade flex flex-wrap items-center gap-3 mt-8">
                 <Link to="/register">
-                  <Button size="lg">
+                  <Button size="lg" className="magnetic-cta magnetic-btn">
                     Start your roadmap
                     <ArrowRight size={16} />
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button variant="secondary" size="lg">
+                  <Button variant="secondary" size="lg" className="magnetic-cta magnetic-btn">
                     Sign in
                   </Button>
                 </Link>
@@ -391,26 +699,60 @@ export function LandingPage() {
 
           <div className="relative z-10 border-y border-hairline bg-surface/60 backdrop-blur-sm py-3.5 overflow-hidden">
             <div className="marquee-track">
-              {[...marqueeItems, ...marqueeItems].map((item, index) => (
-                <Link
-                  key={`${item}-${index >= marqueeItems.length ? 'b' : 'a'}`}
-                  to="/register"
-                  tabIndex={index >= marqueeItems.length ? -1 : 0}
-                  className="marquee-chip shrink-0 inline-flex items-center gap-1.5 text-caption font-semibold text-ink-secondary bg-surface border border-hairline rounded-full px-3 py-1.5 shadow-sm"
-                  {...createMarqueeHoverHandlers(index)}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="marquee-dot h-1.5 w-1.5 rounded-full"
-                    style={{
-                      background: 'var(--aurora)',
-                      backgroundPosition: `${(index % marqueeItems.length) * 8}% 50%`,
-                      backgroundSize: '400% 400%',
-                    }}
-                  />
-                  {item}
-                </Link>
-              ))}
+              {[...marqueeItems, ...marqueeItems].map((item, index) => {
+                const Icon = getMarqueeIcon(item)
+                return (
+                  <Link
+                    key={`${item}-${index >= marqueeItems.length ? 'b' : 'a'}`}
+                    to="/register"
+                    tabIndex={index >= marqueeItems.length ? -1 : 0}
+                    className="marquee-chip shrink-0 inline-flex items-center gap-1.5 relative text-caption font-semibold text-ink-secondary bg-surface border border-hairline rounded-full px-3.5 py-1.5 shadow-sm overflow-hidden"
+                    {...createMarqueeHoverHandlers(index)}
+                  >
+                    <Icon
+                      size={13}
+                      className="marquee-icon text-accent transition-transform duration-300"
+                    />
+                    <span>{item}</span>
+                    <svg
+                      className="absolute bottom-0 left-3 right-3 h-[2px] pointer-events-none"
+                      viewBox="0 0 100 2"
+                      preserveAspectRatio="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        className="marquee-underline-path"
+                        d="M0 1 L100 1"
+                        stroke="var(--accent)"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        fill="none"
+                      />
+                    </svg>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Counter-scrolling marquee row (secondary, 30% opacity) */}
+          <div className="relative z-10 overflow-hidden py-1.5">
+            <div className="marquee-track-counter">
+              {[...marqueeItems.slice().reverse(), ...marqueeItems.slice().reverse()].map(
+                (item, index) => {
+                  const Icon = getMarqueeIcon(item)
+                  return (
+                    <span
+                      // biome-ignore lint/suspicious/noArrayIndexKey: Static array mapping
+                      key={`counter-${item}-${index}`}
+                      className="shrink-0 inline-flex items-center gap-1.5 text-caption font-medium text-ink-tertiary bg-surface/40 border border-hairline/50 rounded-full px-3 py-1"
+                    >
+                      <Icon size={11} className="text-ink-tertiary/60" />
+                      {item}
+                    </span>
+                  )
+                },
+              )}
             </div>
           </div>
 
@@ -435,15 +777,21 @@ function ProblemSection() {
   useGSAP(
     () => {
       const split = new SplitText('.problem-reveal', { type: 'words' })
+      gsap.set(split.words, { position: 'relative', display: 'inline-block' })
       gsap.from(split.words, {
-        opacity: 0.15,
-        stagger: 0.02,
-        duration: 0.8,
+        opacity: 0,
+        physics2D: {
+          velocity: () => Math.random() * 50 + 30,
+          angle: () => Math.random() * 40 + 250, // slightly upwards and sideways
+          gravity: 350,
+        },
+        stagger: 0.015,
+        duration: 1.2,
+        ease: 'power2.out',
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top 80%',
-          end: 'bottom 60%',
-          scrub: true,
+          toggleActions: 'play none none none',
         },
       })
     },
@@ -584,6 +932,8 @@ function InteractiveMapSection() {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
   const [selectedRegion, setSelectedRegion] = useState<string>('London')
   const detailPanelRef = useRef<HTMLDivElement>(null)
+  // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
+  const flipStateRef = useRef<any>(null)
 
   const activeRegionKey = hoveredRegion || selectedRegion
   const details = REGION_INFOCUS[activeRegionKey] || REGION_INFOCUS.London
@@ -603,14 +953,42 @@ function InteractiveMapSection() {
     'Northern Ireland': 2,
   }
 
-  // Trigger animations in the details panel on region update
-  useEffect(() => {
-    if (!detailPanelRef.current || !activeRegionKey) return
-    gsap.fromTo(
-      detailPanelRef.current.children,
-      { opacity: 0, x: 15 },
-      { opacity: 1, x: 0, stagger: 0.08, duration: 0.45, ease: 'power2.out' },
-    )
+  const handleToggle = (r: string) => {
+    if (detailPanelRef.current) {
+      const targets = detailPanelRef.current.querySelectorAll('[data-flip-id]')
+      flipStateRef.current = Flip.getState(targets)
+    }
+    setSelectedRegion(r)
+  }
+
+  const handleHover = (r: string | null) => {
+    if (detailPanelRef.current) {
+      const targets = detailPanelRef.current.querySelectorAll('[data-flip-id]')
+      flipStateRef.current = Flip.getState(targets)
+    }
+    setHoveredRegion(r)
+  }
+
+  useGSAP(() => {
+    if (!detailPanelRef.current) return
+    const targets = detailPanelRef.current.querySelectorAll('[data-flip-id]')
+    if (flipStateRef.current) {
+      Flip.from(flipStateRef.current, {
+        targets: targets,
+        duration: 0.45,
+        ease: 'power2.out',
+        scale: true,
+        absolute: false,
+        stagger: 0.03,
+      })
+      flipStateRef.current = null
+    } else {
+      gsap.fromTo(
+        targets,
+        { opacity: 0, x: 15 },
+        { opacity: 1, x: 0, stagger: 0.05, duration: 0.4, ease: 'power2.out' },
+      )
+    }
   }, [activeRegionKey])
 
   return (
@@ -631,8 +1009,8 @@ function InteractiveMapSection() {
           <UkGeoMap
             selected={[selectedRegion]}
             counts={presetCounts}
-            onToggle={(r) => setSelectedRegion(r)}
-            onHover={(r) => setHoveredRegion(r)}
+            onToggle={handleToggle}
+            onHover={handleHover}
           />
           <p className="text-[10px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
             Click to lock selection • Hover to inspect
@@ -641,16 +1019,21 @@ function InteractiveMapSection() {
 
         <div ref={detailPanelRef} className="flex flex-col h-full justify-between gap-5">
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-hairline pb-3">
+            <div
+              data-flip-id="map-header"
+              className="flex items-center justify-between border-b border-hairline pb-3"
+            >
               <h3 className="text-title3 text-ink font-bold">{details.name}</h3>
               <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
                 {details.unisCount} Universities
               </span>
             </div>
 
-            <p className="text-body text-ink-secondary leading-relaxed">{details.desc}</p>
+            <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
+              {details.desc}
+            </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div data-flip-id="map-stats" className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
                 <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
                   Est. Living Expenses
@@ -667,7 +1050,7 @@ function InteractiveMapSection() {
               </div>
             </div>
 
-            <div className="space-y-2 pt-2">
+            <div data-flip-id="map-unis" className="space-y-2 pt-2">
               <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
                 Featured Institutions
               </span>
@@ -684,7 +1067,7 @@ function InteractiveMapSection() {
             </div>
           </div>
 
-          <div className="border-t border-hairline pt-4 mt-auto">
+          <div data-flip-id="map-cta" className="border-t border-hairline pt-4 mt-auto">
             <Link to="/register">
               <Button className="w-full sm:w-auto sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]">
                 Build my UK roadmap in {details.name}
@@ -703,12 +1086,35 @@ function PillarsSection() {
 
   useGSAP(
     () => {
+      // Animate card entries
       gsap.from('.pillar-card', {
         opacity: 0,
         y: 40,
         stagger: 0.15,
         duration: 0.8,
         ease: 'power3.out',
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      })
+
+      // Animate icon entrances on curved motion path
+      gsap.from('.pillar-icon-span', {
+        opacity: 0,
+        scale: 0.5,
+        motionPath: {
+          path: [
+            { x: -50, y: 40 },
+            { x: -20, y: -20 },
+            { x: 0, y: 0 },
+          ],
+          curviness: 1.5,
+        },
+        duration: 1.1,
+        ease: 'power2.out',
+        stagger: 0.15,
         scrollTrigger: {
           trigger: containerRef.current,
           start: 'top 85%',
@@ -728,9 +1134,9 @@ function PillarsSection() {
         {pillars.map((pillar) => (
           <article
             key={pillar.title}
-            className="pillar-card spotlight-card rounded-lg shadow-md p-6 border border-hairline"
+            className="pillar-card spotlight-card card-lift rounded-lg shadow-md p-6 border border-hairline group"
           >
-            <span className="inline-flex h-11 w-11 rounded-md bg-accent-soft text-accent items-center justify-center mb-4">
+            <span className="pillar-icon-span inline-flex h-11 w-11 rounded-md bg-accent-soft text-accent items-center justify-center mb-4 group-hover:glow-pulse transition-shadow duration-300">
               <pillar.icon size={20} />
             </span>
             <h3 className="text-body-lg font-bold text-ink leading-snug">{pillar.title}</h3>
@@ -743,12 +1149,47 @@ function PillarsSection() {
 }
 
 function ClosingCta() {
+  const auroraRef = useRef<HTMLDivElement>(null)
+  const headingRef = useRef<HTMLHeadingElement>(null)
+
+  useGSAP(() => {
+    if (auroraRef.current) {
+      gsap.to(auroraRef.current, {
+        backgroundPosition: '200% 50%',
+        duration: 8,
+        ease: 'none',
+        repeat: -1,
+      })
+    }
+
+    if (headingRef.current) {
+      gsap.fromTo(
+        headingRef.current,
+        { text: '' },
+        {
+          text: 'Build the roadmap you wish you had on day one.',
+          duration: 1.5,
+          ease: 'power1.inOut',
+          scrollTrigger: {
+            trigger: headingRef.current,
+            start: 'top 85%',
+            toggleActions: 'play none none none',
+          },
+        },
+      )
+    }
+  })
+
   return (
     <section className="cta-section relative z-10 max-w-5xl mx-auto px-6 py-16">
       <div className="relative overflow-hidden rounded-xl border border-hairline-strong p-10 sm:p-14 text-center">
         <div
+          ref={auroraRef}
           className="absolute inset-0 opacity-[0.14]"
-          style={{ background: 'var(--aurora)' }}
+          style={{
+            background: 'var(--aurora)',
+            backgroundSize: '200% 100%',
+          }}
           aria-hidden="true"
         />
         <div className="relative">
@@ -756,15 +1197,18 @@ function ClosingCta() {
             <Sparkles size={12} />
             Free, and always will be
           </span>
-          <h2 className="text-title2 text-ink max-w-xl mx-auto leading-tight font-bold">
-            Build the roadmap you wish you had on day one.
+          <h2
+            ref={headingRef}
+            className="text-title2 text-ink max-w-xl mx-auto leading-tight font-bold h-[2.5em] sm:h-auto"
+          >
+            &nbsp;
           </h2>
           <p className="text-body-lg text-ink-secondary mt-4 max-w-lg mx-auto leading-relaxed">
             Answer three questions and StudYou lays out every step to your UK intake, in order, with
             dates and costs.
           </p>
           <Link to="/register" className="inline-block mt-8">
-            <Button size="lg">
+            <Button size="lg" className="magnetic-cta magnetic-btn">
               Start your roadmap
               <ArrowRight size={16} />
             </Button>

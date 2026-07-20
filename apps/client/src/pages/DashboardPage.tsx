@@ -1,3 +1,4 @@
+import { useGSAP } from '@gsap/react'
 import type { LucideIcon } from 'lucide-react'
 import {
   Bookmark,
@@ -13,27 +14,75 @@ import {
   TrendingUp,
   Wallet,
 } from 'lucide-react'
-import { useMemo } from 'react'
+import { type ReactNode, useMemo, useRef } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
 import { Card, CardContent, CardHeader, CardKicker } from '../components/ui/card'
+import { CountUp } from '../components/ui/count-up'
 import { Select } from '../components/ui/input'
 import { ProgressBar, ProgressRing } from '../components/ui/progress'
 import { CardSkeleton, Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney } from '../hooks/useJourney'
 import { useResources } from '../hooks/useResources'
 import { daysLeftLabel, formatDate, formatGbp, formatHome } from '../lib/format'
+import { ScrambleTextPlugin } from '../lib/gsap/ScrambleTextPlugin.js'
+import { gsap } from '../lib/gsap/index.js'
 import { useAuthStore } from '../store/authStore'
 import { useBookmarkStore, useBookmarkedIds } from '../store/bookmarkStore'
 import { usePreferencesStore } from '../store/preferencesStore'
 import { toast } from '../store/toastStore'
 
+gsap.registerPlugin(useGSAP, ScrambleTextPlugin)
+
 export function DashboardPage() {
   const user = useAuthStore((s) => s.user)
   const dueSoonDays = usePreferencesStore((s) => s.dueSoonDays)
   const showHomeCurrency = usePreferencesStore((s) => s.showHomeCurrency)
+  const reduceMotion = usePreferencesStore((s) => s.reduceMotion)
   const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
+
+  const greetingRef = useRef<HTMLHeadingElement>(null)
+  const firstName = user?.fullName.split(' ')[0] ?? 'there'
+
+  useGSAP(() => {
+    if (isPending) return
+
+    // Respect the user's reduce-motion choice and the OS setting: show the
+    // greeting and tiles immediately, with no scramble or reveal.
+    const reduce = reduceMotion || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+
+    if (greetingRef.current) {
+      if (reduce) {
+        greetingRef.current.textContent = `Hello, ${firstName}`
+      } else {
+        gsap.to(greetingRef.current, {
+          duration: 1.2,
+          scrambleText: {
+            text: `Hello, ${firstName}`,
+            chars: '01',
+            speed: 0.5,
+          },
+        })
+      }
+    }
+
+    if (!reduce) {
+      // Calm swift reveal per the design system motion spec (no overshoot).
+      gsap.fromTo(
+        '.dashboard-stat-tile',
+        { opacity: 0, y: 15 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: 'power3.out',
+          stagger: 0.06,
+          delay: 0.1,
+        },
+      )
+    }
+  }, [firstName, isPending, reduceMotion])
 
   const resourceFilters = useMemo(
     () => ({ search: '', category: '', sort: 'title' as const, order: 'asc' as const }),
@@ -99,13 +148,11 @@ export function DashboardPage() {
   const { budget, upcomingDeadlines, stages, percentComplete, journey } = overview
   const doneTotal = stages.reduce((sum, s) => sum + s.done, 0)
   const taskTotal = stages.reduce((sum, s) => sum + s.total, 0)
-  const firstName = user?.fullName.split(' ')[0] ?? 'there'
   const gaugePercent =
     budget.totalPence === 0 ? 0 : Math.min(100, (budget.spentPence / budget.totalPence) * 100)
   const daysToIntake = Math.ceil(
     (new Date(`${journey.intakeDate}T00:00:00Z`).getTime() - Date.now()) / 86_400_000,
   )
-
   const categoryIcons: Record<string, LucideIcon> = {
     visa: Stamp,
     health: HeartPulse,
@@ -118,7 +165,9 @@ export function DashboardPage() {
   return (
     <div>
       <header className="mb-6">
-        <h1 className="text-title3 text-ink">Hello, {firstName}</h1>
+        <h1 ref={greetingRef} className="text-title3 text-ink scramble-active">
+          Hello, &nbsp;
+        </h1>
         <p className="text-xs text-ink-secondary mt-1">
           {journey.courseLevel} intake on {formatDate(journey.intakeDate)}. Overview of your
           application roadmap status.
@@ -126,18 +175,30 @@ export function DashboardPage() {
       </header>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-        <StatTile icon={TrendingUp} value={`${percentComplete}%`} label="Roadmap complete" />
-        <StatTile icon={CheckCircle2} value={`${doneTotal} of ${taskTotal}`} label="Tasks done" />
-        <StatTile icon={Wallet} value={formatGbp(budget.spentPence)} label="Spent so far" />
+        <StatTile
+          icon={TrendingUp}
+          value={<CountUp value={percentComplete} format={(n) => `${Math.round(n)}%`} />}
+          label="Roadmap complete"
+        />
+        <StatTile
+          icon={CheckCircle2}
+          value={<CountUp value={doneTotal} format={(n) => `${Math.round(n)} of ${taskTotal}`} />}
+          label="Tasks done"
+        />
+        <StatTile
+          icon={Wallet}
+          value={<CountUp value={budget.spentPence} format={(n) => formatGbp(n)} />}
+          label="Spent so far"
+        />
         <StatTile
           icon={CalendarClock}
-          value={daysToIntake >= 0 ? String(daysToIntake) : 'Arrived'}
+          value={daysToIntake >= 0 ? <CountUp value={daysToIntake} /> : 'Arrived'}
           label={daysToIntake >= 0 ? 'Days to intake' : 'Intake passed'}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <Card>
+        <Card className="card-lift">
           <CardHeader>
             <CardKicker>Journey completion</CardKicker>
           </CardHeader>
@@ -149,7 +210,7 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-lift">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardKicker>Budget tracker</CardKicker>
             {budget.budgetPence > 0 && budget.overBudget && (
@@ -160,7 +221,9 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <div className="flex items-baseline">
-              <span className="text-title2 text-ink">{formatGbp(budget.spentPence)}</span>
+              <span className="text-title2 text-ink tabular-nums">
+                <CountUp value={budget.spentPence} format={(n) => formatGbp(n)} />
+              </span>
               <span className="text-xs text-ink-secondary ml-1.5">
                 spent of {formatGbp(budget.totalPence)} total cost
               </span>
@@ -189,7 +252,7 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-lift">
           <CardHeader>
             <CardKicker>Upcoming deadlines</CardKicker>
           </CardHeader>
@@ -234,9 +297,9 @@ export function DashboardPage() {
                     <span
                       className={`text-micro font-semibold px-1.5 py-0.5 rounded-xs shrink-0 ${
                         d.daysLeft < 0
-                          ? 'bg-danger-soft text-danger'
+                          ? 'bg-danger-soft text-danger wiggle-warn cursor-default'
                           : d.daysLeft <= dueSoonDays
-                            ? 'bg-warning-soft text-warning'
+                            ? 'bg-warning-soft text-warning glow-pulse'
                             : 'bg-surface-secondary text-ink-secondary'
                       }`}
                     >
@@ -249,7 +312,7 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="card-lift">
           <CardHeader>
             <CardKicker>Progress per stage</CardKicker>
           </CardHeader>
@@ -273,7 +336,7 @@ export function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="md:col-span-2">
+        <Card className="md:col-span-2 card-lift">
           <CardHeader className="flex flex-row items-center justify-between border-b border-hairline pb-3">
             <div>
               <CardKicker>Saved for reference</CardKicker>
@@ -342,7 +405,7 @@ export function DashboardPage() {
                           <div className="flex items-center gap-2 mt-2 text-[10px] text-ink-tertiary">
                             <span className="capitalize">{res.categoryKey}</span>
                             <span>•</span>
-                            <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                            <span className="font-bold text-positive">
                               {res.costPence !== null ? formatGbp(res.costPence) : 'No fee'}
                             </span>
                           </div>
@@ -384,9 +447,9 @@ function StatTile({
   icon: Icon,
   value,
   label,
-}: { icon: LucideIcon; value: string; label: string }) {
+}: { icon: LucideIcon; value: ReactNode; label: string }) {
   return (
-    <Card className="p-4 flex items-center gap-3 hover:shadow-md hover:-translate-y-0.5 transition-all duration-150 cursor-default">
+    <Card className="dashboard-stat-tile card-lift p-4 flex items-center gap-3 cursor-default">
       <span className="h-9 w-9 shrink-0 rounded-sm bg-accent-soft text-accent flex items-center justify-center">
         <Icon size={17} />
       </span>

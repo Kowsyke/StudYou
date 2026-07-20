@@ -1,3 +1,4 @@
+import { useGSAP } from '@gsap/react'
 import { motion } from 'framer-motion'
 import {
   BarChart3,
@@ -18,15 +19,20 @@ import {
   SlidersHorizontal,
   Users,
 } from 'lucide-react'
-import { type FormEvent, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { type FormEvent, useCallback, useRef, useState } from 'react'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useSubmitReport } from '../hooks/useAdmin'
+import { ScrambleTextPlugin } from '../lib/gsap/ScrambleTextPlugin.js'
+import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
 import { useProfileStore } from '../store/profileStore'
 import { toast } from '../store/toastStore'
 import { CommandPalette } from './CommandPalette'
+import { PageTransition } from './PageTransition'
 import { Avatar } from './ui/avatar'
+
+gsap.registerPlugin(ScrambleTextPlugin)
 
 const swift = [0.16, 1, 0.3, 1] as const
 
@@ -52,14 +58,72 @@ export function Layout() {
   const user = useAuthStore((s) => s.user)
   const clearAuth = useAuthStore((s) => s.clearAuth)
   const navigate = useNavigate()
-  const location = useLocation()
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [aboutOpen, setAboutOpen] = useState(false)
+  const logoRef = useRef<HTMLSpanElement>(null)
+  const taglineRef = useRef<HTMLParagraphElement>(null)
+
+  // ScrambleText on the sidebar tagline on mount
+  useGSAP(() => {
+    if (!taglineRef.current) return
+    gsap.to(taglineRef.current, {
+      duration: 1.4,
+      scrambleText: {
+        text: 'Your UK study roadmap',
+        chars: '01!@#$%^&*()_+=',
+        speed: 0.4,
+        revealDelay: 0.3,
+      },
+      delay: 0.6,
+    })
+
+    // Animate ambient blobs with slow drift
+    gsap.to('.ambient-a', {
+      x: 60,
+      y: 40,
+      scale: 1.15,
+      duration: 20,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    })
+    gsap.to('.ambient-b', {
+      x: -50,
+      y: -30,
+      scale: 1.1,
+      duration: 24,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    })
+  })
+
+  // Magnetic logo hover
+  const onLogoMove = useCallback((e: React.MouseEvent) => {
+    if (!logoRef.current) return
+    const rect = logoRef.current.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = (e.clientX - cx) * 0.25
+    const dy = (e.clientY - cy) * 0.25
+    gsap.to(logoRef.current, { x: dx, y: dy, duration: 0.3, ease: 'power2.out', overwrite: 'auto' })
+  }, [])
+
+  const onLogoLeave = useCallback(() => {
+    if (!logoRef.current) return
+    gsap.to(logoRef.current, {
+      x: 0,
+      y: 0,
+      duration: 0.5,
+      ease: 'power3.out',
+      overwrite: 'auto',
+    })
+  }, [])
 
   const nav = user?.role === 'admin' ? adminNav : studentNav
 
   return (
-    <div className="min-h-screen flex">
+    <div className="noise-overlay min-h-screen flex">
       <div className="ambient ambient-a" aria-hidden="true" />
       <div className="ambient ambient-b" aria-hidden="true" />
       <aside className="glass-side w-[260px] shrink-0 border-r border-hairline flex flex-col fixed inset-y-0 select-none transition-colors duration-200 z-10">
@@ -69,12 +133,19 @@ export function Layout() {
             aria-label="StudYou home"
             className="flex items-center gap-2 text-body-lg font-bold tracking-[-0.01em] rounded-sm w-fit"
           >
-            <span className="breathe w-5 h-5 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)] transition-transform duration-[120ms] hover:rotate-6 hover:scale-110">
+            <span
+              ref={logoRef}
+              onMouseMove={onLogoMove}
+              onMouseLeave={onLogoLeave}
+              className="breathe w-5 h-5 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)] transition-transform duration-[120ms] hover:rotate-6 hover:scale-110"
+            >
               SY
             </span>
             StudYou
           </Link>
-          <p className="text-caption text-ink-tertiary mt-1">Your UK study roadmap</p>
+          <p ref={taglineRef} className="text-caption text-ink-tertiary mt-1">
+            Your UK study roadmap
+          </p>
         </div>
 
         <nav className="flex-1 px-3 overflow-y-auto">
@@ -162,14 +233,9 @@ export function Layout() {
 
       <main className="flex-1 min-w-0 ml-[260px] relative z-[1]">
         <div className="max-w-5xl mx-auto px-10 py-8">
-          <motion.div
-            key={location.pathname.startsWith('/admin') ? '/admin' : location.pathname}
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.22, ease: swift }}
-          >
+          <PageTransition>
             <Outlet />
-          </motion.div>
+          </PageTransition>
           <footer className="mt-12 pb-4 text-caption text-ink-tertiary text-center leading-relaxed">
             StudYou provides guidance and signposting only. It is not legal or immigration advice.
             Always confirm details on official sources such as gov.uk.

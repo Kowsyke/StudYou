@@ -255,7 +255,7 @@ export function ShortlistedPage() {
                       <span className="text-[10px] text-ink-tertiary font-semibold uppercase tracking-wider block mb-1">
                         Indicative International Tuition
                       </span>
-                      <span className="text-body font-bold text-emerald-600 dark:text-emerald-400 tabular-nums">
+                      <span className="text-body font-bold text-positive tabular-nums">
                         {uni.tuitionIntlMinGbp && uni.tuitionIntlMaxGbp
                           ? `${formatGbpWhole(uni.tuitionIntlMinGbp)} – ${formatGbpWhole(
                               uni.tuitionIntlMaxGbp,

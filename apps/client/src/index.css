@@ -470,13 +470,19 @@ body {
   opacity: 0.9;
 }
 
+/* The command palette carries .glass-reflect, whose position: relative would
+   otherwise beat the Tailwind fixed utility (unlayered rules win over utilities
+   regardless of source order) and drop the palette into page flow, where
+   top-[12vh] becomes a flow offset and the palette runs off the bottom of the
+   screen. Pinning it here, in a later unlayered rule, keeps it anchored to the
+   viewport. Covers both the current cmdk-dialog class and the legacy palette-in. */
+.cmdk-dialog,
+.palette-in {
+  position: fixed;
+}
+
 /* Command palette drop in, 300ms swift per the motion spec. */
 .palette-in {
-  /* The palette also carries .glass-reflect, whose position: relative would
-     otherwise beat the Tailwind fixed utility (unlayered rules win over
-     utilities) and drop the palette into page flow. Pin it here so it stays
-     anchored to the viewport and never runs off the bottom of the screen. */
-  position: fixed;
   animation: palette-in 300ms var(--ease-swift);
 }
 
@@ -570,10 +576,10 @@ body {
 /* Mouse cursor follower halo */
 .cursor-halo {
   position: fixed;
-  width: 160px;
-  height: 160px;
+  width: 64px;
+  height: 64px;
   border-radius: 9999px;
-  background: radial-gradient(circle, rgba(0, 102, 204, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 102, 204, 0.16) 0%, transparent 75%);
   pointer-events: none;
   transform: translate(-50%, -50%);
   z-index: 1;
@@ -582,7 +588,236 @@ body {
 }
 
 .dark .cursor-halo {
-  background: radial-gradient(circle, rgba(59, 158, 255, 0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59, 158, 255, 0.24) 0%, transparent 75%);
+}
+
+/* ────────────────────────────────────────────────────────────
+   Premium UI elevation utilities (v0.9)
+   ──────────────────────────────────────────────────────────── */
+
+/* Magnetic button: 3D perspective container, JS sets rotateX/Y */
+.magnetic-btn {
+  perspective: 800px;
+  transform-style: preserve-3d;
+  position: relative;
+  overflow: hidden;
+}
+
+.magnetic-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.magnetic-btn:hover::after {
+  opacity: 1;
+}
+
+/* Card hover lift: smooth rise with shadow bloom */
+.card-lift {
+  transition: transform 300ms var(--ease-swift), box-shadow 300ms var(--ease-swift);
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--elevation-lg);
+}
+
+.card-lift:active {
+  transform: translateY(-1px);
+  box-shadow: var(--elevation-sm);
+}
+
+/* Aurora text gradient */
+.text-gradient {
+  background: var(--aurora);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glow pulse: accent ring that breathes */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 4px 0px var(--accent-soft);
+  }
+  50% {
+    box-shadow: 0 0 14px 3px var(--accent-soft);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+/* Danger warning wiggle */
+@keyframes wiggle-warn {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10% {
+    transform: translateX(-3px);
+  }
+  30% {
+    transform: translateX(3px);
+  }
+  50% {
+    transform: translateX(-2px);
+  }
+  70% {
+    transform: translateX(2px);
+  }
+  90% {
+    transform: translateX(-1px);
+  }
+}
+
+.wiggle-warn:hover {
+  animation: wiggle-warn 0.5s ease-in-out;
+}
+
+/* Noise texture overlay: subtle grain on the canvas */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+.dark .noise-overlay::before {
+  opacity: 0.035;
+}
+
+/* Glassmorphism sidebar border glow (dark mode) */
+.dark .glass-side {
+  border-right-color: transparent;
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+/* Material ripple on buttons */
+.ripple-host {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-host .ripple-circle {
+  position: absolute;
+  border-radius: 9999px;
+  background: currentColor;
+  opacity: 0.12;
+  pointer-events: none;
+  transform: scale(0);
+}
+
+/* Page transition wrappers */
+.page-enter {
+  opacity: 0;
+  transform: scale(1.02) translateY(6px);
+  filter: blur(2px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+.page-exit {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: scale(0.96) translateY(-4px);
+  filter: blur(2px);
+}
+
+/* DrawSVG focus ring for input fields */
+.draw-focus {
+  position: relative;
+}
+
+.draw-focus::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 2px solid var(--accent);
+  border-radius: inherit;
+  pointer-events: none;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 300ms var(--ease-swift);
+}
+
+.draw-focus:focus-within::after {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Particle canvas behind hero sections */
+.particle-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Orbiting glow dot for progress rings */
+@keyframes orbit-glow {
+  from {
+    filter: drop-shadow(0 0 3px var(--accent));
+  }
+  to {
+    filter: drop-shadow(0 0 8px var(--accent));
+  }
+}
+
+.orbit-dot {
+  animation: orbit-glow 1.2s ease-in-out infinite alternate;
+}
+
+/* Scramble text container — monospace during decode, then normal */
+.scramble-active {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Counter-scroll marquee (second row, 30% opacity) */
+.marquee-track-counter {
+  display: flex;
+  gap: 12px;
+  width: max-content;
+  opacity: 0.3;
+}
+
+/* Scanner grid overlay for cockpit HUD look */
+.scanner-grid {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+  background-size: 36px 36px;
+  background-position: center center;
+}
+
+.dark .scanner-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+.radial-blender {
+  background: radial-gradient(circle at center, transparent 20%, var(--canvas) 95%);
 }
 
 /* All nonessential animation collapses when the user asks for less motion. */

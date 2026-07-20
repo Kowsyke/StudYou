@@ -1,3 +1,4 @@
+import { useGSAP } from '@gsap/react'
 import type { CategoryKey, Resource } from '@studyou/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
@@ -17,7 +18,7 @@ import {
   Sun,
   Trash2,
 } from 'lucide-react'
-import React, { type FormEvent, useMemo, useState, useEffect } from 'react'
+import React, { type FormEvent, useMemo, useState, useEffect, useRef } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { ReportsPanel, UsersPanel } from '../components/AdminControl'
@@ -33,6 +34,7 @@ import {
   CardKicker,
   CardTitle,
 } from '../components/ui/card'
+import { CountUp } from '../components/ui/count-up'
 import { Input, Label, Select, Textarea } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useAdminNotes, useCreateAdminNote, useDeleteAdminNote } from '../hooks/useAdmin'
@@ -41,9 +43,13 @@ import { useAnalytics, useCategories } from '../hooks/useMeta'
 import { useDeleteResource, useResources, useSaveResource } from '../hooks/useResources'
 import { apiErrorMessage } from '../lib/api'
 import { formatGbp } from '../lib/format'
+import { Draggable } from '../lib/gsap/Draggable.js'
+import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
 import { ACCENT_PRESETS, useThemeStore } from '../store/themeStore'
 import { toast } from '../store/toastStore'
+
+gsap.registerPlugin(useGSAP, Draggable)
 
 export function AdminPage() {
   const { data: analytics, isPending, error, refetch, isRefetching } = useAnalytics(true)
@@ -57,6 +63,18 @@ export function AdminPage() {
     | 'settings'
     | 'notes'
   const { themePreference, setTheme, accentPreset, setAccentPreset } = useThemeStore()
+
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    if (panelRef.current) {
+      gsap.fromTo(
+        panelRef.current.children,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', stagger: 0.05, overwrite: 'auto' },
+      )
+    }
+  }, [activeTab])
 
   // For exporting Knowledge Base resources
   const { data: resources } = useResources({
@@ -146,334 +164,348 @@ export function AdminPage() {
         </div>
       </header>
 
-      {(activeTab === 'insights' || window.location.search.includes('print')) &&
-        (isPending ? (
-          <div className="space-y-4 mb-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <CardSkeleton lines={1} />
-              <CardSkeleton lines={1} />
-              <CardSkeleton lines={1} />
-              <CardSkeleton lines={1} />
+      <div ref={panelRef} className="admin-panel-contents">
+        {(activeTab === 'insights' || window.location.search.includes('print')) &&
+          (isPending ? (
+            <div className="space-y-4 mb-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <CardSkeleton lines={1} />
+                <CardSkeleton lines={1} />
+                <CardSkeleton lines={1} />
+                <CardSkeleton lines={1} />
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <CardSkeleton lines={6} />
+                <CardSkeleton lines={6} />
+              </div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <CardSkeleton lines={6} />
-              <CardSkeleton lines={6} />
-            </div>
-          </div>
-        ) : error || !analytics ? (
-          <QueryError
-            message="Analytics could not be loaded. Check your connection and try again."
-            onRetry={() => refetch()}
-            retrying={isRefetching}
-          />
-        ) : (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
-              <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
-                <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
-                  Active now
-                </p>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="relative flex h-2.5 w-2.5">
-                    {analytics.activeUsers > 0 && (
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
-                    )}
-                    <span
-                      className={cn(
-                        'relative inline-flex rounded-full h-2.5 w-2.5',
-                        analytics.activeUsers > 0 ? 'bg-positive' : 'bg-ink-muted',
+          ) : error || !analytics ? (
+            <QueryError
+              message="Analytics could not be loaded. Check your connection and try again."
+              onRetry={() => refetch()}
+              retrying={isRefetching}
+            />
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+                <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
+                  <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
+                    Active now
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="relative flex h-2.5 w-2.5">
+                      {analytics.activeUsers > 0 && (
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
                       )}
-                    />
-                  </span>
-                  <p className="text-title3 font-bold text-ink tabular-nums">
-                    {analytics.activeUsers}
-                  </p>
+                      <span
+                        className={cn(
+                          'relative inline-flex rounded-full h-2.5 w-2.5 glow-pulse',
+                          analytics.activeUsers > 0 ? 'bg-positive' : 'bg-ink-muted',
+                        )}
+                      />
+                    </span>
+                    <p className="text-title3 font-bold text-ink tabular-nums">
+                      <CountUp value={analytics.activeUsers} />
+                    </p>
+                  </div>
+                  <p className="text-micro text-ink-tertiary mt-1">Seen in the last 5 minutes</p>
                 </div>
-                <p className="text-micro text-ink-tertiary mt-1">Seen in the last 5 minutes</p>
+                <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
+                  <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
+                    Active today
+                  </p>
+                  <p className="text-title3 font-bold text-ink mt-1 tabular-nums">
+                    <CountUp value={analytics.activeToday} />
+                  </p>
+                  <p className="text-micro text-ink-tertiary mt-1">Seen in the last 24 hours</p>
+                </div>
+                <StatTile label="Total users" value={analytics.totalUsers} />
+                <StatTile label="New this week" value={analytics.newThisWeek} />
+                <StatTile label="Suspended" value={analytics.suspendedUsers} />
               </div>
-              <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
-                <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
-                  Active today
-                </p>
-                <p className="text-title3 font-bold text-ink mt-1 tabular-nums">
-                  {analytics.activeToday}
-                </p>
-                <p className="text-micro text-ink-tertiary mt-1">Seen in the last 24 hours</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
+                <StatTile label="Students" value={analytics.totalStudents} />
+                <StatTile label="Active journeys" value={analytics.totalJourneys} />
+                <StatTile
+                  label="Average completion"
+                  value={analytics.averageCompletion}
+                  format={(n) => `${Math.round(n)}%`}
+                />
               </div>
-              <StatTile label="Total users" value={analytics.totalUsers} />
-              <StatTile label="New this week" value={analytics.newThisWeek} />
-              <StatTile label="Suspended" value={analytics.suspendedUsers} />
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
-              <StatTile label="Students" value={analytics.totalStudents} />
-              <StatTile label="Active journeys" value={analytics.totalJourneys} />
-              <StatTile label="Average completion" value={`${analytics.averageCompletion}%`} />
-            </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-              <Card className="print:break-inside-avoid">
-                <CardHeader>
-                  <CardKicker>Completion rate by stage</CardKicker>
-                  <CardDescription>Share of tasks completed in each stage</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={220}>
-                    <BarChart
-                      data={analytics.stageBreakdown}
-                      margin={{ top: 4, right: 4, left: -18, bottom: 20 }}
-                    >
-                      <CartesianGrid stroke={chart.grid} strokeWidth={1} vertical={false} />
-                      <XAxis
-                        dataKey="stageTitle"
-                        tick={{ fill: chart.ink, fontSize: 11 }}
-                        axisLine={{ stroke: chart.grid }}
-                        tickLine={false}
-                        interval={0}
-                        angle={-20}
-                        textAnchor="end"
-                        height={40}
-                      />
-                      <YAxis
-                        unit="%"
-                        domain={[0, 100]}
-                        tick={{ fill: chart.ink, fontSize: 11 }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <Tooltip
-                        cursor={{ fill: 'var(--accent-soft)' }}
-                        contentStyle={tooltipStyle}
-                        formatter={(value) => [`${value}%`, 'Completion']}
-                      />
-                      <Bar
-                        dataKey="completionRate"
-                        fill={chart.accent}
-                        radius={[4, 4, 0, 0]}
-                        barSize={28}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                <Card className="print:break-inside-avoid">
+                  <CardHeader>
+                    <CardKicker>Completion rate by stage</CardKicker>
+                    <CardDescription>Share of tasks completed in each stage</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={220}>
+                      <BarChart
+                        data={analytics.stageBreakdown}
+                        margin={{ top: 4, right: 4, left: -18, bottom: 20 }}
+                      >
+                        <CartesianGrid stroke={chart.grid} strokeWidth={1} vertical={false} />
+                        <XAxis
+                          dataKey="stageTitle"
+                          tick={{ fill: chart.ink, fontSize: 11 }}
+                          axisLine={{ stroke: chart.grid }}
+                          tickLine={false}
+                          interval={0}
+                          angle={-20}
+                          textAnchor="end"
+                          height={40}
+                        />
+                        <YAxis
+                          unit="%"
+                          domain={[0, 100]}
+                          tick={{ fill: chart.ink, fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <Tooltip
+                          cursor={{ fill: 'var(--accent-soft)' }}
+                          contentStyle={tooltipStyle}
+                          formatter={(value) => [`${value}%`, 'Completion']}
+                        />
+                        <Bar
+                          dataKey="completionRate"
+                          fill={chart.accent}
+                          radius={[4, 4, 0, 0]}
+                          barSize={28}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="print:break-inside-avoid">
+                  <CardHeader>
+                    <CardKicker>Drop off by stage</CardKicker>
+                    <CardDescription>
+                      Journeys with at least one task done per stage
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ResponsiveContainer width="100%" height={220}>
+                      <BarChart
+                        data={analytics.dropOff}
+                        margin={{ top: 4, right: 4, left: -18, bottom: 20 }}
+                      >
+                        <CartesianGrid stroke={chart.grid} strokeWidth={1} vertical={false} />
+                        <XAxis
+                          dataKey="stageTitle"
+                          tick={{ fill: chart.ink, fontSize: 11 }}
+                          axisLine={{ stroke: chart.grid }}
+                          tickLine={false}
+                          interval={0}
+                          angle={-20}
+                          textAnchor="end"
+                          height={40}
+                        />
+                        <YAxis
+                          allowDecimals={false}
+                          tick={{ fill: chart.ink, fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <Tooltip
+                          cursor={{ fill: 'var(--accent-soft)' }}
+                          contentStyle={tooltipStyle}
+                          formatter={(value) => [value, 'Journeys reached']}
+                        />
+                        <Bar
+                          dataKey="studentsReached"
+                          fill={chart.positive}
+                          radius={[4, 4, 0, 0]}
+                          barSize={28}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card className="mb-6 bg-accent-soft/20 border-accent/20">
+                <CardContent className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="text-body font-bold text-ink">Azure App Service Analytics</h4>
+                    <p className="text-caption text-ink-secondary mt-1">
+                      Access compute metrics, response times, memory usage, and server-side log
+                      analytics in the Azure Portal.
+                    </p>
+                  </div>
+                  <Button
+                    onClick={() => window.open('https://portal.azure.com', '_blank')}
+                    className="sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]"
+                  >
+                    <ExternalLink size={14} className="mr-1.5" />
+                    Azure Server Analytics
+                  </Button>
                 </CardContent>
               </Card>
 
-              <Card className="print:break-inside-avoid">
-                <CardHeader>
-                  <CardKicker>Drop off by stage</CardKicker>
-                  <CardDescription>Journeys with at least one task done per stage</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={220}>
-                    <BarChart
-                      data={analytics.dropOff}
-                      margin={{ top: 4, right: 4, left: -18, bottom: 20 }}
-                    >
-                      <CartesianGrid stroke={chart.grid} strokeWidth={1} vertical={false} />
-                      <XAxis
-                        dataKey="stageTitle"
-                        tick={{ fill: chart.ink, fontSize: 11 }}
-                        axisLine={{ stroke: chart.grid }}
-                        tickLine={false}
-                        interval={0}
-                        angle={-20}
-                        textAnchor="end"
-                        height={40}
-                      />
-                      <YAxis
-                        allowDecimals={false}
-                        tick={{ fill: chart.ink, fontSize: 11 }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <Tooltip
-                        cursor={{ fill: 'var(--accent-soft)' }}
-                        contentStyle={tooltipStyle}
-                        formatter={(value) => [value, 'Journeys reached']}
-                      />
-                      <Bar
-                        dataKey="studentsReached"
-                        fill={chart.positive}
-                        radius={[4, 4, 0, 0]}
-                        barSize={28}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </div>
+              <InfrastructurePanel />
+            </>
+          ))}
 
-            <Card className="mb-6 bg-accent-soft/20 border-accent/20">
-              <CardContent className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <h4 className="text-body font-bold text-ink">Azure App Service Analytics</h4>
-                  <p className="text-caption text-ink-secondary mt-1">
-                    Access compute metrics, response times, memory usage, and server-side log
-                    analytics in the Azure Portal.
-                  </p>
+        {activeTab === 'kb' && <KnowledgeBaseManager />}
+        {activeTab === 'users' && <UsersPanel />}
+        {activeTab === 'reports' && <ReportsPanel />}
+        {activeTab === 'notes' && <AdminNotesManager />}
+
+        {activeTab === 'settings' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
+            <Card>
+              <CardHeader>
+                <CardKicker>Visual Settings</CardKicker>
+                <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
+                <CardDescription>Customize the application aesthetics</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-5">
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
+                  <div className="flex gap-2">
+                    <Button
+                      variant={themePreference === 'light' ? 'primary' : 'secondary'}
+                      size="sm"
+                      className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                      onClick={() => setTheme('light')}
+                    >
+                      <Sun size={14} />
+                      Light
+                    </Button>
+                    <Button
+                      variant={themePreference === 'dark' ? 'primary' : 'secondary'}
+                      size="sm"
+                      className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                      onClick={() => setTheme('dark')}
+                    >
+                      <Moon size={14} />
+                      Dark
+                    </Button>
+                    <Button
+                      variant={themePreference === 'system' ? 'primary' : 'secondary'}
+                      size="sm"
+                      className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                      onClick={() => setTheme('system')}
+                    >
+                      <Monitor size={14} />
+                      System
+                    </Button>
+                  </div>
                 </div>
-                <Button
-                  onClick={() => window.open('https://portal.azure.com', '_blank')}
-                  className="sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]"
-                >
-                  <ExternalLink size={14} className="mr-1.5" />
-                  Azure Server Analytics
-                </Button>
+
+                <div className="space-y-2">
+                  <Label className="text-xs font-semibold text-ink-secondary">
+                    Brand Accent Color
+                  </Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {Object.values(ACCENT_PRESETS).map((preset) => {
+                      const isActive = accentPreset === preset.key
+                      return (
+                        <button
+                          key={preset.key}
+                          onClick={() => setAccentPreset(preset.key)}
+                          className={cn(
+                            'relative flex items-center justify-between px-3 py-2 rounded-sm border text-left text-xs transition-all duration-150 hover:bg-surface-secondary',
+                            isActive
+                              ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
+                              : 'border-hairline bg-surface text-ink-secondary',
+                          )}
+                        >
+                          <span className="flex items-center gap-2">
+                            <span
+                              className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+                              style={{ background: preset.accent }}
+                            />
+                            {preset.label}
+                          </span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-            <InfrastructurePanel />
-          </>
-        ))}
-
-      {activeTab === 'kb' && <KnowledgeBaseManager />}
-      {activeTab === 'users' && <UsersPanel />}
-      {activeTab === 'reports' && <ReportsPanel />}
-      {activeTab === 'notes' && <AdminNotesManager />}
-
-      {activeTab === 'settings' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
-          <Card>
-            <CardHeader>
-              <CardKicker>Visual Settings</CardKicker>
-              <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
-              <CardDescription>Customize the application aesthetics</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-5">
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
-                <div className="flex gap-2">
-                  <Button
-                    variant={themePreference === 'light' ? 'primary' : 'secondary'}
-                    size="sm"
-                    className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                    onClick={() => setTheme('light')}
-                  >
-                    <Sun size={14} />
-                    Light
-                  </Button>
-                  <Button
-                    variant={themePreference === 'dark' ? 'primary' : 'secondary'}
-                    size="sm"
-                    className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                    onClick={() => setTheme('dark')}
-                  >
-                    <Moon size={14} />
-                    Dark
-                  </Button>
-                  <Button
-                    variant={themePreference === 'system' ? 'primary' : 'secondary'}
-                    size="sm"
-                    className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                    onClick={() => setTheme('system')}
-                  >
-                    <Monitor size={14} />
-                    System
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold text-ink-secondary">
-                  Brand Accent Color
-                </Label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {Object.values(ACCENT_PRESETS).map((preset) => {
-                    const isActive = accentPreset === preset.key
-                    return (
-                      <button
-                        key={preset.key}
-                        onClick={() => setAccentPreset(preset.key)}
-                        className={cn(
-                          'relative flex items-center justify-between px-3 py-2 rounded-sm border text-left text-xs transition-all duration-150 hover:bg-surface-secondary',
-                          isActive
-                            ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
-                            : 'border-hairline bg-surface text-ink-secondary',
-                        )}
-                      >
-                        <span className="flex items-center gap-2">
-                          <span
-                            className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
-                            style={{ background: preset.accent }}
-                          />
-                          {preset.label}
-                        </span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardKicker>Data & Exports</CardKicker>
-              <CardTitle className="text-body font-semibold">Reports & Downloads</CardTitle>
-              <CardDescription>Export platform metrics and information</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="p-3 bg-surface-secondary rounded-sm border border-hairline flex flex-col gap-2">
-                <div className="flex justify-between items-center">
-                  <div className="min-w-0 pr-2">
-                    <h4 className="text-xs font-semibold text-ink">Analytics Summary Report</h4>
-                    <p className="text-caption text-ink-tertiary truncate">
-                      Student completions, stage statistics, and drop-off rate counts.
-                    </p>
+            <Card>
+              <CardHeader>
+                <CardKicker>Data & Exports</CardKicker>
+                <CardTitle className="text-body font-semibold">Reports & Downloads</CardTitle>
+                <CardDescription>Export platform metrics and information</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-3 bg-surface-secondary rounded-sm border border-hairline flex flex-col gap-2">
+                  <div className="flex justify-between items-center">
+                    <div className="min-w-0 pr-2">
+                      <h4 className="text-xs font-semibold text-ink">Analytics Summary Report</h4>
+                      <p className="text-caption text-ink-tertiary truncate">
+                        Student completions, stage statistics, and drop-off rate counts.
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={handleDownloadAnalyticsCSV}
+                      className="flex items-center gap-1 shrink-0 h-7"
+                    >
+                      <Download size={12} />
+                      CSV
+                    </Button>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={handleDownloadAnalyticsCSV}
-                    className="flex items-center gap-1 shrink-0 h-7"
-                  >
-                    <Download size={12} />
-                    CSV
-                  </Button>
                 </div>
-              </div>
 
-              <div className="p-3 bg-surface-secondary rounded-sm border border-hairline flex flex-col gap-2">
-                <div className="flex justify-between items-center">
-                  <div className="min-w-0 pr-2">
-                    <h4 className="text-xs font-semibold text-ink">Knowledge Base Export</h4>
-                    <p className="text-caption text-ink-tertiary truncate">
-                      Full list of all immigration fees, housing guidelines, and documents.
-                    </p>
+                <div className="p-3 bg-surface-secondary rounded-sm border border-hairline flex flex-col gap-2">
+                  <div className="flex justify-between items-center">
+                    <div className="min-w-0 pr-2">
+                      <h4 className="text-xs font-semibold text-ink">Knowledge Base Export</h4>
+                      <p className="text-caption text-ink-tertiary truncate">
+                        Full list of all immigration fees, housing guidelines, and documents.
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      onClick={handleDownloadResourcesCSV}
+                      className="flex items-center gap-1 shrink-0 h-7"
+                    >
+                      <Download size={12} />
+                      CSV
+                    </Button>
                   </div>
+                </div>
+
+                <div className="pt-2">
                   <Button
-                    size="sm"
-                    onClick={handleDownloadResourcesCSV}
-                    className="flex items-center gap-1 shrink-0 h-7"
+                    variant="secondary"
+                    className="w-full flex items-center justify-center gap-2 h-9 text-xs"
+                    onClick={() => window.print()}
                   >
-                    <Download size={12} />
-                    CSV
+                    <Printer size={14} />
+                    Print Executive Summary
                   </Button>
                 </div>
-              </div>
-
-              <div className="pt-2">
-                <Button
-                  variant="secondary"
-                  className="w-full flex items-center justify-center gap-2 h-9 text-xs"
-                  onClick={() => window.print()}
-                >
-                  <Printer size={14} />
-                  Print Executive Summary
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
 
-function StatTile({ label, value }: { label: string; value: string | number }) {
+function StatTile({
+  label,
+  value,
+  format,
+}: { label: string; value: number; format?: (n: number) => string }) {
   return (
     <Card className="p-4 flex flex-col gap-1">
       <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
         {label}
       </p>
-      <p className="text-[22px] leading-tight font-bold text-ink">{value}</p>
+      <p className="text-[22px] leading-tight font-bold text-ink tabular-nums">
+        <CountUp value={value} format={format} />
+      </p>
     </Card>
   )
 }
@@ -999,6 +1031,19 @@ function AdminNotesManager() {
   const [newCategory, setNewCategory] = useState<'bug' | 'feature' | 'data' | 'general'>('general')
   const [newAuthor, setNewAuthor] = useState('')
 
+  const boardRef = useRef<HTMLDivElement>(null)
+
+  useGSAP(() => {
+    if (!isPending && notes.length > 0 && boardRef.current) {
+      Draggable.create(boardRef.current.querySelectorAll('.draggable-note-card'), {
+        type: 'x,y',
+        edgeResistance: 0.65,
+        bounds: boardRef.current,
+        inertia: true,
+      })
+    }
+  }, [notes, isPending])
+
   const handleAddNote = (e: React.FormEvent) => {
     e.preventDefault()
     if (!newTitle.trim() || !newContent.trim()) return
@@ -1126,7 +1171,7 @@ function AdminNotesManager() {
       </Card>
 
       {/* Right side: Notes Board */}
-      <div className="lg:col-span-2 space-y-4">
+      <div ref={boardRef} className="lg:col-span-2 space-y-4">
         <div className="flex justify-between items-center">
           <h2 className="text-body-lg font-semibold tracking-tight">Interactive Board</h2>
           <span className="text-caption text-ink-tertiary">
@@ -1146,13 +1191,10 @@ function AdminNotesManager() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {notes.map((note) => (
-              <motion.div
+              <div
                 key={note.id}
-                layout
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs transition-shadow duration-[120ms] hover:shadow-sm"
+                id={`note-${note.id}`}
+                className="draggable-note-card bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs transition-shadow duration-[120ms] hover:shadow-sm cursor-grab active:cursor-grabbing relative z-10"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -1189,7 +1231,7 @@ function AdminNotesManager() {
                     Resolve
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}

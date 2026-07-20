@@ -14,7 +14,7 @@ test('student logs in, ticks a task and the dashboard updates live', async ({ pa
   const percentBefore = Number.parseInt(await page.getByTestId('percent-complete').innerText(), 10)
 
   await page.getByRole('link', { name: 'My journey' }).click()
-  await expect(page.getByRole('heading', { name: 'My journey' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Your Study Journey' })).toBeVisible()
 
   const firstPending = page.getByRole('button', { name: /^Mark .* as done$/ }).first()
   const pendingLabel = await firstPending.getAttribute('aria-label')
@@ -22,7 +22,7 @@ test('student logs in, ticks a task and the dashboard updates live', async ({ pa
   const doneLabel = pendingLabel.replace(/ as done$/, ' as pending')
 
   await firstPending.click()
-  await expect(page.getByRole('button', { name: doneLabel })).toBeVisible()
+  await expect(page.getByRole('button', { name: doneLabel, exact: true })).toBeVisible()
 
   await page.getByRole('link', { name: 'Dashboard' }).click()
   await expect(page.getByTestId('percent-complete')).toBeVisible()
@@ -31,6 +31,6 @@ test('student logs in, ticks a task and the dashboard updates live', async ({ pa
 
   // Untick the task so the test is repeatable against the same seed data.
   await page.getByRole('link', { name: 'My journey' }).click()
-  await page.getByRole('button', { name: doneLabel }).click()
-  await expect(page.getByRole('button', { name: pendingLabel })).toBeVisible()
+  await page.getByRole('button', { name: doneLabel, exact: true }).click()
+  await expect(page.getByRole('button', { name: pendingLabel, exact: true })).toBeVisible()
 })

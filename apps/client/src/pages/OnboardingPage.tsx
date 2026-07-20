@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { useGSAP } from '@gsap/react'
 import {
   ArrowRight,
   BookOpen,
@@ -9,7 +9,7 @@ import {
   School,
   Wallet,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SwipeDeck } from '../components/SwipeDeck'
 import { UkGeoMap } from '../components/UkGeoMap'
@@ -19,12 +19,15 @@ import { useCreateJourney } from '../hooks/useJourney'
 import { useCountries } from '../hooks/useMeta'
 import { useUniversities } from '../hooks/useUniversities'
 import { apiErrorMessage } from '../lib/api'
+import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
+import { Flip } from '../lib/gsap/Flip.js'
+import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
 import { useProfileStore } from '../store/profileStore'
 import { toast } from '../store/toastStore'
 
-const swift = [0.16, 1, 0.3, 1] as const
+gsap.registerPlugin(useGSAP, Flip, DrawSVGPlugin)
 
 const courseLevels = [
   {
@@ -98,6 +101,13 @@ export function OnboardingPage() {
   const [budgetGbp, setBudgetGbp] = useState('')
   const [error, setError] = useState<string | null>(null)
 
+  // Refs for GSAP
+  const stepContainerRef = useRef<HTMLDivElement>(null)
+  // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
+  const flipStateRef = useRef<any>(null)
+  const progressLine1Ref = useRef<SVGLineElement>(null)
+  const progressLine2Ref = useRef<SVGLineElement>(null)
+
   // University shortlisting state
   const shortlistIds = useProfileStore((s) => s.shortlistIds)
   const toggleShortlistId = useProfileStore((s) => s.toggleShortlist)
@@ -144,6 +154,13 @@ export function OnboardingPage() {
     )
   }
 
+  const changeStep = (newStep: number) => {
+    if (stepContainerRef.current) {
+      flipStateRef.current = Flip.getState(stepContainerRef.current)
+    }
+    setStep(newStep)
+  }
+
   const handleNextStep = () => {
     if (!intakeDate) {
       setError('Please select or pick an intake date.')
@@ -158,7 +175,7 @@ export function OnboardingPage() {
       return
     }
     setError(null)
-    setStep(2)
+    changeStep(2)
   }
 
   const handleCreateJourney = () => {
@@ -182,21 +199,85 @@ export function OnboardingPage() {
     )
   }
 
+  // GSAP Flip transition + entrance anims
+  useGSAP(() => {
+    if (stepContainerRef.current && flipStateRef.current) {
+      Flip.from(flipStateRef.current, {
+        duration: 0.55,
+        ease: 'power3.out',
+        scale: true,
+        fade: true,
+        absolute: false,
+      })
+      flipStateRef.current = null
+    } else {
+      gsap.fromTo(
+        stepContainerRef.current,
+        { opacity: 0, y: 15 },
+        { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' },
+      )
+    }
+
+    // Slow ambient blob drift
+    gsap.to('.ambient-a', {
+      x: 60,
+      y: 40,
+      scale: 1.15,
+      duration: 20,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    })
+    gsap.to('.ambient-b', {
+      x: -50,
+      y: -30,
+      scale: 1.1,
+      duration: 24,
+      ease: 'sine.inOut',
+      repeat: -1,
+      yoyo: true,
+    })
+  }, [step])
+
+  // DrawSVG course icons on Step 1 mount
+  useGSAP(() => {
+    if (step === 1) {
+      gsap.fromTo(
+        '.course-icon path, .course-icon circle',
+        { drawSVG: '0%' },
+        { drawSVG: '100%', duration: 0.7, ease: 'power2.out', stagger: 0.1 },
+      )
+    }
+  }, [step])
+
+  // DrawSVG progress indicator lines
+  useEffect(() => {
+    if (progressLine1Ref.current) {
+      gsap.to(progressLine1Ref.current, {
+        drawSVG: step > 1 ? '100%' : '0%',
+        duration: 0.4,
+        ease: 'power2.out',
+      })
+    }
+    if (progressLine2Ref.current) {
+      gsap.to(progressLine2Ref.current, {
+        drawSVG: step > 2 ? '100%' : '0%',
+        duration: 0.4,
+        ease: 'power2.out',
+      })
+    }
+  }, [step])
+
   return (
-    <div className="min-h-screen bg-canvas py-10 px-4 [background:radial-gradient(circle_at_50%_0%,var(--surface-secondary)_0%,var(--canvas)_60%)]">
+    <div className="noise-overlay min-h-screen bg-canvas py-10 px-4 [background:radial-gradient(circle_at_50%_0%,var(--surface-secondary)_0%,var(--canvas)_60%)] relative overflow-hidden">
       <div className="ambient ambient-a" aria-hidden="true" />
       <div className="ambient ambient-b" aria-hidden="true" />
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: swift }}
-        className="max-w-2xl mx-auto"
-      >
+      <div className="onboarding-card-wrapper max-w-2xl mx-auto relative z-10">
         <header className="text-center mb-8">
-          <span className="inline-flex w-8 h-8 rounded-sm bg-accent-solid text-white text-body-lg font-extrabold items-center justify-center [background-image:var(--accent-gradient)] mb-3">
+          <span className="inline-flex w-8 h-8 rounded-sm bg-accent-solid text-white text-body-lg font-extrabold items-center justify-center [background-image:var(--accent-gradient)] mb-3 shadow-md">
             SY
           </span>
-          <h1 className="text-title2 text-ink">Set up your journey</h1>
+          <h1 className="text-title2 text-ink font-bold text-gradient">Set up your journey</h1>
           <p className="text-body text-ink-secondary mt-1.5 max-w-md mx-auto">
             StudYou builds your personalised roadmap, working backwards from your intake date.
           </p>
@@ -226,7 +307,21 @@ export function OnboardingPage() {
               Academic Details
             </span>
           </div>
-          <span className="h-px w-8 bg-hairline-strong" />
+
+          <svg width="32" height="2" viewBox="0 0 32 2" className="overflow-visible shrink-0">
+            <title>Progress connector</title>
+            <line x1="0" y1="1" x2="32" y2="1" stroke="var(--border-strong)" strokeWidth="2" />
+            <line
+              ref={progressLine1Ref}
+              x1="0"
+              y1="1"
+              x2="32"
+              y2="1"
+              stroke="var(--accent)"
+              strokeWidth="2"
+            />
+          </svg>
+
           <div className="flex items-center gap-2">
             <span
               className={cn(
@@ -249,7 +344,21 @@ export function OnboardingPage() {
               Target Regions
             </span>
           </div>
-          <span className="h-px w-8 bg-hairline-strong" />
+
+          <svg width="32" height="2" viewBox="0 0 32 2" className="overflow-visible shrink-0">
+            <title>Progress connector</title>
+            <line x1="0" y1="1" x2="32" y2="1" stroke="var(--border-strong)" strokeWidth="2" />
+            <line
+              ref={progressLine2Ref}
+              x1="0"
+              y1="1"
+              x2="32"
+              y2="1"
+              stroke="var(--accent)"
+              strokeWidth="2"
+            />
+          </svg>
+
           <div className="flex items-center gap-2">
             <span
               className={cn(
@@ -272,18 +381,11 @@ export function OnboardingPage() {
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
+        <div ref={stepContainerRef}>
           {step === 1 && (
-            <motion.div
-              key="step-1"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.25 }}
-              className="flex flex-col gap-6"
-            >
+            <div className="flex flex-col gap-6">
               {/* Course Level */}
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
                 <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
                   What level are you studying?
                 </h2>
@@ -297,13 +399,16 @@ export function OnboardingPage() {
                         onClick={() => setCourseLevel(level.value)}
                         aria-pressed={active}
                         className={cn(
-                          'rounded-md border p-3.5 text-left transition-all duration-[120ms] hover:-translate-y-0.5',
+                          'rounded-md border p-3.5 text-left transition-all duration-[120ms] hover:-translate-y-0.5 relative overflow-hidden',
                           active
                             ? 'border-transparent text-white shadow-md bg-accent-solid [background-image:var(--accent-gradient)]'
                             : 'bg-surface border-hairline-strong hover:bg-surface-secondary',
                         )}
                       >
-                        <level.icon size={18} className={active ? 'text-white' : 'text-accent'} />
+                        <level.icon
+                          size={18}
+                          className={cn('course-icon', active ? 'text-white' : 'text-accent')}
+                        />
                         <p
                           className={cn(
                             'text-body font-semibold mt-2',
@@ -327,7 +432,7 @@ export function OnboardingPage() {
               </section>
 
               {/* Major or Subject */}
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
                 <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
                   What is your major or subject of interest?
                 </h2>
@@ -351,41 +456,45 @@ export function OnboardingPage() {
                     )
                   })}
                 </div>
-                <Label htmlFor="major-input">Or type your custom major / subject</Label>
-                <Input
-                  id="major-input"
-                  type="text"
-                  placeholder="e.g. Psychology, Computer Science, Law"
-                  value={major}
-                  onChange={(e) => setMajor(e.target.value)}
-                  className="max-w-md mt-1"
-                />
+                <div className="draw-focus">
+                  <Label htmlFor="major-input">Or type your custom major / subject</Label>
+                  <Input
+                    id="major-input"
+                    type="text"
+                    placeholder="e.g. Psychology, Computer Science, Law"
+                    value={major}
+                    onChange={(e) => setMajor(e.target.value)}
+                    className="max-w-md mt-1 w-full"
+                  />
+                </div>
               </section>
 
               {/* Education completed till */}
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
                 <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
                   Education completed till
                 </h2>
-                <Label htmlFor="education-select">
-                  Select your highest level of completed education
-                </Label>
-                <Select
-                  id="education-select"
-                  value={educationCompleted}
-                  onChange={(e) => setEducationCompleted(e.target.value)}
-                  className="max-w-md mt-1"
-                >
-                  {educationCompletedOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </Select>
+                <div className="draw-focus">
+                  <Label htmlFor="education-select">
+                    Select your highest level of completed education
+                  </Label>
+                  <Select
+                    id="education-select"
+                    value={educationCompleted}
+                    onChange={(e) => setEducationCompleted(e.target.value)}
+                    className="max-w-md mt-1 w-full"
+                  >
+                    {educationCompletedOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
               </section>
 
               {/* Intake presets */}
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
                 <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
                   When do you want to start?
                 </h2>
@@ -410,19 +519,21 @@ export function OnboardingPage() {
                     )
                   })}
                 </div>
-                <Label htmlFor="intake">Or pick an exact intake date</Label>
-                <Input
-                  id="intake"
-                  type="date"
-                  required
-                  className="max-w-56"
-                  value={intakeDate}
-                  onChange={(e) => setIntakeDate(e.target.value)}
-                />
+                <div className="draw-focus">
+                  <Label htmlFor="intake">Or pick an exact intake date</Label>
+                  <Input
+                    id="intake"
+                    type="date"
+                    required
+                    className="max-w-56 w-full"
+                    value={intakeDate}
+                    onChange={(e) => setIntakeDate(e.target.value)}
+                  />
+                </div>
               </section>
 
               {/* Process Budget */}
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
                 <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
                   Your process budget
                 </h2>
@@ -447,53 +558,48 @@ export function OnboardingPage() {
                     )
                   })}
                 </div>
-                <Label htmlFor="budget">Or enter your own amount (GBP)</Label>
-                <div className="relative max-w-56">
-                  <Wallet
-                    size={14}
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
-                  />
-                  <Input
-                    id="budget"
-                    type="number"
-                    min={0}
-                    step="100"
-                    required
-                    className="pl-8"
-                    value={budgetGbp}
-                    onChange={(e) => setBudgetGbp(e.target.value)}
-                    placeholder="4000"
-                  />
+                <div className="draw-focus">
+                  <Label htmlFor="budget">Or enter your own amount (GBP)</Label>
+                  <div className="relative max-w-56 w-full">
+                    <Wallet
+                      size={14}
+                      className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
+                    />
+                    <Input
+                      id="budget"
+                      type="number"
+                      min={0}
+                      step="100"
+                      required
+                      className="pl-8 w-full"
+                      value={budgetGbp}
+                      onChange={(e) => setBudgetGbp(e.target.value)}
+                      placeholder="4000"
+                    />
+                  </div>
                 </div>
                 <p className="text-caption text-ink-tertiary mt-2 leading-relaxed">
                   Not tuition, just the process: tests, visa, health surcharge, travel and setup.
                 </p>
               </section>
 
-              {error && <p className="text-body text-danger text-center">{error}</p>}
+              {error && <p className="text-body text-danger text-center font-medium">{error}</p>}
 
               <Button
                 type="button"
                 onClick={handleNextStep}
                 size="lg"
-                className="self-center min-w-64"
+                className="self-center min-w-64 magnetic-btn"
               >
                 Next: Choose Regions
                 <ArrowRight size={16} />
               </Button>
-            </motion.div>
+            </div>
           )}
 
           {step === 2 && (
-            <motion.div
-              key="step-2"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.25 }}
-              className="flex flex-col gap-6"
-            >
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center">
+            <div className="flex flex-col gap-6">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center card-lift">
                 <div className="w-full text-left">
                   <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-1">
                     Preferred regions in the UK
@@ -530,13 +636,13 @@ export function OnboardingPage() {
                 </div>
               </section>
 
-              {error && <p className="text-body text-danger text-center">{error}</p>}
+              {error && <p className="text-body text-danger text-center font-medium">{error}</p>}
 
               <div className="flex flex-col sm:flex-row justify-center gap-3.5">
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => setStep(1)}
+                  onClick={() => changeStep(1)}
                   className="w-full sm:w-auto"
                 >
                   Back
@@ -549,27 +655,24 @@ export function OnboardingPage() {
                 >
                   Skip shortlisting, build map
                 </Button>
-                <Button type="button" onClick={() => setStep(3)} className="w-full sm:w-auto">
+                <Button
+                  type="button"
+                  onClick={() => changeStep(3)}
+                  className="w-full sm:w-auto magnetic-btn"
+                >
                   Next: Shortlist Universities
                   <ArrowRight size={16} />
                 </Button>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {step === 3 && (
-            <motion.div
-              key="step-3"
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 10 }}
-              transition={{ duration: 0.25 }}
-              className="flex flex-col gap-6"
-            >
-              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center">
+            <div className="flex flex-col gap-6">
+              <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center card-lift">
                 <div className="w-full text-left mb-4">
                   <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-1 flex items-center gap-1.5">
-                    <Heart size={16} className="text-danger fill-current" />
+                    <Heart size={16} className="text-danger fill-current animate-pulse" />
                     Swipe and Shortlist
                   </h2>
                   <p className="text-xs text-ink-secondary">
@@ -588,13 +691,13 @@ export function OnboardingPage() {
                 </div>
               </section>
 
-              {error && <p className="text-body text-danger text-center">{error}</p>}
+              {error && <p className="text-body text-danger text-center font-medium">{error}</p>}
 
               <div className="flex flex-col sm:flex-row justify-center gap-3.5">
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => setStep(2)}
+                  onClick={() => changeStep(2)}
                   className="w-full sm:w-auto"
                 >
                   Back
@@ -603,15 +706,15 @@ export function OnboardingPage() {
                   type="button"
                   onClick={handleCreateJourney}
                   disabled={createJourney.isPending}
-                  className="w-full sm:w-auto"
+                  className="w-full sm:w-auto magnetic-btn"
                 >
                   {createJourney.isPending ? 'Building roadmap...' : 'Complete: Go to Dashboard'}
                 </Button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
-      </motion.div>
+        </div>
+      </div>
     </div>
   )
 }
