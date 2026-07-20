@@ -64,7 +64,7 @@ Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API 
 - Charts: recharts
 - Tooling: Biome (lint and format), Vitest (unit), Playwright (end to end), pnpm workspaces, Docker
 
-A Tauri v2 desktop shell is planned for v0.5. The frontend is a plain Vite SPA, so wrapping it later is a packaging step, not a rewrite.
+A Tauri v2 desktop shell is a planned future addition. The frontend is a plain Vite SPA, so wrapping it later is a packaging step, not a rewrite.
 
 ## Getting started
 
@@ -128,10 +128,15 @@ The schema is country agnostic by design: every domain table (stages, task_templ
 - journeys: one per student, holding intake date, course level and budget
 - journey_tasks: the student copy of each template with status and a computed target date
 - resources: the knowledge base, each entry with an optional cost and deadline, an official source URL and a last updated stamp
+- universities: 200 UK universities with region, Russell Group flag, tuition ranges and official website, international and application URLs
+- region_costs: indicative monthly rent, living and transport costs per UK region, shown beside the university map
 - exchange_rates: GBP conversion rates for home currency display
-- users: student or admin role, bcrypt password hash, optional origin country
+- users: student or admin role, bcrypt password hash, optional origin country, a suspended flag enforced at the API layer, and a throttled last_seen_at timestamp powering the admin presence metrics
+- bug_reports: student submitted bug and wrong data reports with a status for admin triage
+- admin_notes: collaborative notes admins leave for each other, with priority and category
+- global_settings: platform wide key value settings, currently the admin chosen default theme and accent applied to every client
 
-All money is stored and computed as integer pence to avoid floating point errors.
+All money is stored and computed as integer pence to avoid floating point errors. Every domain table carries a country reference so a second country is data entry, not a schema change.
 
 ## API reference
 
@@ -158,12 +163,20 @@ Knowledge base:
 - PUT /api/v1/resources/:id (admin only)
 - DELETE /api/v1/resources/:id (admin only)
 
-Analytics and reference data:
+Admin workspace (admin only):
 
-- GET /api/v1/admin/analytics (admin only)
-- GET /api/v1/meta/countries, /api/v1/meta/categories, /api/v1/meta/stages (public reference data)
+- GET /api/v1/admin/analytics (completion rates, drop off, and real platform metrics: active now, active today, new this week, suspended)
+- GET /api/v1/admin/users, PATCH /api/v1/admin/users/:id (list students and suspend or reinstate them; an admin cannot suspend their own account)
+- GET /api/v1/admin/reports, PATCH /api/v1/admin/reports/:id (review and update the status of submitted bug reports)
+- GET, POST /api/v1/admin/notes and DELETE /api/v1/admin/notes/:id (admin collaboration notes)
 
-RBAC is enforced with server middleware (verify the JWT, then require the role). A student calling an admin route receives 403 regardless of what the UI shows.
+Reports and reference data:
+
+- POST /api/v1/reports (authenticated; a student files a bug or wrong data report)
+- GET /api/v1/meta/countries, /api/v1/meta/categories, /api/v1/meta/stages, /api/v1/meta/region-costs (public reference data)
+- GET /api/v1/meta/theme (public global theme) and POST /api/v1/meta/theme (admin only, sets the global default theme and accent)
+
+RBAC is enforced with server middleware (verify the JWT, then require the role). A student calling an admin route receives 403 regardless of what the UI shows. Suspension is enforced both at login and on every authenticated request, so suspending a user takes effect immediately, not only at their next sign in.
 
 Hardening on every route:
 
@@ -193,8 +206,21 @@ Because both are pure functions they are unit tested in isolation and reused by 
 
 ## Roadmap
 
-- v0.5: Tauri v2 desktop shell producing native Windows and Mac installers
-- Later: more destination countries (data entry thanks to the country agnostic schema), live FX rates, notifications for approaching deadlines
+Shipped so far:
+
+- v0.2 to v0.4: schema, auth and RBAC, the budget and deadline engines, the full UI, the semantic token system with a dark theme, and the WCAG AA contrast audit
+- v0.5: the university finder with a regional map, swipeable decks and the public landing page
+- v0.6: the Apple style journey wallet deck, the knowledge tree, and printable admin reports
+- v0.7: the admin platform with real analytics, user administration, bug triage and honest infrastructure health
+- v0.8: the GSAP landing page makeover with scroll driven reveals and physics widgets
+- v0.9: workspace debugging and polish, plus a system theme option, local profile photo upload and a responsive infrastructure panel
+- Deployment: containerised database, a GitHub Actions workflow, and a live deployment on Azure App Service
+
+Planned next:
+
+- A Tauri v2 desktop shell producing native Windows and Mac installers
+- More destination countries, which is data entry thanks to the country agnostic schema
+- Live FX rates and notifications for approaching deadlines
 
 ## Author
 
