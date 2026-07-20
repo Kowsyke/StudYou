@@ -41,12 +41,14 @@ StudYou is built on three pillars.
 
 ### 3. Insight
 
-- Student dashboard: percent complete, live budget tracker in GBP and home currency, upcoming deadlines with overdue flags
-- Admin dashboard: completion rates and drop off analytics across stages
+- Student dashboard: percent complete, live budget tracker in GBP and home currency, upcoming deadlines with overdue flags, and saved bookmarks
+- Admin dashboard: completion rates and drop off analytics across stages, plus real platform metrics (active now, active today, new this week, suspended) measured from a throttled last seen timestamp, and an honest infrastructure card that times the live API health endpoint rather than inventing gauges
+- Admin workspace: user administration with per request and at login suspension enforcement, bug report triage, admin notes, a knowledge base manager with search, filter and content aware layout, and CSV plus printable report exports
 - Command palette: press Ctrl K (or Cmd K on Mac) to jump to any task, stage, resource or page
 - Settings: students can change their budget, intake date and home country at any time; an intake date change recalculates every target date through the deadline engine after an explicit confirmation
-- Appearance: a light and a dark theme, switched in Settings and remembered per device; the whole interface is built on semantic design tokens so the theme swap is a single class change
-- University finder: the top 100 UK universities, researched from official university domains only, filterable by any combination of the twelve UK regions, searchable, sortable, with a Russell Group filter; browse as tiles or swipe through a deck, shortlist any number, and open every official website, international admissions and application page directly, for international and home students alike
+- Appearance: light, dark and a system option that follows the operating system and tracks it live, switched in Settings and remembered per device; the whole interface is built on semantic design tokens so the theme swap is a single class change. Admins can also set a global default theme for everyone, stored in the database
+- Profile: students can upload a profile photo from their computer; it is cropped and downscaled in the browser to a compact image kept on the device, with gradient initials as the fallback
+- University finder: 200 UK universities, researched from official university domains only, filterable by any combination of the twelve UK regions, searchable, sortable, with a Russell Group filter; browse as tiles or swipe through a deck, shortlist any number, see regional living costs beside the map, and open every official website, international admissions and application page directly, for international and home students alike
 
 Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API layer with middleware, not just hidden in the UI. The API is hardened with rate limited auth routes, security headers on every response, a central error handler that never leaks internals, and zod validation on every body, parameter and query string.
 
@@ -55,7 +57,7 @@ Auth uses JWT with bcrypt and two roles (student and admin) enforced at the API 
 - Runtime: Bun (Node compatible, native TypeScript, fast startup and I/O)
 - Backend: Hono, a lightweight high performance web framework, versioned REST under /api/v1
 - Frontend: React 19, Vite, TypeScript
-- Styling: TailwindCSS v4 semantic design tokens with light and dark themes, shadcn style components, Framer Motion transitions honouring prefers-reduced-motion, cmdk command palette, WCAG AA checked color pairings
+- Styling: TailwindCSS v4 semantic design tokens with light, dark and system themes, shadcn style components, Framer Motion transitions honouring prefers-reduced-motion, GSAP (ScrollSmoother, ScrollTrigger, Draggable) on the public landing page, cmdk command palette, WCAG AA checked color pairings
 - State: Zustand for client state, TanStack Query v5 for server state
 - Database: PostgreSQL with Drizzle ORM (type safe, SQL transparent) and generated migrations
 - Auth: JWT and bcrypt, role based access control
