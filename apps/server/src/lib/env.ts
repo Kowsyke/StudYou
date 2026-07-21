@@ -1,6 +1,7 @@
+import { fileURLToPath } from 'node:url'
 import { config } from 'dotenv'
 
-config({ path: new URL('../../../../.env', import.meta.url).pathname })
+config({ path: fileURLToPath(new URL('../../../../.env', import.meta.url)) })
 
 export const env = {
   databaseUrl: process.env.DATABASE_URL ?? 'postgresql://postgres:postgres@localhost:5432/studyou',

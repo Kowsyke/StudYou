@@ -199,19 +199,19 @@ export function RegisterPage() {
         title=""
         subtitle=""
         description=""
-        colorDeep="#04050b"
-        colorMid="#134d93"
-        colorHighlight="#8cecff"
-        speed={0.2}
+        colorDeep="#040714"
+        colorMid="#1e58bc"
+        colorHighlight="#38bdf8"
+        speed={0.25}
         flowStrength={0.8}
-        grain={0.03}
-        contrast={1.05}
-        opacity={0.4}
+        grain={0.02}
+        contrast={1.2}
+        opacity={0.8}
         reveal
       />
 
       <div className="pointer-events-none absolute inset-0 scanner-grid opacity-30 z-0" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-canvas/40 via-canvas/70 to-canvas z-0" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-canvas/15 via-canvas/45 to-canvas/85 z-0" />
 
       {/* Main Split-Panel Registration Container */}
       <div

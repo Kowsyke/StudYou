@@ -105,10 +105,13 @@
 }
 
 @theme {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui,
-    sans-serif;
-  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-podium: "FSP DEMO - PODIUM Sharp 4.11", "Inter", sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Inter",
+    "Helvetica Neue", system-ui, sans-serif;
+  --font-apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro",
+    "Inter", sans-serif;
+  --font-inter: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", "Inter", sans-serif;
+  --font-podium: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro",
+    "Inter", sans-serif;
 
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
@@ -196,6 +199,23 @@ body {
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+button,
+select,
+textarea {
+  font-family: var(--font-apple);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.012em;
 }
 
 .cmdk-group [cmdk-group-heading] {

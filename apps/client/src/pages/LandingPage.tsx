@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import {
   ArrowRight,
   BadgePoundSterling,
@@ -488,20 +489,20 @@ export function LandingPage() {
         title=""
         subtitle=""
         description=""
-        colorDeep="#04050b"
-        colorMid="#121829"
-        colorHighlight="#004488"
-        speed={0.2}
-        flowStrength={0.2}
+        colorDeep="#040714"
+        colorMid="#1a4ca6"
+        colorHighlight="#38bdf8"
+        speed={0.25}
+        flowStrength={0.3}
         grain={0.015}
-        contrast={1.15}
-        opacity={0.45}
+        contrast={1.25}
+        opacity={0.85}
       />
 
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute inset-0 scanner-grid pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-b from-canvas/40 via-canvas/70 to-canvas pointer-events-none" />
-        <div className="absolute inset-0 radial-blender pointer-events-none" />
+        <div className="absolute inset-0 scanner-grid pointer-events-none opacity-40" />
+        <div className="absolute inset-0 bg-gradient-to-b from-canvas/10 via-canvas/35 to-canvas/85 pointer-events-none" />
+        <div className="absolute inset-0 radial-blender pointer-events-none opacity-60" />
       </div>
 
       <div id="smooth-wrapper" className="relative min-h-screen bg-transparent overflow-x-hidden">
@@ -517,7 +518,7 @@ export function LandingPage() {
               </span>
               StudYou
             </Link>
-            <div className="flex items-center gap-2 font-inter">
+            <div className="flex items-center gap-2">
               <Link to="/login">
                 <Button variant="ghost" size="sm">
                   Sign in
@@ -1049,6 +1050,69 @@ const REGION_INFOCUS: Record<
   },
 }
 
+function Draggable3DMapWrapper({ children }: { children: React.ReactNode }) {
+  const [isDragging, setIsDragging] = useState(false)
+  const [rotation, setRotation] = useState({ x: 0, y: 0 })
+  const startPosRef = useRef({ x: 0, y: 0 })
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDragging(true)
+    startPosRef.current = { x: e.clientX - rotation.y * 3, y: e.clientY + rotation.x * 3 }
+  }
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return
+    const deltaX = e.clientX - startPosRef.current.x
+    const deltaY = e.clientY - startPosRef.current.y
+
+    const rotY = Math.max(-28, Math.min(28, deltaX * 0.35))
+    const rotX = Math.max(-28, Math.min(28, -deltaY * 0.35))
+    setRotation({ x: rotX, y: rotY })
+  }
+
+  const handlePointerUp = () => {
+    setIsDragging(false)
+    setRotation({ x: 0, y: 0 })
+  }
+
+  return (
+    <div
+      style={{ perspective: 1000 }}
+      className="relative cursor-grab active:cursor-grabbing select-none w-full flex flex-col items-center py-1"
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerLeave={handlePointerUp}
+    >
+      <motion.div
+        animate={{
+          rotateX: rotation.x,
+          rotateY: rotation.y,
+          scale: isDragging ? 1.06 : 1,
+          y: isDragging ? -6 : 0,
+        }}
+        transition={{
+          rotateX: {
+            type: 'spring',
+            stiffness: isDragging ? 400 : 250,
+            damping: isDragging ? 30 : 20,
+          },
+          rotateY: {
+            type: 'spring',
+            stiffness: isDragging ? 400 : 250,
+            damping: isDragging ? 30 : 20,
+          },
+          scale: { duration: 0.2 },
+          y: { duration: 0.2 },
+        }}
+        className="w-full flex flex-col items-center justify-center transform-gpu"
+      >
+        {children}
+      </motion.div>
+    </div>
+  )
+}
+
 function InteractiveMapSection() {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
@@ -1120,168 +1184,189 @@ function InteractiveMapSection() {
   }, [activeRegionKey])
 
   return (
-    <section className="map-section relative z-10 max-w-5xl mx-auto px-6 py-20 border-t border-hairline bg-surface/20">
-      <div className="text-center mb-12">
-        <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-tertiary mb-3">
-          Explore UK Geography
-        </p>
-        <h2 className="text-title2 text-ink font-bold font-podium">Discover Regions & Costs</h2>
-        <p className="text-body text-ink-secondary mt-2 max-w-md mx-auto">
-          Hover or click on any region on the interactive map to compare local living costs, average
-          tuition ranges, and notable institutions.
-        </p>
-      </div>
+    <section className="scroll-container-section map-section relative z-10 max-w-5xl mx-auto px-4 sm:px-6 overflow-hidden">
+      <ContainerScroll
+        titleComponent={
+          <div className="text-center mb-6">
+            <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-tertiary mb-2">
+              Explore UK Geography
+            </p>
+            <h2 className="text-title1 text-ink font-bold font-apple">Discover Regions & Costs</h2>
+            <p className="text-body text-ink-secondary mt-2 max-w-md mx-auto">
+              Hover or click on any region on the interactive map to compare local living costs,
+              average tuition ranges, and notable institutions.
+            </p>
+          </div>
+        }
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 items-center h-full w-full p-3 md:p-6 text-left overflow-hidden">
+          <div className="flex flex-col items-center justify-center p-4 bg-surface-secondary/20 rounded-2xl border border-hairline/60 w-full overflow-hidden">
+            <Draggable3DMapWrapper>
+              <UkGeoMap
+                selected={selectedRegions}
+                counts={presetCounts}
+                onToggle={handleToggle}
+                onHover={handleHover}
+              />
+            </Draggable3DMapWrapper>
+            <p className="text-[10px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
+              Click & drag to tilt map in 3D • Click region to select
+            </p>
+          </div>
 
-      <div className="map-holding-box grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 items-center bg-surface border border-hairline rounded-lg shadow-md p-6 md:p-8 transform-gpu">
-        <div className="flex flex-col items-center justify-center p-4 bg-surface-secondary/40 rounded-md border border-hairline max-w-sm mx-auto w-full">
-          <UkGeoMap
-            selected={selectedRegions}
-            counts={presetCounts}
-            onToggle={handleToggle}
-            onHover={handleHover}
-          />
-          <p className="text-[10px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
-            Click once to select • Click again to unselect
-          </p>
-        </div>
-
-        <div ref={detailPanelRef} className="flex flex-col h-full justify-between gap-5">
-          {details ? (
-            <div className="space-y-4">
-              {/* Selected Regions Tag List */}
-              {selectedRegions.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 border-b border-hairline pb-3 mb-2">
-                  <span className="text-[10px] uppercase font-bold text-ink-tertiary mr-1">
-                    Selected:
-                  </span>
-                  {selectedRegions.map((reg) => (
-                    <button
-                      key={reg}
-                      type="button"
-                      onClick={() => handleToggle(reg)}
-                      className="text-[11px] font-semibold bg-accent-soft text-accent px-2 py-0.5 rounded-full hover:bg-danger-soft hover:text-danger transition-colors flex items-center gap-1"
-                    >
-                      {reg}
-                      <span className="text-[9px] font-bold">&times;</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              <div
-                data-flip-id="map-header"
-                className="flex items-center justify-between border-b border-hairline pb-3"
-              >
-                <h3 className="text-title3 text-ink font-bold">{details.name}</h3>
-                <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
-                  {details.unisCount} Universities
-                </span>
-              </div>
-
-              <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
-                {details.desc}
-              </p>
-
-              <div data-flip-id="map-stats" className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
-                    Est. Living Expenses
-                  </span>
-                  <span className="text-body font-bold text-ink">{details.avgCost}</span>
-                </div>
-                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
-                    Avg. International Tuition
-                  </span>
-                  <span className="text-body font-bold text-emerald-600 dark:text-emerald-400">
-                    {details.tuition}
-                  </span>
-                </div>
-              </div>
-
-              <div data-flip-id="map-unis" className="space-y-2 pt-2">
-                <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
-                  Featured Institutions
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {details.famous.map((uni) => (
-                    <span
-                      key={uni}
-                      className="text-xs font-medium px-3 py-1 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
-                    >
-                      {uni}
+          <div
+            ref={detailPanelRef}
+            className="flex flex-col h-full justify-between gap-4 overflow-hidden"
+          >
+            {details ? (
+              <div className="space-y-3">
+                {/* Selected Regions Tag List */}
+                {selectedRegions.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-1.5 border-b border-hairline pb-2 mb-1">
+                    <span className="text-[10px] uppercase font-bold text-ink-tertiary mr-1">
+                      Selected:
                     </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div
-                data-flip-id="map-header"
-                className="flex items-center justify-between border-b border-hairline pb-3"
-              >
-                <h3 className="text-title3 text-ink font-bold">Compare UK Regions</h3>
-                <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
-                  12 Regions total
-                </span>
-              </div>
+                    {selectedRegions.map((reg) => (
+                      <button
+                        key={reg}
+                        type="button"
+                        onClick={() => handleToggle(reg)}
+                        className="text-[11px] font-semibold bg-accent-soft text-accent px-2 py-0.5 rounded-full hover:bg-danger-soft hover:text-danger transition-colors flex items-center gap-1"
+                      >
+                        {reg}
+                        <span className="text-[9px] font-bold">&times;</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
 
-              <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
-                Explore local expenses, tuition levels, and universities by hovering over or
-                clicking on any UK region. Select multiple regions on the map to compare and
-                shortlist options for your customized degree roadmap.
-              </p>
-
-              <div data-flip-id="map-stats" className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
-                    UK Living Costs Range
-                  </span>
-                  <span className="text-body font-bold text-ink">£380 - £950 / month</span>
-                </div>
-                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
-                    Average Tuition Range
-                  </span>
-                  <span className="text-body font-bold text-emerald-600 dark:text-emerald-400">
-                    £13,500 - £35,000 / year
+                <div
+                  data-flip-id="map-header"
+                  className="flex items-center justify-between border-b border-hairline pb-2"
+                >
+                  <h3 className="text-title3 text-ink font-bold">{details.name}</h3>
+                  <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
+                    {details.unisCount} Universities
                   </span>
                 </div>
-              </div>
 
-              <div data-flip-id="map-unis" className="space-y-2 pt-2">
-                <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
-                  Shortlist Universities
-                </span>
-                <div className="flex flex-wrap gap-2 opacity-60">
-                  {['Oxford', 'Cambridge', 'Imperial', 'Edinburgh', 'Manchester', 'Bristol'].map(
-                    (uni) => (
+                <p
+                  data-flip-id="map-desc"
+                  className="text-body-sm text-ink-secondary leading-relaxed"
+                >
+                  {details.desc}
+                </p>
+
+                <div
+                  data-flip-id="map-stats"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
+                >
+                  <div className="bg-canvas border border-hairline rounded-sm p-3 flex flex-col gap-0.5">
+                    <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                      Est. Living Expenses
+                    </span>
+                    <span className="text-body-sm font-bold text-ink">{details.avgCost}</span>
+                  </div>
+                  <div className="bg-canvas border border-hairline rounded-sm p-3 flex flex-col gap-0.5">
+                    <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                      Avg. International Tuition
+                    </span>
+                    <span className="text-body-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      {details.tuition}
+                    </span>
+                  </div>
+                </div>
+
+                <div data-flip-id="map-unis" className="space-y-1.5 pt-1">
+                  <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
+                    Featured Institutions
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {details.famous.map((uni) => (
                       <span
                         key={uni}
-                        className="text-xs font-medium px-3 py-1 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
+                        className="text-[11px] font-medium px-2.5 py-0.5 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
                       >
                         {uni}
                       </span>
-                    ),
-                  )}
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="space-y-3">
+                <div
+                  data-flip-id="map-header"
+                  className="flex items-center justify-between border-b border-hairline pb-2"
+                >
+                  <h3 className="text-title3 text-ink font-bold">Compare UK Regions</h3>
+                  <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
+                    12 Regions total
+                  </span>
+                </div>
 
-          <div data-flip-id="map-cta" className="border-t border-hairline pt-4 mt-auto">
-            <Link to="/register">
-              <Button className="w-full sm:w-auto sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]">
-                {details
-                  ? `Build my UK roadmap in ${details.name}`
-                  : 'Start building my UK degree roadmap'}
-                <ArrowRight size={14} className="ml-1.5" />
-              </Button>
-            </Link>
+                <p
+                  data-flip-id="map-desc"
+                  className="text-body-sm text-ink-secondary leading-relaxed"
+                >
+                  Explore local expenses, tuition levels, and universities by hovering over or
+                  clicking on any UK region. Select multiple regions on the map to compare and
+                  shortlist options for your customized degree roadmap.
+                </p>
+
+                <div
+                  data-flip-id="map-stats"
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1"
+                >
+                  <div className="bg-canvas border border-hairline rounded-sm p-3 flex flex-col gap-0.5">
+                    <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                      UK Living Costs Range
+                    </span>
+                    <span className="text-body-sm font-bold text-ink">£380 - £950 / month</span>
+                  </div>
+                  <div className="bg-canvas border border-hairline rounded-sm p-3 flex flex-col gap-0.5">
+                    <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                      Average Tuition Range
+                    </span>
+                    <span className="text-body-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      £13,500 - £35,000 / year
+                    </span>
+                  </div>
+                </div>
+
+                <div data-flip-id="map-unis" className="space-y-1.5 pt-1">
+                  <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
+                    Shortlist Universities
+                  </span>
+                  <div className="flex flex-wrap gap-1.5 opacity-60">
+                    {['Oxford', 'Cambridge', 'Imperial', 'Edinburgh', 'Manchester', 'Bristol'].map(
+                      (uni) => (
+                        <span
+                          key={uni}
+                          className="text-[11px] font-medium px-2.5 py-0.5 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
+                        >
+                          {uni}
+                        </span>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div data-flip-id="map-cta" className="border-t border-hairline pt-3 mt-auto">
+              <Link to="/register">
+                <Button className="w-full sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]">
+                  {details
+                    ? `Build my UK roadmap in ${details.name}`
+                    : 'Start building my UK degree roadmap'}
+                  <ArrowRight size={14} className="ml-1.5" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </ContainerScroll>
     </section>
   )
 }

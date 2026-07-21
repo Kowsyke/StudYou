@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { UK_GEO_REGIONS, UK_MAP_VIEWBOX } from './ukGeoData'
 
 interface UkGeoMapProps {
@@ -17,7 +18,7 @@ export function UkGeoMap({ selected, counts, onToggle, onHover }: UkGeoMapProps)
   return (
     <svg
       viewBox={UK_MAP_VIEWBOX}
-      className="w-full max-w-[340px] select-none"
+      className="w-full max-w-[380px] select-none"
       style={{ overflow: 'visible' }}
       // biome-ignore lint/a11y/useSemanticElements: an SVG map cannot be replaced with a fieldset, the group role communicates the region collection to assistive tech.
       role="group"
@@ -28,7 +29,7 @@ export function UkGeoMap({ selected, counts, onToggle, onHover }: UkGeoMapProps)
         const active = selected.includes(geo.region)
         const count = counts[geo.region] ?? 0
         return (
-          <g
+          <motion.g
             key={geo.region}
             // biome-ignore lint/a11y/useSemanticElements: SVG shapes cannot be native buttons, so the group carries the button role with full keyboard handling.
             role="button"
@@ -45,6 +46,27 @@ export function UkGeoMap({ selected, counts, onToggle, onHover }: UkGeoMapProps)
             }}
             onMouseEnter={() => onHover?.(geo.region)}
             onMouseLeave={() => onHover?.(null)}
+            animate={
+              active
+                ? {
+                    scale: [1, 1.012, 1],
+                    filter: [
+                      'drop-shadow(0 0 1px rgba(67,100,247,0.15))',
+                      'drop-shadow(0 0 4px rgba(67,100,247,0.35))',
+                      'drop-shadow(0 0 1px rgba(67,100,247,0.15))',
+                    ],
+                  }
+                : { scale: 1, filter: 'drop-shadow(0 0 0px transparent)' }
+            }
+            transition={
+              active
+                ? {
+                    duration: 2.6,
+                    repeat: Number.POSITIVE_INFINITY,
+                    ease: 'easeInOut',
+                  }
+                : { duration: 0.2 }
+            }
           >
             {geo.paths.map((d) => (
               <path key={d.slice(0, 24)} d={d} />
@@ -55,7 +77,7 @@ export function UkGeoMap({ selected, counts, onToggle, onHover }: UkGeoMapProps)
             <text x={geo.label[0]} y={geo.label[1] + 11} className="geo-count" textAnchor="middle">
               {count}
             </text>
-          </g>
+          </motion.g>
         )
       })}
     </svg>

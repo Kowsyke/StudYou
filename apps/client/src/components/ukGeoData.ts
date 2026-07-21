@@ -10,7 +10,7 @@ export interface GeoRegion {
   label: [number, number]
 }
 
-export const UK_MAP_VIEWBOX = '0 110 320 484.5'
+export const UK_MAP_VIEWBOX = '0 100 320 515'
 
 export const UK_GEO_REGIONS: GeoRegion[] = [
   {
