@@ -39,10 +39,17 @@ import {
 import { CountUp } from '../components/ui/count-up'
 import { Input, Label, Select, Textarea } from '../components/ui/input'
 import { CardSkeleton } from '../components/ui/skeleton'
-import { useAdminNotes, useCreateAdminNote, useDeleteAdminNote } from '../hooks/useAdmin'
+import {
+  useAdminNotes,
+  useAdminReports,
+  useAdminUsers,
+  useCreateAdminNote,
+  useDeleteAdminNote,
+} from '../hooks/useAdmin'
 import { useChartTokens } from '../hooks/useChartTokens'
 import { useAnalytics, useCategories } from '../hooks/useMeta'
 import { useDeleteResource, useResources, useSaveResource } from '../hooks/useResources'
+import { useUniversities } from '../hooks/useUniversities'
 import { apiErrorMessage } from '../lib/api'
 import { formatGbp } from '../lib/format'
 import { Draggable } from '../lib/gsap/Draggable.js'
@@ -65,6 +72,7 @@ export function AdminPage() {
     | 'settings'
     | 'notes'
   const { themePreference, setTheme, accentPreset, setAccentPreset } = useThemeStore()
+  const [settingsSubTab, setSettingsSubTab] = useState<'visuals' | 'exports'>('visuals')
 
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -76,57 +84,131 @@ export function AdminPage() {
         { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', stagger: 0.05, overwrite: 'auto' },
       )
     }
-  }, [activeTab])
+  }, [activeTab, settingsSubTab])
 
-  // For exporting Knowledge Base resources
+  // Data hooks for admin export capabilities
   const { data: resources } = useResources({
     search: '',
     category: '',
     sort: 'title',
     order: 'asc',
   })
+  const { data: usersList } = useAdminUsers(activeTab === 'settings')
+  const { data: reportsList } = useAdminReports(activeTab === 'settings')
+  const { data: universitiesList } = useUniversities({
+    search: '',
+    regions: [],
+    russellGroup: false,
+    sort: 'rank',
+  })
+
+  // Robust Blob & ObjectURL download triggers for clean cross-browser exports
+  const downloadBlob = (
+    content: string,
+    filename: string,
+    mimeType = 'text/csv;charset=utf-8;',
+  ) => {
+    const blob = new Blob([content], { type: mimeType })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', filename)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
 
   const handleDownloadAnalyticsCSV = () => {
-    if (!analytics) return
-    let csvContent = 'data:text/csv;charset=utf-8,'
-    csvContent += 'Metric,Value\n'
+    if (!analytics) {
+      toast.error('Analytics data is loading or unavailable.')
+      return
+    }
+    let csvContent = 'Metric,Value\n'
     csvContent += `Total Students,${analytics.totalStudents}\n`
     csvContent += `Active Journeys,${analytics.totalJourneys}\n`
     csvContent += `Average Completion %,${analytics.averageCompletion}\n\n`
     csvContent += 'Stage Title,Total Tasks,Completed Tasks,Completion Rate\n'
     for (const stage of analytics.stageBreakdown) {
-      csvContent += `"${stage.stageTitle}",${stage.totalTasks},${stage.completedTasks},${stage.completionRate}%\n`
+      csvContent += `"${stage.stageTitle.replace(/"/g, '""')}",${stage.totalTasks},${stage.completedTasks},${stage.completionRate}%\n`
     }
     csvContent += '\nDrop-Off Analytics\n'
     csvContent += 'Stage Title,Students Reached\n'
     for (const d of analytics.dropOff) {
-      csvContent += `"${d.stageTitle}",${d.studentsReached}\n`
+      csvContent += `"${d.stageTitle.replace(/"/g, '""')}",${d.studentsReached}\n`
     }
-    const encodedUri = encodeURI(csvContent)
-    const link = document.createElement('a')
-    link.setAttribute('href', encodedUri)
-    link.setAttribute('download', 'studyou_analytics_report.csv')
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    toast.success('Analytics CSV downloaded.')
+    downloadBlob(csvContent, 'studyou_analytics_report.csv')
+    toast.success('Analytics summary CSV exported.')
   }
 
   const handleDownloadResourcesCSV = () => {
-    if (!resources) return
-    let csvContent = 'data:text/csv;charset=utf-8,'
-    csvContent += 'ID,Title,Category,Cost (Pence),Deadline (Days),Source URL\n'
-    for (const r of resources) {
-      csvContent += `"${r.id}","${r.title.replace(/"/g, '""')}","${r.categoryKey}",${r.costPence ?? 0},${r.deadlineDaysBeforeIntake ?? 0},"${r.sourceUrl}"\n`
+    if (!resources || resources.length === 0) {
+      toast.error('Knowledge Base resources dataset is empty or loading.')
+      return
     }
-    const encodedUri = encodeURI(csvContent)
-    const link = document.createElement('a')
-    link.setAttribute('href', encodedUri)
-    link.setAttribute('download', 'studyou_resources_export.csv')
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    let csvContent = 'ID,Title,Category,Cost (Pence),Deadline (Days),Source URL\n'
+    for (const r of resources) {
+      csvContent += `"${r.id}","${(r.title ?? '').replace(/"/g, '""')}","${r.categoryKey}",${r.costPence ?? 0},${r.deadlineDaysBeforeIntake ?? 0},"${r.sourceUrl ?? ''}"\n`
+    }
+    downloadBlob(csvContent, 'studyou_resources_export.csv')
     toast.success('Knowledge Base CSV exported.')
+  }
+
+  const handleDownloadUsersCSV = () => {
+    if (!usersList || usersList.length === 0) {
+      toast.error('Users roster is empty or loading.')
+      return
+    }
+    let csvContent = 'ID,Full Name,Email,Role,Status,Roadmap Completion %,Open Reports,Created At\n'
+    for (const u of usersList) {
+      csvContent += `"${u.id}","${(u.fullName ?? '').replace(/"/g, '""')}","${u.email}",${u.role},"${u.suspended ? 'Suspended' : 'Active'}",${u.percentComplete ?? 0}%,${u.openReports},"${u.createdAt}"\n`
+    }
+    downloadBlob(csvContent, 'studyou_users_roster.csv')
+    toast.success('Users roster CSV exported.')
+  }
+
+  const handleDownloadReportsCSV = () => {
+    if (!reportsList || reportsList.length === 0) {
+      toast.error('No feedback reports available to export.')
+      return
+    }
+    let csvContent = 'ID,Category,Message,Page Path,Status,Admin Note,Created At\n'
+    for (const rep of reportsList) {
+      csvContent += `"${rep.id}","${rep.category}","${(rep.message ?? '').replace(/"/g, '""')}","${rep.pagePath ?? ''}","${rep.status}","${(rep.adminNote ?? '').replace(/"/g, '""')}","${rep.createdAt}"\n`
+    }
+    downloadBlob(csvContent, 'studyou_bug_reports.csv')
+    toast.success('Bug reports CSV exported.')
+  }
+
+  const handleDownloadUniversitiesCSV = () => {
+    if (!universitiesList || universitiesList.length === 0) {
+      toast.error('Universities dataset is loading or unavailable.')
+      return
+    }
+    let csvContent =
+      'Rank,Name,City,Region,Russell Group,Website,Tuition Intl Min GBP,Tuition Intl Max GBP\n'
+    for (const uni of universitiesList) {
+      csvContent += `${uni.rank},"${uni.name.replace(/"/g, '""')}","${uni.city}","${uni.region}",${uni.russellGroup ? 'Yes' : 'No'},"${uni.website}",${uni.tuitionIntlMinGbp ?? 0},${uni.tuitionIntlMaxGbp ?? 0}\n`
+    }
+    downloadBlob(csvContent, 'studyou_universities_directory.csv')
+    toast.success('Universities directory CSV exported.')
+  }
+
+  const handleDownloadFullBackupJSON = () => {
+    const backupData = {
+      exportTimestamp: new Date().toISOString(),
+      analytics: analytics ?? null,
+      resources: resources ?? [],
+      users: usersList ?? [],
+      reports: reportsList ?? [],
+      universities: universitiesList ?? [],
+    }
+    downloadBlob(
+      JSON.stringify(backupData, null, 2),
+      `studyou_full_backup_${new Date().toISOString().slice(0, 10)}.json`,
+      'application/json',
+    )
+    toast.success('Full database JSON backup exported.')
   }
 
   const tooltipStyle = {
@@ -358,153 +440,302 @@ export function AdminPage() {
 
         {activeTab === 'settings' && (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start print:hidden">
-            {/* Admin Settings Sidebar */}
+            {/* Admin Settings Sidebar Sub-Navigation */}
             <div className="md:col-span-4 lg:col-span-3 bg-surface border border-hairline rounded-xl p-2 space-y-1 shadow-xs sticky top-20">
               <div className="px-3 py-2 text-caption font-semibold uppercase tracking-wider text-accent">
                 Admin Settings
               </div>
-              <div className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-bold text-ink bg-accent-soft border border-accent/20">
-                <Palette size={16} className="text-accent shrink-0" />
+              <button
+                type="button"
+                onClick={() => setSettingsSubTab('visuals')}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 cursor-pointer text-left',
+                  settingsSubTab === 'visuals'
+                    ? 'bg-accent-soft border border-accent/20 text-accent font-bold shadow-xs'
+                    : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/60 border border-transparent',
+                )}
+              >
+                <Palette
+                  size={16}
+                  className={settingsSubTab === 'visuals' ? 'text-accent' : 'text-ink-tertiary'}
+                />
                 <span>Visuals & Branding</span>
-              </div>
-              <div className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-secondary/50">
-                <Download size={16} className="text-ink-tertiary shrink-0" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setSettingsSubTab('exports')}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 cursor-pointer text-left',
+                  settingsSubTab === 'exports'
+                    ? 'bg-accent-soft border border-accent/20 text-accent font-bold shadow-xs'
+                    : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/60 border border-transparent',
+                )}
+              >
+                <Download
+                  size={16}
+                  className={settingsSubTab === 'exports' ? 'text-accent' : 'text-ink-tertiary'}
+                />
                 <span>Reports & Exports</span>
-              </div>
+              </button>
             </div>
 
-            {/* Admin Settings Panels */}
+            {/* Admin Settings Content Panels */}
             <div className="md:col-span-8 lg:col-span-9 space-y-6">
-              <Card className="card-lift border-hairline shadow-sm">
-                <CardHeader>
-                  <CardKicker>Visual Settings</CardKicker>
-                  <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
-                  <CardDescription>
-                    Customize the application aesthetics and brand accents
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-5">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
-                    <div className="flex gap-2">
-                      <Button
-                        variant={themePreference === 'light' ? 'primary' : 'secondary'}
-                        size="sm"
-                        className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                        onClick={() => setTheme('light')}
-                      >
-                        <Sun size={14} />
-                        Light
-                      </Button>
-                      <Button
-                        variant={themePreference === 'dark' ? 'primary' : 'secondary'}
-                        size="sm"
-                        className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                        onClick={() => setTheme('dark')}
-                      >
-                        <Moon size={14} />
-                        Dark
-                      </Button>
-                      <Button
-                        variant={themePreference === 'system' ? 'primary' : 'secondary'}
-                        size="sm"
-                        className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                        onClick={() => setTheme('system')}
-                      >
-                        <Monitor size={14} />
-                        System
-                      </Button>
+              {(settingsSubTab === 'visuals' || settingsSubTab === 'exports') && (
+                <Card className="card-lift border-hairline shadow-sm">
+                  <CardHeader>
+                    <CardKicker>Visual Settings</CardKicker>
+                    <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
+                    <CardDescription>
+                      Customize the application aesthetics and brand accents
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-5">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
+                      <div className="flex gap-2">
+                        <Button
+                          variant={themePreference === 'light' ? 'primary' : 'secondary'}
+                          size="sm"
+                          className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                          onClick={() => setTheme('light')}
+                        >
+                          <Sun size={14} />
+                          Light
+                        </Button>
+                        <Button
+                          variant={themePreference === 'dark' ? 'primary' : 'secondary'}
+                          size="sm"
+                          className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                          onClick={() => setTheme('dark')}
+                        >
+                          <Moon size={14} />
+                          Dark
+                        </Button>
+                        <Button
+                          variant={themePreference === 'system' ? 'primary' : 'secondary'}
+                          size="sm"
+                          className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                          onClick={() => setTheme('system')}
+                        >
+                          <Monitor size={14} />
+                          System
+                        </Button>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label className="text-xs font-semibold text-ink-secondary">
-                      Brand Accent Color Presets
-                    </Label>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {Object.values(ACCENT_PRESETS).map((preset) => {
-                        const isActive = accentPreset === preset.key
-                        return (
-                          <button
-                            key={preset.key}
-                            type="button"
-                            onClick={() => setAccentPreset(preset.key)}
-                            className={cn(
-                              'relative flex items-center justify-between px-3 py-2 rounded-md border text-left text-xs transition-all duration-150 cursor-pointer hover:bg-surface-secondary',
-                              isActive
-                                ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
-                                : 'border-hairline bg-surface text-ink-secondary',
-                            )}
-                          >
-                            <span className="flex items-center gap-2">
-                              <span
-                                className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
-                                style={{ background: preset.accent }}
-                              />
-                              {preset.label}
-                            </span>
-                            {isActive && <Check size={12} className="text-accent" />}
-                          </button>
-                        )
-                      })}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-semibold text-ink-secondary">
+                        Brand Accent Color Presets
+                      </Label>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {Object.values(ACCENT_PRESETS).map((preset) => {
+                          const isActive = accentPreset === preset.key
+                          return (
+                            <button
+                              key={preset.key}
+                              type="button"
+                              onClick={() => setAccentPreset(preset.key)}
+                              className={cn(
+                                'relative flex items-center justify-between px-3 py-2 rounded-md border text-left text-xs transition-all duration-150 cursor-pointer hover:bg-surface-secondary',
+                                isActive
+                                  ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
+                                  : 'border-hairline bg-surface text-ink-secondary',
+                              )}
+                            >
+                              <span className="flex items-center gap-2">
+                                <span
+                                  className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+                                  style={{ background: preset.accent }}
+                                />
+                                {preset.label}
+                              </span>
+                              {isActive && <Check size={12} className="text-accent" />}
+                            </button>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
 
-              <Card className="card-lift border-hairline shadow-sm">
-                <CardHeader>
-                  <CardKicker>Data & Reports</CardKicker>
-                  <CardTitle className="text-body font-semibold">Reports & Downloads</CardTitle>
-                  <CardDescription>Export platform metrics and executive summaries</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-3 bg-surface-secondary/40 rounded-lg border border-hairline flex items-center justify-between">
-                    <div className="min-w-0 pr-2">
-                      <h4 className="text-xs font-semibold text-ink">Analytics Summary Report</h4>
-                      <p className="text-caption text-ink-tertiary truncate">
-                        Student completions, stage statistics, and drop-off rate counts.
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
+              {(settingsSubTab === 'exports' || settingsSubTab === 'visuals') && (
+                <Card className="card-lift border-hairline shadow-sm">
+                  <CardHeader>
+                    <CardKicker>Data & Reports</CardKicker>
+                    <CardTitle className="text-body font-semibold">
+                      Reports & Data Downloads
+                    </CardTitle>
+                    <CardDescription>
+                      Export platform metrics, databases, and executive summaries
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {/* Analytics Summary Export Placeholder */}
+                    <button
+                      type="button"
                       onClick={handleDownloadAnalyticsCSV}
-                      className="flex items-center gap-1 shrink-0 h-8"
+                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
-                      <Download size={13} />
-                      Export CSV
-                    </Button>
-                  </div>
+                      <div className="min-w-0 pr-3">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
+                            Analytics Summary Report
+                          </h4>
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                            CSV
+                          </Badge>
+                        </div>
+                        <p className="text-caption text-ink-tertiary truncate mt-0.5">
+                          Student completions, stage statistics, and drop-off rate counts.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                        <Download size={13} />
+                        Export CSV
+                      </span>
+                    </button>
 
-                  <div className="p-3 bg-surface-secondary/40 rounded-lg border border-hairline flex items-center justify-between">
-                    <div className="min-w-0 pr-2">
-                      <h4 className="text-xs font-semibold text-ink">Knowledge Base Export</h4>
-                      <p className="text-caption text-ink-tertiary truncate">
-                        Full list of all immigration fees, housing guidelines, and documents.
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
+                    {/* Knowledge Base Export Placeholder */}
+                    <button
+                      type="button"
                       onClick={handleDownloadResourcesCSV}
-                      className="flex items-center gap-1 shrink-0 h-8"
+                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
-                      <Download size={13} />
-                      Export CSV
-                    </Button>
-                  </div>
+                      <div className="min-w-0 pr-3">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
+                            Knowledge Base Resources
+                          </h4>
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                            CSV
+                          </Badge>
+                        </div>
+                        <p className="text-caption text-ink-tertiary truncate mt-0.5">
+                          Full list of all immigration fees, housing guidelines, and documents.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                        <Download size={13} />
+                        Export CSV
+                      </span>
+                    </button>
 
-                  <div className="pt-2">
-                    <Button
-                      variant="secondary"
-                      className="w-full flex items-center justify-center gap-2 h-9 text-xs font-semibold"
-                      onClick={() => window.print()}
+                    {/* Registered Users Roster Export Placeholder */}
+                    <button
+                      type="button"
+                      onClick={handleDownloadUsersCSV}
+                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
-                      <Printer size={14} />
-                      Print Executive Summary Report
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                      <div className="min-w-0 pr-3">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
+                            Registered Users Roster
+                          </h4>
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                            CSV
+                          </Badge>
+                        </div>
+                        <p className="text-caption text-ink-tertiary truncate mt-0.5">
+                          Student accounts, user roles, origin countries, and account statuses.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                        <Download size={13} />
+                        Export CSV
+                      </span>
+                    </button>
+
+                    {/* Bug & Feedback Reports Export Placeholder */}
+                    <button
+                      type="button"
+                      onClick={handleDownloadReportsCSV}
+                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                    >
+                      <div className="min-w-0 pr-3">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
+                            Bug & Feedback Reports
+                          </h4>
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                            CSV
+                          </Badge>
+                        </div>
+                        <p className="text-caption text-ink-tertiary truncate mt-0.5">
+                          User feedback messages, status tags, admin notes, and submission URLs.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                        <Download size={13} />
+                        Export CSV
+                      </span>
+                    </button>
+
+                    {/* Universities Directory Export Placeholder */}
+                    <button
+                      type="button"
+                      onClick={handleDownloadUniversitiesCSV}
+                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                    >
+                      <div className="min-w-0 pr-3">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
+                            Universities Directory
+                          </h4>
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                            CSV
+                          </Badge>
+                        </div>
+                        <p className="text-caption text-ink-tertiary truncate mt-0.5">
+                          UK university ranks, regions, tuition fee ranges, and portal URLs.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                        <Download size={13} />
+                        Export CSV
+                      </span>
+                    </button>
+
+                    {/* Complete JSON Database Backup Placeholder */}
+                    <button
+                      type="button"
+                      onClick={handleDownloadFullBackupJSON}
+                      className="w-full text-left group p-3.5 bg-accent-soft/30 hover:bg-accent-soft/50 rounded-lg border border-accent/30 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                    >
+                      <div className="min-w-0 pr-3">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-xs font-bold text-accent group-hover:text-accent-hover transition-colors">
+                            Full Database JSON Backup
+                          </h4>
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono bg-accent text-white">
+                            JSON
+                          </Badge>
+                        </div>
+                        <p className="text-caption text-ink-tertiary truncate mt-0.5">
+                          Comprehensive system snapshot archive containing all platform datasets.
+                        </p>
+                      </div>
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs sheen [background-image:var(--accent-gradient)] group-hover:scale-105 transition-transform">
+                        <Download size={13} />
+                        Backup JSON
+                      </span>
+                    </button>
+
+                    <div className="pt-2">
+                      <Button
+                        variant="secondary"
+                        className="w-full flex items-center justify-center gap-2 h-9 text-xs font-semibold hover:bg-surface-secondary cursor-pointer"
+                        onClick={() => window.print()}
+                      >
+                        <Printer size={14} />
+                        Print Executive Summary Report
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         )}
