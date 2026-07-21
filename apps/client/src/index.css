@@ -183,6 +183,7 @@
 html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -190,6 +191,7 @@ body {
   color: var(--ink);
   font-family: var(--font-sans);
   transition: background-color 200ms var(--ease-calm), color 200ms var(--ease-calm);
+  -webkit-overflow-scrolling: touch;
 }
 
 ::selection {

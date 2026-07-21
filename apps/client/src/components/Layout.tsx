@@ -123,10 +123,48 @@ export function Layout() {
   const nav = user?.role === 'admin' ? adminNav : studentNav
 
   return (
-    <div className="noise-overlay min-h-screen flex">
+    <div className="noise-overlay min-h-screen flex flex-col lg:flex-row">
       <div className="ambient ambient-a" aria-hidden="true" />
       <div className="ambient ambient-b" aria-hidden="true" />
-      <aside className="glass-side w-[260px] shrink-0 border-r border-hairline flex flex-col fixed inset-y-0 select-none transition-colors duration-200 z-10">
+
+      {/* Mobile Sticky Top Header */}
+      <header className="sticky top-0 lg:hidden z-20 flex items-center justify-between px-4 h-14 bg-surface/80 backdrop-blur-md border-b border-hairline w-full select-none">
+        <Link
+          to="/"
+          aria-label="StudYou home"
+          className="flex items-center gap-2 text-body font-bold"
+        >
+          <span className="w-5 h-5 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)]">
+            SY
+          </span>
+          StudYou
+        </Link>
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setPaletteOpen(true)}
+            className="p-2 text-ink-secondary hover:text-ink rounded-sm transition-colors"
+            aria-label="Search"
+          >
+            <Command size={15} />
+          </button>
+          <button
+            onClick={() => setAboutOpen(true)}
+            className="p-2 text-ink-secondary hover:text-ink rounded-sm transition-colors"
+            aria-label="About"
+          >
+            <Info size={15} />
+          </button>
+          <MobileProfileTrigger
+            onSignOut={() => {
+              clearAuth()
+              navigate('/login')
+            }}
+          />
+        </div>
+      </header>
+
+      {/* Desktop Sidebar (hidden on mobile/tablet) */}
+      <aside className="glass-side w-[260px] shrink-0 border-r border-hairline hidden lg:flex flex-col fixed inset-y-0 select-none transition-colors duration-200 z-10">
         <div className="px-5 pt-6 pb-4">
           <Link
             to="/"
@@ -231,8 +269,9 @@ export function Layout() {
         />
       </aside>
 
-      <main className="flex-1 min-w-0 ml-[260px] relative z-[1]">
-        <div className="max-w-5xl mx-auto px-10 py-8">
+      {/* Main Content Area */}
+      <main className="flex-1 min-w-0 ml-0 lg:ml-[260px] pb-[calc(env(safe-area-inset-bottom)+70px)] lg:pb-0 relative z-[1]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10 py-6 lg:py-8">
           <PageTransition>
             <Outlet />
           </PageTransition>
@@ -242,6 +281,38 @@ export function Layout() {
           </footer>
         </div>
       </main>
+
+      {/* Mobile Sticky Bottom Navigation Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-20 bg-surface/85 backdrop-blur-md border-t border-hairline lg:hidden pb-[safe-area-inset-bottom] pt-2 px-2 flex justify-around items-center select-none shadow-lg">
+        {nav.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === '/' || item.to === '/admin'}
+            className={({ isActive }) =>
+              cn(
+                'flex flex-col items-center justify-center flex-1 py-1 gap-1 text-[10px] font-medium transition-colors duration-[120ms] relative',
+                isActive ? 'text-accent' : 'text-ink-secondary hover:text-ink',
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <motion.span
+                    layoutId="mobile-nav-indicator"
+                    transition={{ duration: 0.25, ease: swift }}
+                    className="absolute top-0 left-1/2 -translate-x-1/2 h-[3px] w-8 rounded-full [background-image:var(--accent-gradient)]"
+                    aria-hidden="true"
+                  />
+                )}
+                <item.icon size={18} strokeWidth={2} className="shrink-0" />
+                <span className="truncate max-w-[64px]">{item.label.split(' ')[0]}</span>
+              </>
+            )}
+          </NavLink>
+        ))}
+      </nav>
 
       <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />
       <AboutSupportDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
@@ -432,6 +503,65 @@ function ProfileBlock({ onSignOut }: { onSignOut: () => void }) {
         </span>
         <ChevronsUpDown size={14} className="text-ink-tertiary shrink-0" />
       </button>
+    </div>
+  )
+}
+
+function MobileProfileTrigger({ onSignOut }: { onSignOut: () => void }) {
+  const user = useAuthStore((s) => s.user)
+  const shortlistCount = useProfileStore((s) => s.shortlistIds.length)
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-accent"
+        aria-label="Profile menu"
+      >
+        <Avatar fullName={user?.fullName} size={28} />
+      </button>
+      {open && (
+        <>
+          <button
+            className="fixed inset-0 z-30 cursor-default"
+            aria-label="Close profile menu"
+            onClick={() => setOpen(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-0 top-full mt-2 w-48 z-40 bg-surface border border-hairline-strong rounded-md shadow-overlay overflow-hidden"
+          >
+            {user?.role !== 'admin' && (
+              <Link
+                to="/profile"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2.5 px-3.5 h-9 text-body text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors"
+              >
+                <CircleUser size={15} />
+                My profile
+                {shortlistCount > 0 && (
+                  <span className="ml-auto text-micro font-bold text-accent bg-accent-soft rounded-full px-1.5 py-0.5 tabular-nums">
+                    {shortlistCount}
+                  </span>
+                )}
+              </Link>
+            )}
+            <button
+              onClick={() => {
+                setOpen(false)
+                onSignOut()
+              }}
+              className="w-full flex items-center gap-2.5 px-3.5 h-9 text-body text-ink-secondary hover:bg-danger-soft hover:text-danger transition-colors border-t border-hairline text-left"
+            >
+              <LogOut size={15} />
+              Sign out
+            </button>
+          </motion.div>
+        </>
+      )}
     </div>
   )
 }

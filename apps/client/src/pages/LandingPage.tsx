@@ -1077,7 +1077,7 @@ function Draggable3DMapWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      style={{ perspective: 1000 }}
+      style={{ perspective: 1000, touchAction: 'pan-y' }}
       className="relative cursor-grab active:cursor-grabbing select-none w-full flex flex-col items-center py-1"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
