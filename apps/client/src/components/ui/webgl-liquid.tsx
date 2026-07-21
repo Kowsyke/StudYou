@@ -146,7 +146,7 @@ export function WebGLLiquid({
   colorDeep = FALLBACK_DEEP,
   colorMid = FALLBACK_MID,
   colorHighlight = FALLBACK_HIGHLIGHT,
-  speed = 1,
+  speed = 0.2,
   flowStrength = 1,
   grain = 0.05,
   contrast = 1.1,
@@ -292,13 +292,23 @@ export function WebGLLiquid({
         return
       }
 
+      let lastWidth = 0
+      let lastHeight = 0
+
       const resize = () => {
         const dpr = Math.min(window.devicePixelRatio || 1, 2)
         const { width, height } = host.getBoundingClientRect()
-        canvas.width = Math.max(1, Math.floor(width * dpr))
-        canvas.height = Math.max(1, Math.floor(height * dpr))
-        gl.viewport(0, 0, canvas.width, canvas.height)
-        gl.uniform2f(uRes, canvas.width, canvas.height)
+        const newW = Math.max(1, Math.floor(width * dpr))
+        const newH = Math.max(1, Math.floor(height * dpr))
+
+        if (Math.abs(newW - lastWidth) > 3 || Math.abs(newH - lastHeight) > 3) {
+          lastWidth = newW
+          lastHeight = newH
+          canvas.width = newW
+          canvas.height = newH
+          gl.viewport(0, 0, newW, newH)
+          gl.uniform2f(uRes, newW, newH)
+        }
       }
 
       resize()

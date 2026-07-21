@@ -1,5 +1,5 @@
 import { useGSAP } from '@gsap/react'
-import { Download, Monitor, Moon, Sun, Trash2 } from 'lucide-react'
+import { Bell, Calendar, Download, Monitor, Moon, Palette, Sun, Trash2, User } from 'lucide-react'
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { QueryError } from '../components/QueryError'
@@ -22,6 +22,16 @@ import { type ThemePreference, useThemeStore } from '../store/themeStore'
 import { toast } from '../store/toastStore'
 
 gsap.registerPlugin(useGSAP, Flip, CustomEase, CustomWiggle)
+
+type SettingsTab = 'account' | 'journey' | 'appearance' | 'deadlines' | 'data'
+
+const settingsTabs: { id: SettingsTab; label: string; icon: typeof User; kicker: string }[] = [
+  { id: 'account', label: 'Account Profile', icon: User, kicker: 'Identity' },
+  { id: 'journey', label: 'Intake & Journey', icon: Calendar, kicker: 'Roadmap' },
+  { id: 'appearance', label: 'Appearance & Display', icon: Palette, kicker: 'Preferences' },
+  { id: 'deadlines', label: 'Deadlines & Currency', icon: Bell, kicker: 'Notifications' },
+  { id: 'data', label: 'Data & Privacy', icon: Download, kicker: 'Storage' },
+]
 
 const themeOptions: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
   { value: 'light', label: 'Light', icon: Sun },
@@ -50,7 +60,7 @@ function ThemeToggle() {
   return (
     <fieldset
       ref={containerRef}
-      className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0 relative select-none"
+      className="inline-flex bg-surface-secondary p-[3px] rounded-md border-0 relative select-none w-full sm:w-auto"
       aria-label="Appearance"
     >
       {themeOptions.map((option) => {
@@ -61,15 +71,15 @@ function ThemeToggle() {
             type="button"
             aria-pressed={active}
             onClick={() => handleThemeChange(option.value)}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-[6px] text-caption font-semibold transition-colors duration-[120ms] relative z-10 cursor-pointer text-ink-secondary hover:text-ink"
+            className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 rounded-sm text-caption font-semibold transition-colors duration-[120ms] relative z-10 cursor-pointer text-ink-secondary hover:text-ink"
           >
             {active && (
               <div
                 data-flip-id="theme-pill"
-                className="theme-indicator absolute inset-0 bg-surface rounded-[6px] shadow-sm -z-10"
+                className="theme-indicator absolute inset-0 bg-surface rounded-sm shadow-xs -z-10"
               />
             )}
-            <option.icon size={12} className={cn(active ? 'text-accent' : 'text-ink-secondary')} />
+            <option.icon size={14} className={cn(active ? 'text-accent' : 'text-ink-secondary')} />
             <span className={cn(active && 'text-ink font-bold')}>{option.label}</span>
           </button>
         )
@@ -78,7 +88,6 @@ function ThemeToggle() {
   )
 }
 
-/* Reusable DrawSVG Input Focus Wrapper */
 function DrawFocusInput({
   label,
   id,
@@ -121,7 +130,10 @@ function DrawFocusInput({
           onChange={(e) => onChange(e.target.value)}
           onFocus={onFocus}
           onBlur={onBlur}
-          className={cn('w-full pr-4', className)}
+          className={cn(
+            'w-full pr-4 bg-surface-secondary/40 border-hairline focus:border-accent',
+            className,
+          )}
           {...props}
         />
         <svg
@@ -185,7 +197,10 @@ function DrawFocusSelect({
           onChange={onChange}
           onFocus={onFocus}
           onBlur={onBlur}
-          className={cn('w-full', className)}
+          className={cn(
+            'w-full bg-surface-secondary/40 border-hairline focus:border-accent',
+            className,
+          )}
           {...props}
         >
           {children}
@@ -218,6 +233,7 @@ export function SettingsPage() {
   const { data: countries } = useCountries()
   const updateSettings = useUpdateSettings()
 
+  const [activeTab, setActiveTab] = useState<SettingsTab>('account')
   const [budgetGbp, setBudgetGbp] = useState('')
   const [intakeDate, setIntakeDate] = useState('')
   const [originCountryCode, setOriginCountryCode] = useState('')
@@ -230,6 +246,8 @@ export function SettingsPage() {
 
   const dangerBtnRef = useRef<HTMLButtonElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!overview) return
@@ -241,7 +259,29 @@ export function SettingsPage() {
     setOriginCountryCode(currentOriginCode)
   }, [currentOriginCode])
 
-  // CustomWiggle danger button warn animation
+  // Flip indicator and panel transition on tab change
+  const handleTabChange = (tabId: SettingsTab) => {
+    if (tabId === activeTab) return
+    const state = Flip.getState(navRef.current?.querySelectorAll('.sidebar-pill'))
+    setActiveTab(tabId)
+    setTimeout(() => {
+      if (state && navRef.current) {
+        Flip.from(state, {
+          duration: 0.3,
+          ease: 'power2.out',
+        })
+      }
+    }, 0)
+
+    if (panelRef.current) {
+      gsap.fromTo(
+        panelRef.current,
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+      )
+    }
+  }
+
   const wiggleDanger = () => {
     if (dangerBtnRef.current) {
       CustomWiggle.create('warnWiggle', { wiggles: 5, type: 'ease-out' })
@@ -253,7 +293,6 @@ export function SettingsPage() {
     }
   }
 
-  // Recalculate dialog entrance transition
   useEffect(() => {
     if (confirming && modalRef.current) {
       gsap.fromTo(
@@ -268,7 +307,7 @@ export function SettingsPage() {
 
   if (isPending) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-4xl mx-auto">
         <CardSkeleton lines={4} />
         <CardSkeleton lines={2} />
       </div>
@@ -328,180 +367,301 @@ export function SettingsPage() {
   }
 
   return (
-    <div>
-      <header className="mb-6">
-        <h1 className="text-title3 text-ink font-bold text-gradient">Settings</h1>
-        <p className="text-xs text-ink-secondary mt-1">
-          Adjust your plan. Your roadmap and budget update everywhere, instantly.
-        </p>
+    <div className="max-w-5xl mx-auto space-y-6">
+      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-hairline pb-4">
+        <div>
+          <h1 className="text-title3 text-ink font-bold text-gradient">Preferences & Settings</h1>
+          <p className="text-body-sm text-ink-secondary mt-1">
+            Manage your account identity, UK intake roadmap parameters, and visual experience.
+          </p>
+        </div>
       </header>
 
-      <Card className="max-w-xl mb-5 card-lift">
-        <CardHeader>
-          <CardTitle>Account</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-x-8 gap-y-2">
-          <div>
-            <p className="text-caption text-ink-tertiary">Name</p>
-            <p className="text-body font-semibold text-ink">{user?.fullName}</p>
-          </div>
-          <div className="min-w-0">
-            <p className="text-caption text-ink-tertiary">Email</p>
-            <p className="text-body font-semibold text-ink truncate">{user?.email}</p>
-          </div>
-          <div>
-            <p className="text-caption text-ink-tertiary">Role</p>
-            <p className="text-body font-semibold text-ink capitalize">{user?.role}</p>
-          </div>
-          <Link to="/profile" className="ml-auto text-xs font-semibold text-accent hover:underline">
-            Edit avatar and shortlist
-          </Link>
-        </CardContent>
-      </Card>
+      {/* 2-Column Sidebar Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        {/* Navigation Sidebar */}
+        <nav
+          ref={navRef}
+          className="md:col-span-4 lg:col-span-3 bg-surface border border-hairline rounded-xl p-2 space-y-1 shadow-xs sticky top-20"
+        >
+          {settingsTabs.map((tab) => {
+            const active = activeTab === tab.id
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => handleTabChange(tab.id)}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium transition-colors relative cursor-pointer text-left',
+                  active
+                    ? 'text-ink font-bold'
+                    : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/50',
+                )}
+              >
+                {active && (
+                  <div
+                    data-flip-id="sidebar-tab-pill"
+                    className="sidebar-pill absolute inset-0 bg-accent-soft rounded-lg border border-accent/20 -z-10"
+                  />
+                )}
+                <tab.icon
+                  size={16}
+                  className={cn(
+                    'shrink-0 transition-colors',
+                    active ? 'text-accent' : 'text-ink-tertiary',
+                  )}
+                />
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate">{tab.label}</span>
+                </div>
+              </button>
+            )
+          })}
+        </nav>
 
-      <Card className="max-w-xl mb-5 card-lift">
-        <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>
-            Choose how StudYou looks and moves. Saved on this device.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <ThemeToggle />
-          <MotionAndDensity />
-        </CardContent>
-      </Card>
+        {/* Settings Content Panel */}
+        <main ref={panelRef} className="md:col-span-8 lg:col-span-9 space-y-6">
+          {/* TAB 1: ACCOUNT */}
+          {activeTab === 'account' && (
+            <Card className="card-lift border-hairline shadow-sm">
+              <CardHeader>
+                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                  Identity & Profile
+                </div>
+                <CardTitle>Account Profile</CardTitle>
+                <CardDescription>Your account details registered with StudYou.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-lg bg-surface-secondary/40 border border-hairline">
+                  <div>
+                    <p className="text-caption text-ink-tertiary font-medium">Full Name</p>
+                    <p className="text-body font-bold text-ink mt-0.5">{user?.fullName}</p>
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-caption text-ink-tertiary font-medium">Email Address</p>
+                    <p className="text-body font-bold text-ink truncate mt-0.5">{user?.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-caption text-ink-tertiary font-medium">Account Role</p>
+                    <p className="text-body font-bold text-ink capitalize mt-0.5">{user?.role}</p>
+                  </div>
+                  <div>
+                    <p className="text-caption text-ink-tertiary font-medium">
+                      Authentication Method
+                    </p>
+                    <p className="text-body font-bold text-ink mt-0.5">Secure JWT Session</p>
+                  </div>
+                </div>
 
-      <Card className="max-w-xl mb-5 card-lift">
-        <CardHeader>
-          <CardTitle>Planning</CardTitle>
-          <CardDescription>How StudYou flags what is coming up.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <DueSoonPicker />
-          <HomeCurrencyToggle />
-        </CardContent>
-      </Card>
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-caption text-ink-secondary">
+                    Looking to update your avatar or view saved universities?
+                  </span>
+                  <Link to="/profile">
+                    <Button variant="secondary" size="sm" className="font-semibold">
+                      Edit Profile & Shortlist
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-      <Card className="max-w-xl card-lift">
-        <CardHeader>
-          <CardTitle>Journey settings</CardTitle>
-          <CardDescription>
-            Changing the intake date recalculates every target date in your roadmap.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit} className="space-y-4">
-            <DrawFocusInput
-              id="settings-intake"
-              label="Target intake date"
-              type="date"
-              required
-              value={intakeDate}
-              onChange={setIntakeDate}
-            />
-            {intakeChanged && (
-              <p className="text-xs text-ink-muted -mt-2">
-                All target dates will be recalculated from this date.
-              </p>
-            )}
+          {/* TAB 2: INTAKE & JOURNEY */}
+          {activeTab === 'journey' && (
+            <Card className="card-lift border-hairline shadow-sm">
+              <CardHeader>
+                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                  Roadmap Engine
+                </div>
+                <CardTitle>Journey Settings</CardTitle>
+                <CardDescription>
+                  Changing your target intake date automatically recalculates every milestone in
+                  your roadmap.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={onSubmit} className="space-y-5">
+                  <DrawFocusInput
+                    id="settings-intake"
+                    label="Target intake date"
+                    type="date"
+                    required
+                    value={intakeDate}
+                    onChange={setIntakeDate}
+                  />
+                  {intakeChanged && (
+                    <p className="text-caption text-warning font-medium -mt-2">
+                      ⚠️ Target dates across all 21 roadmap steps will be recalculated from this
+                      date.
+                    </p>
+                  )}
 
-            <DrawFocusInput
-              id="settings-budget"
-              label="Budget for fees and process costs (GBP)"
-              type="number"
-              min={0}
-              step="100"
-              required
-              value={budgetGbp}
-              onChange={setBudgetGbp}
-            />
+                  <DrawFocusInput
+                    id="settings-budget"
+                    label="Budget for tuition fees and process costs (GBP £)"
+                    type="number"
+                    min={0}
+                    step="100"
+                    required
+                    value={budgetGbp}
+                    onChange={setBudgetGbp}
+                  />
 
-            <DrawFocusSelect
-              id="settings-origin"
-              label="Home country"
-              value={originCountryCode}
-              onChange={(e) => setOriginCountryCode(e.target.value)}
-            >
-              <option value="">Not set</option>
-              {originCountries.map((c) => (
-                <option key={c.id} value={c.code}>
-                  {c.name}
-                </option>
-              ))}
-            </DrawFocusSelect>
-            <p className="text-xs text-ink-muted -mt-2">
-              Sets the home currency shown next to GBP costs.
-            </p>
+                  <DrawFocusSelect
+                    id="settings-origin"
+                    label="Home country"
+                    value={originCountryCode}
+                    onChange={(e) => setOriginCountryCode(e.target.value)}
+                  >
+                    <option value="">Not set (GBP only)</option>
+                    {originCountries.map((c) => (
+                      <option key={c.id} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </DrawFocusSelect>
+                  <p className="text-caption text-ink-tertiary -mt-2">
+                    Used to calculate approximate costs in your local currency alongside GBP.
+                  </p>
 
-            {formError && <p className="text-sm text-danger">{formError}</p>}
-            <Button
-              type="submit"
-              disabled={updateSettings.isPending}
-              className="font-semibold [background-image:var(--accent-gradient)]"
-            >
-              {updateSettings.isPending ? 'Saving...' : 'Save settings'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+                  {formError && <p className="text-body-sm text-danger font-medium">{formError}</p>}
 
-      <Card className="max-w-xl mt-5 card-lift">
-        <CardHeader>
-          <CardTitle>Your data</CardTitle>
-          <CardDescription>
-            Everything StudYou stores on this device stays on this device.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-2.5">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              const payload = {
-                exportedAt: new Date().toISOString(),
-                account: { name: user?.fullName, email: user?.email, role: user?.role },
-                journey: overview.journey,
-                progress: {
-                  percentComplete: overview.percentComplete,
-                  budget: overview.budget,
-                  upcomingDeadlines: overview.upcomingDeadlines,
-                },
-                localPreferences: JSON.parse(localStorage.getItem('studyou_prefs') ?? '{}'),
-                profileChoices: JSON.parse(localStorage.getItem('studyou_profile') ?? '{}'),
-              }
-              const blob = new Blob([JSON.stringify(payload, null, 2)], {
-                type: 'application/json',
-              })
-              const url = URL.createObjectURL(blob)
-              const a = document.createElement('a')
-              a.href = url
-              a.download = 'studyou-export.json'
-              a.click()
-              URL.revokeObjectURL(url)
-              toast.success('Export downloaded.')
-            }}
-          >
-            <Download size={13} />
-            Export my data
-          </Button>
-          <Button
-            ref={dangerBtnRef}
-            variant="danger"
-            size="sm"
-            onMouseEnter={wiggleDanger}
-            onClick={() => {
-              clearLocalData()
-              toast.success('Local data cleared.')
-              setTimeout(() => window.location.reload(), 600)
-            }}
-          >
-            <Trash2 size={13} />
-            Clear local data
-          </Button>
-        </CardContent>
-      </Card>
+                  <div className="pt-2">
+                    <Button
+                      type="submit"
+                      disabled={updateSettings.isPending}
+                      className="font-semibold [background-image:var(--accent-gradient)]"
+                    >
+                      {updateSettings.isPending ? 'Saving settings...' : 'Save journey settings'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          )}
 
+          {/* TAB 3: APPEARANCE & DISPLAY */}
+          {activeTab === 'appearance' && (
+            <Card className="card-lift border-hairline shadow-sm">
+              <CardHeader>
+                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                  Interface & Theme
+                </div>
+                <CardTitle>Appearance Settings</CardTitle>
+                <CardDescription>
+                  Choose how StudYou looks and moves on this device.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-2">
+                  <Label className="text-body-sm font-semibold text-ink">Theme Mode</Label>
+                  <ThemeToggle />
+                </div>
+
+                <div className="border-t border-hairline pt-4 space-y-4">
+                  <MotionAndDensity />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* TAB 4: DEADLINES & CURRENCY */}
+          {activeTab === 'deadlines' && (
+            <Card className="card-lift border-hairline shadow-sm">
+              <CardHeader>
+                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                  Notifications & Formatting
+                </div>
+                <CardTitle>Planning & Currency</CardTitle>
+                <CardDescription>
+                  Configure how upcoming deadlines are flagged and displayed on your dashboard.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <DueSoonPicker />
+
+                <div className="border-t border-hairline pt-4">
+                  <HomeCurrencyToggle />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* TAB 5: DATA & PRIVACY */}
+          {activeTab === 'data' && (
+            <Card className="card-lift border-hairline shadow-sm">
+              <CardHeader>
+                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                  Local Storage & Export
+                </div>
+                <CardTitle>Your Data & Privacy</CardTitle>
+                <CardDescription>
+                  Export your roadmap metrics or clear local storage data on this device.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="p-4 rounded-lg bg-surface-secondary/40 border border-hairline space-y-2">
+                  <p className="text-body-sm font-semibold text-ink">Data Export</p>
+                  <p className="text-caption text-ink-secondary">
+                    Download a full JSON copy of your journey progress, budget stats, and local
+                    preferences.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3 pt-2">
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      const payload = {
+                        exportedAt: new Date().toISOString(),
+                        account: { name: user?.fullName, email: user?.email, role: user?.role },
+                        journey: overview.journey,
+                        progress: {
+                          percentComplete: overview.percentComplete,
+                          budget: overview.budget,
+                          upcomingDeadlines: overview.upcomingDeadlines,
+                        },
+                        localPreferences: JSON.parse(localStorage.getItem('studyou_prefs') ?? '{}'),
+                        profileChoices: JSON.parse(localStorage.getItem('studyou_profile') ?? '{}'),
+                      }
+                      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                        type: 'application/json',
+                      })
+                      const url = URL.createObjectURL(blob)
+                      const a = document.createElement('a')
+                      a.href = url
+                      a.download = 'studyou-export.json'
+                      a.click()
+                      URL.revokeObjectURL(url)
+                      toast.success('Export downloaded.')
+                    }}
+                  >
+                    <Download size={14} className="mr-1.5" />
+                    Export my data (JSON)
+                  </Button>
+
+                  <Button
+                    ref={dangerBtnRef}
+                    variant="danger"
+                    onMouseEnter={wiggleDanger}
+                    onClick={() => {
+                      clearLocalData()
+                      toast.success('Local data cleared.')
+                      setTimeout(() => window.location.reload(), 600)
+                    }}
+                  >
+                    <Trash2 size={14} className="mr-1.5" />
+                    Clear local data
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </main>
+      </div>
+
+      {/* Recalculate Modal Dialog */}
       {confirming && (
         <div
           className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px] flex items-center justify-center px-4"
@@ -514,7 +674,7 @@ export function SettingsPage() {
             role="alertdialog"
             aria-modal="true"
             aria-labelledby="confirm-title"
-            className="glass-reflect bg-surface rounded-lg border border-hairline shadow-overlay p-6 w-[400px] max-w-full flex flex-col gap-4 select-none"
+            className="glass-reflect bg-surface rounded-xl border border-hairline shadow-overlay p-6 w-[420px] max-w-full flex flex-col gap-4 select-none"
           >
             <h2 id="confirm-title" className="text-body-lg font-bold text-ink">
               Recalculate your roadmap?
@@ -545,7 +705,7 @@ function MotionAndDensity() {
   const setCompactCards = usePreferencesStore((s) => s.setCompactCards)
 
   return (
-    <>
+    <div className="space-y-4">
       <Switch
         id="pref-motion"
         checked={reduceMotion}
@@ -560,7 +720,7 @@ function MotionAndDensity() {
         label="Compact cards"
         hint="Fits more universities and resources on screen with tighter cards."
       />
-    </>
+    </div>
   )
 }
 
@@ -583,7 +743,7 @@ function DueSoonPicker() {
   }
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <span>
         <span className="block text-body font-medium text-ink">Due soon window</span>
         <span className="block text-caption text-ink-tertiary mt-0.5">
@@ -592,7 +752,7 @@ function DueSoonPicker() {
       </span>
       <fieldset
         ref={containerRef}
-        className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0 shrink-0 relative select-none"
+        className="inline-flex bg-surface-secondary p-[3px] rounded-md border-0 shrink-0 relative select-none"
         aria-label="Due soon window"
       >
         {DUE_SOON_OPTIONS.map((days) => {
@@ -603,12 +763,12 @@ function DueSoonPicker() {
               type="button"
               aria-pressed={active}
               onClick={() => handleDaysChange(days)}
-              className="px-3 py-1.5 rounded-[6px] text-caption font-semibold transition-colors duration-[120ms] tabular-nums relative z-10 cursor-pointer text-ink-secondary hover:text-ink"
+              className="px-3 py-1.5 rounded-sm text-caption font-semibold transition-colors duration-[120ms] tabular-nums relative z-10 cursor-pointer text-ink-secondary hover:text-ink"
             >
               {active && (
                 <div
                   data-flip-id="days-pill"
-                  className="days-indicator absolute inset-0 bg-surface rounded-[6px] shadow-sm -z-10"
+                  className="days-indicator absolute inset-0 bg-surface rounded-sm shadow-xs -z-10"
                 />
               )}
               <span className={cn(active && 'text-ink font-bold')}>{days}d</span>

@@ -1,31 +1,25 @@
 import {
-  Activity,
   ArrowRight,
   BadgePoundSterling,
-  BookOpen,
+  Building2,
+  Calculator,
   CalendarClock,
-  Car,
   Check,
-  Compass,
-  FileSpreadsheet,
-  FileText,
+  CheckCircle2,
+  Clock,
   GraduationCap,
-  HeartPulse,
-  Home,
-  Landmark,
+  Mail,
   Map as MapIcon,
-  Shield,
   ShieldCheck,
   Sparkles,
-  Stamp,
-  Stethoscope,
-  Tag,
   Wallet,
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
+import { ContainerScroll } from '../components/ui/container-scroll-animation'
+import { ParticleCanvas } from '../components/ui/particle-canvas'
 import { WebGLLiquid } from '../components/ui/webgl-liquid'
 import { useAuthStore } from '../store/authStore'
 
@@ -61,82 +55,12 @@ gsap.registerPlugin(
   Flip,
 )
 
-const marqueeItems = [
-  'IELTS booking',
-  'UCAS application',
-  'CAS statement',
-  'Student visa',
-  'Health surcharge',
-  'TB test',
-  'Financial proof',
-  'Accommodation',
-  'eVisa status',
-  'GP registration',
-  'Bank account',
-  'NI number',
-  'Student discounts',
-  'Driving licence',
-]
-
 const stats = [
   { value: '200', label: 'UK universities' },
   { value: '21', label: 'Official steps' },
   { value: '47', label: 'Sourced resources' },
   { value: '0', label: 'Agency fees', isCurrency: true },
 ]
-
-const pillars = [
-  {
-    icon: MapIcon,
-    title: 'A roadmap that tracks itself',
-    body: 'Five stages, twenty one official steps, each with a target date worked back from your intake. Tick things off and your budget and deadlines update live.',
-  },
-  {
-    icon: GraduationCap,
-    title: 'Find your university without a middleman',
-    body: 'The top 200 UK universities on a real map. Filter by region, compare tuition, swipe to shortlist, and open the official admissions page in one click.',
-  },
-  {
-    icon: BadgePoundSterling,
-    title: 'The true cost, in your currency',
-    body: 'Every fee from the English test to the health surcharge, added up in GBP and your home currency. No hidden commissions, because there are none.',
-  },
-]
-
-const getMarqueeIcon = (item: string) => {
-  switch (item) {
-    case 'IELTS booking':
-      return BookOpen
-    case 'UCAS application':
-      return FileText
-    case 'CAS statement':
-      return Shield
-    case 'Student visa':
-      return Stamp
-    case 'Health surcharge':
-      return Activity
-    case 'TB test':
-      return HeartPulse
-    case 'Financial proof':
-      return Wallet
-    case 'Accommodation':
-      return Home
-    case 'eVisa status':
-      return ShieldCheck
-    case 'GP registration':
-      return Stethoscope
-    case 'Bank account':
-      return Landmark
-    case 'NI number':
-      return FileSpreadsheet
-    case 'Student discounts':
-      return Tag
-    case 'Driving licence':
-      return Car
-    default:
-      return Compass
-  }
-}
 
 export function LandingPage() {
   const token = useAuthStore((s) => s.token)
@@ -176,18 +100,25 @@ export function LandingPage() {
   }, [])
 
   useGSAP(() => {
-    // Initialize smooth scrolling
+    const prefersReducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    // Tracked so the hero particle loop can be cancelled on unmount (it was
+    // leaking a runaway rAF) and paused while the tab is hidden.
+    let heroRaf = 0
+    let onHeroVisibility: (() => void) | null = null
+
+    // Initialize smooth scrolling. When reduced motion is requested, fall back
+    // to native instant scroll (no inertia, no scroll-driven effects) so the
+    // page never feels heavy or janky for those users.
     ScrollSmoother.create({
       wrapper: '#smooth-wrapper',
       content: '#smooth-content',
-      smooth: 1.2,
-      effects: true,
+      smooth: prefersReducedMotion ? 0 : 1.2,
+      effects: !prefersReducedMotion,
     })
 
     // Scroll-driven parallax and scale of the background WebGL liquid
     const liquid = liquidRef.current
     if (liquid) {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
       if (!prefersReducedMotion) {
         gsap.to(liquid, {
           y: '12vh',
@@ -205,10 +136,10 @@ export function LandingPage() {
 
     // ScrambleText hero decode — characters resolve from symbols
     gsap.to('.hero-headline', {
-      duration: 1.6,
+      duration: 1.2,
       scrambleText: {
         text: 'Your UK study journey, without the agencies.',
-        chars: '!<>-_\\/[]{}—=+*^?#$@%&01',
+        chars: '!<>- _\\/[] {}—=+* ^? #$@%&01',
         speed: 0.35,
         revealDelay: 0.4,
       },
@@ -294,9 +225,10 @@ export function LandingPage() {
       card.addEventListener('mousemove', handleMove)
     }
 
-    // Scroll reveal sections (dim when scrolled out, bright and focused when reading)
+    // Unified Ethereal Bi-Directional Scroll Reveal Timeline
+    // Smoothly handles both scrolling DOWN and scrolling UP seamlessly!
     const revealTargets = [
-      '.hero-container',
+      '.scroll-container-section',
       '.problem-section',
       '.map-section',
       '.pillars-section',
@@ -306,36 +238,48 @@ export function LandingPage() {
       const el = document.querySelector(selector)
       if (!el) continue
 
-      // Fade-in / scale-up / focus when entering
-      gsap.fromTo(
-        el,
-        { opacity: 0.45, scale: 0.98, filter: 'brightness(0.85) blur(1px)' },
-        {
-          opacity: 1,
-          scale: 1,
-          filter: 'brightness(1.05) blur(0px)',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            end: 'top 45%',
-            scrub: 0.5,
-          },
-        },
-      )
-
-      // Fade-out / blur when scrolling past
-      gsap.to(el, {
-        opacity: 0.45,
-        scale: 0.98,
-        filter: 'brightness(0.85) blur(1px)',
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: el,
-          start: 'bottom 40%',
-          end: 'bottom 10%',
-          scrub: 0.5,
+          start: 'top 92%',
+          end: 'bottom 8%',
+          scrub: 0.6,
         },
       })
+
+      tl.fromTo(
+        el,
+        { opacity: 0.15, y: 30, scale: 0.96, filter: 'blur(3px)' },
+        { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.35, ease: 'power2.out' },
+      )
+        .to(el, { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: 0.5 })
+        .to(el, {
+          opacity: 0.15,
+          y: -30,
+          scale: 0.96,
+          filter: 'blur(3px)',
+          duration: 0.35,
+          ease: 'power2.in',
+        })
     }
+
+    // 3D Scroll Perspective Tilt for Map Holding Box
+    gsap.set('.map-holding-box', { transformPerspective: 1200 })
+    gsap.fromTo(
+      '.map-holding-box',
+      { rotateX: 15, scale: 0.94, opacity: 0.8 },
+      {
+        rotateX: 0,
+        scale: 1,
+        opacity: 1,
+        scrollTrigger: {
+          trigger: '.map-section',
+          start: 'top 85%',
+          end: 'top 40%',
+          scrub: 0.8,
+        },
+      },
+    )
 
     // Infinite GSAP marquee (primary row)
     const marqueeTrack = document.querySelector('.marquee-track')
@@ -509,80 +453,28 @@ export function LandingPage() {
           }
 
           ctx.globalAlpha = 1
-          requestAnimationFrame(animate)
+          heroRaf = requestAnimationFrame(animate)
         }
-        animate()
+        // Pause the loop when the tab is hidden; skip it entirely for
+        // reduced motion, leaving a still canvas.
+        onHeroVisibility = () => {
+          if (document.hidden) {
+            cancelAnimationFrame(heroRaf)
+            heroRaf = 0
+          } else if (!prefersReducedMotion && !heroRaf) {
+            animate()
+          }
+        }
+        if (!prefersReducedMotion) animate()
+        document.addEventListener('visibilitychange', onHeroVisibility)
       }
     }
-  })
 
-  const createMarqueeHoverHandlers = (idx: number) => {
-    return {
-      onMouseEnter: (e: React.MouseEvent<HTMLAnchorElement>) => {
-        gsap.to(e.currentTarget, {
-          scale: 1.15,
-          rotate: (idx % 2 === 0 ? 1 : -1) * 3,
-          boxShadow: 'var(--shadow-md)',
-          color: 'var(--accent)',
-          borderColor: 'var(--accent)',
-          zIndex: 10,
-          duration: 0.3,
-          ease: 'back.out(1.7)',
-          overwrite: 'auto',
-        })
-        const icon = e.currentTarget.querySelector('.marquee-icon')
-        if (icon) {
-          gsap.to(icon, {
-            rotate: 360,
-            scale: 1.25,
-            duration: 0.5,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-        }
-        const underline = e.currentTarget.querySelector('.marquee-underline-path')
-        if (underline) {
-          gsap.fromTo(
-            underline,
-            { drawSVG: '0%' },
-            { drawSVG: '100%', duration: 0.3, ease: 'power2.out', overwrite: 'auto' },
-          )
-        }
-      },
-      onMouseLeave: (e: React.MouseEvent<HTMLAnchorElement>) => {
-        gsap.to(e.currentTarget, {
-          scale: 1,
-          rotate: 0,
-          boxShadow: 'var(--shadow-sm)',
-          color: 'var(--ink-secondary)',
-          borderColor: 'var(--border)',
-          zIndex: 1,
-          duration: 0.3,
-          ease: 'power2.out',
-          overwrite: 'auto',
-        })
-        const icon = e.currentTarget.querySelector('.marquee-icon')
-        if (icon) {
-          gsap.to(icon, {
-            rotate: 0,
-            scale: 1,
-            duration: 0.4,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-        }
-        const underline = e.currentTarget.querySelector('.marquee-underline-path')
-        if (underline) {
-          gsap.to(underline, {
-            drawSVG: '0%',
-            duration: 0.25,
-            ease: 'power2.out',
-            overwrite: 'auto',
-          })
-        }
-      },
+    return () => {
+      cancelAnimationFrame(heroRaf)
+      if (onHeroVisibility) document.removeEventListener('visibilitychange', onHeroVisibility)
     }
-  }
+  })
 
   if (token) return <Navigate to="/" replace />
 
@@ -591,26 +483,22 @@ export function LandingPage() {
       <div ref={haloRef} className="cursor-halo" aria-hidden="true" />
 
       {/* Cinematic WebGL Liquid Animated Background */}
-      <div
-        ref={liquidRef}
-        className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none z-0"
-      >
-        <WebGLLiquid
-          className="absolute inset-0 w-full h-full bg-transparent"
-          title=""
-          subtitle=""
-          description=""
-          colorDeep="#04050b"
-          colorMid="#134d93"
-          colorHighlight="#8cecff"
-          speed={0.6}
-          flowStrength={0.8}
-          grain={0.03}
-          contrast={1.05}
-          opacity={0.35}
-          reveal
-        />
-        {/* Scanner grid lines overlay and radial blender vignette */}
+      <WebGLLiquid
+        className="fixed inset-0 w-full h-full pointer-events-none z-0"
+        title=""
+        subtitle=""
+        description=""
+        colorDeep="#04050b"
+        colorMid="#121829"
+        colorHighlight="#004488"
+        speed={0.2}
+        flowStrength={0.2}
+        grain={0.015}
+        contrast={1.15}
+        opacity={0.45}
+      />
+
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute inset-0 scanner-grid pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-b from-canvas/40 via-canvas/70 to-canvas pointer-events-none" />
         <div className="absolute inset-0 radial-blender pointer-events-none" />
@@ -618,21 +506,18 @@ export function LandingPage() {
 
       <div id="smooth-wrapper" className="relative min-h-screen bg-transparent overflow-x-hidden">
         <div id="smooth-content">
-          <div className="blob blob-a w-[420px] h-[420px] -top-24 -left-24" />
-          <div className="blob blob-b w-[380px] h-[380px] top-[70vh] -right-32" />
-
           <nav className="relative z-10 max-w-5xl mx-auto flex items-center justify-between px-6 py-5">
             <Link
               to="/"
               aria-label="StudYou home"
-              className="flex items-center gap-2 text-body-lg font-bold tracking-[-0.01em] rounded-sm"
+              className="flex items-center gap-2 text-body-lg font-podium font-bold tracking-tight rounded-sm"
             >
               <span className="breathe w-6 h-6 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)] transition-transform duration-[120ms] hover:rotate-6 hover:scale-110">
                 SY
               </span>
               StudYou
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 font-inter">
               <Link to="/login">
                 <Button variant="ghost" size="sm">
                   Sign in
@@ -655,7 +540,7 @@ export function LandingPage() {
                 Every step from official sources
               </div>
 
-              <h1 className="hero-headline text-title1 text-ink max-w-xl scramble-active">
+              <h1 className="hero-headline text-title1 text-ink font-podium font-black tracking-tight max-w-xl scramble-active">
                 &nbsp;
               </h1>
 
@@ -678,17 +563,20 @@ export function LandingPage() {
                 </Link>
               </div>
 
-              <div className="hero-fade grid grid-cols-4 gap-4 mt-10 max-w-md">
+              {/* Frameless Interactive Glow Text Stats */}
+              <div className="hero-fade grid grid-cols-4 gap-4 mt-10 max-w-md select-none">
                 {stats.map((stat) => (
-                  <div key={stat.label}>
+                  <div key={stat.label} className="group cursor-pointer">
                     <p
-                      className="stat-counter text-title3 text-ink tabular-nums font-bold"
+                      className="stat-counter text-title3 text-ink tabular-nums font-black transition-all duration-300 group-hover:text-accent group-hover:scale-105 origin-left [text-shadow:0_0_0px_transparent] group-hover:[text-shadow:0_0_18px_rgba(140,236,255,0.7),0_0_36px_rgba(140,236,255,0.4)]"
                       data-target={stat.value}
                       data-currency={stat.isCurrency ? 'true' : 'false'}
                     >
                       0
                     </p>
-                    <p className="text-caption text-ink-secondary mt-0.5">{stat.label}</p>
+                    <p className="text-caption font-semibold text-ink-secondary group-hover:text-ink transition-colors duration-200 mt-0.5">
+                      {stat.label}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -697,73 +585,306 @@ export function LandingPage() {
             <FloatingPreview />
           </main>
 
-          <div className="relative z-10 border-y border-hairline bg-surface/60 backdrop-blur-sm py-3.5 overflow-hidden">
-            <div className="marquee-track">
-              {[...marqueeItems, ...marqueeItems].map((item, index) => {
-                const Icon = getMarqueeIcon(item)
+          {/* Spacious Classy Feature Showcase Marquee */}
+          <div className="relative z-10 border-y border-hairline bg-surface/30 backdrop-blur-md py-6 overflow-hidden select-none">
+            <div className="marquee-track flex gap-5">
+              {[
+                {
+                  title: '200+ Verified UK Universities',
+                  subtitle: 'Official UCAS & Portal Links',
+                  quote:
+                    'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
+                  author: 'Ken Masters',
+                  role: 'MSc Computer Science, Manchester',
+                  icon: Building2,
+                },
+                {
+                  title: 'Step-by-Step CAS & Milestone Tracker',
+                  subtitle: 'Zero Missed Deadlines',
+                  quote:
+                    'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
+                  author: 'Kira Athrun',
+                  role: 'BEng Mechanical, Bristol',
+                  icon: CheckCircle2,
+                },
+                {
+                  title: 'Real Cost & Proof of Funds Calc',
+                  subtitle: 'Live Currency Conversion',
+                  quote:
+                    'Calculate living expenses and tuition converted into your home currency with real exchange rates.',
+                  author: 'Jessica Lin',
+                  role: 'LLM Law, Edinburgh',
+                  icon: Calculator,
+                },
+                {
+                  title: 'Official Visa & IHS Guidance',
+                  subtitle: 'GOV.UK Signposting',
+                  quote:
+                    'Direct signposts to official UKVI visa applications, IHS health surcharges, and financial requirements.',
+                  author: 'David Wright',
+                  role: 'BA Business, Birmingham',
+                  icon: ShieldCheck,
+                },
+                {
+                  title: '200+ Verified UK Universities',
+                  subtitle: 'Official UCAS & Portal Links',
+                  quote:
+                    'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
+                  author: 'Ken Masters',
+                  role: 'MSc Computer Science, Manchester',
+                  icon: Building2,
+                },
+                {
+                  title: 'Step-by-Step CAS & Milestone Tracker',
+                  subtitle: 'Zero Missed Deadlines',
+                  quote:
+                    'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
+                  author: 'Kira Athrun',
+                  role: 'BEng Mechanical, Bristol',
+                  icon: CheckCircle2,
+                },
+              ].map((card, index) => {
+                const Icon = card.icon
                 return (
-                  <Link
-                    key={`${item}-${index >= marqueeItems.length ? 'b' : 'a'}`}
-                    to="/register"
-                    tabIndex={index >= marqueeItems.length ? -1 : 0}
-                    className="marquee-chip shrink-0 inline-flex items-center gap-1.5 relative text-caption font-semibold text-ink-secondary bg-surface border border-hairline rounded-full px-3.5 py-1.5 shadow-sm overflow-hidden"
-                    {...createMarqueeHoverHandlers(index)}
+                  <div
+                    key={`marquee-card-${card.title}-${index}`}
+                    className="shrink-0 w-80 p-4 rounded-xl liquid-glass-card hover:border-accent/40 hover:shadow-[0_8px_32px_rgba(0,102,204,0.12)] group"
                   >
-                    <Icon
-                      size={13}
-                      className="marquee-icon text-accent transition-transform duration-300"
-                    />
-                    <span>{item}</span>
-                    <svg
-                      className="absolute bottom-0 left-3 right-3 h-[2px] pointer-events-none"
-                      viewBox="0 0 100 2"
-                      preserveAspectRatio="none"
-                      aria-hidden="true"
-                    >
-                      <path
-                        className="marquee-underline-path"
-                        d="M0 1 L100 1"
-                        stroke="var(--accent)"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        fill="none"
-                      />
-                    </svg>
-                  </Link>
+                    <div className="flex items-center gap-3 mb-2.5">
+                      <div className="w-9 h-9 rounded-full overflow-hidden border border-hairline shrink-0 bg-accent-soft flex items-center justify-center">
+                        <Icon size={18} className="text-accent" />
+                      </div>
+                      <div className="overflow-hidden">
+                        <p className="text-body-sm font-bold text-ink truncate group-hover:text-accent transition-colors">
+                          {card.title}
+                        </p>
+                        <p className="text-[11px] font-mono text-ink-tertiary truncate">
+                          {card.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-caption text-ink-secondary leading-relaxed line-clamp-2">
+                      "{card.quote}"
+                    </p>
+                    <div className="mt-3 pt-2 border-t border-hairline/50 flex items-center justify-between text-[11px]">
+                      <span className="font-semibold text-ink">{card.author}</span>
+                      <span className="text-accent font-medium">{card.role}</span>
+                    </div>
+                  </div>
                 )
               })}
             </div>
           </div>
 
-          {/* Counter-scrolling marquee row (secondary, 30% opacity) */}
-          <div className="relative z-10 overflow-hidden py-1.5">
-            <div className="marquee-track-counter">
-              {[...marqueeItems.slice().reverse(), ...marqueeItems.slice().reverse()].map(
-                (item, index) => {
-                  const Icon = getMarqueeIcon(item)
-                  return (
-                    <span
-                      // biome-ignore lint/suspicious/noArrayIndexKey: Static array mapping
-                      key={`counter-${item}-${index}`}
-                      className="shrink-0 inline-flex items-center gap-1.5 text-caption font-medium text-ink-tertiary bg-surface/40 border border-hairline/50 rounded-full px-3 py-1"
-                    >
-                      <Icon size={11} className="text-ink-tertiary/60" />
-                      {item}
-                    </span>
-                  )
-                },
-              )}
-            </div>
-          </div>
-
           <ProblemSection />
+
+          {/* 3D Perspective Container Scroll Showcase */}
+          <section className="scroll-container-section relative z-10 my-4">
+            <ContainerScroll
+              titleComponent={
+                <div className="space-y-2 max-w-2xl mx-auto">
+                  <h2 className="text-title1 sm:text-[2.8rem] font-extrabold text-ink tracking-tight leading-none">
+                    Track every step of your UK degree.
+                  </h2>
+                  <p className="text-body text-ink-secondary mt-2">
+                    Official target dates, verified cost calculators, and direct admissions links.
+                  </p>
+                </div>
+              }
+            >
+              <div className="relative w-full h-full rounded-xl overflow-hidden bg-surface/20 backdrop-blur-md border border-hairline/40 flex flex-col justify-between p-4 md:p-6 text-left shadow-2xl">
+                <div className="flex items-center justify-between border-b border-hairline/60 pb-3 mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-full bg-danger/80 inline-block" />
+                    <span className="w-3 h-3 rounded-full bg-warning/80 inline-block" />
+                    <span className="w-3 h-3 rounded-full bg-positive/80 inline-block" />
+                    <span className="text-caption font-mono text-ink-secondary ml-2">
+                      studyou.app/roadmap
+                    </span>
+                  </div>
+                  <span className="text-caption font-semibold bg-accent-soft text-accent px-2.5 py-0.5 rounded-full">
+                    Stage 2 of 5 Active
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 my-auto">
+                  <div className="p-3.5 rounded-lg bg-surface/60 border border-hairline space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-caption font-semibold text-ink-secondary">
+                        IELTS Test Prep
+                      </span>
+                      <CheckCircle2 size={16} className="text-positive" />
+                    </div>
+                    <p className="text-body-lg font-bold text-ink">Score 7.5 Verified</p>
+                    <div className="h-1.5 w-full bg-surface-secondary rounded-full overflow-hidden">
+                      <div className="h-full bg-positive w-full" />
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-lg bg-surface/60 border border-accent/40 space-y-2 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <span className="text-caption font-semibold text-accent">CAS Statement</span>
+                      <Clock size={16} className="text-accent animate-pulse" />
+                    </div>
+                    <p className="text-body-lg font-bold text-ink">Due in 14 Days</p>
+                    <div className="h-1.5 w-full bg-surface-secondary rounded-full overflow-hidden">
+                      <div className="h-full bg-accent w-[65%]" />
+                    </div>
+                  </div>
+
+                  <div className="p-3.5 rounded-lg bg-surface/60 border border-hairline space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-caption font-semibold text-ink-secondary">
+                        Financial Proof
+                      </span>
+                      <ShieldCheck size={16} className="text-ink-tertiary" />
+                    </div>
+                    <p className="text-body-lg font-bold text-ink">£12,006 Required</p>
+                    <div className="h-1.5 w-full bg-surface-secondary rounded-full overflow-hidden">
+                      <div className="h-full bg-ink-tertiary w-[30%]" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-hairline/60 flex flex-wrap items-center justify-between gap-3 text-caption text-ink-secondary">
+                  <span className="font-semibold text-ink">
+                    Top 200 UK Universities Map & Tuition Comparison
+                  </span>
+                  <span className="text-accent font-medium">
+                    Updated live with official UK government guidance &rarr;
+                  </span>
+                </div>
+              </div>
+            </ContainerScroll>
+          </section>
+
           <InteractiveMapSection />
           <PillarsSection />
           <ClosingCta />
 
-          <footer className="relative z-10 max-w-5xl mx-auto px-6 py-8 text-caption text-ink-tertiary text-center leading-relaxed">
-            StudYou provides guidance and signposting only. It is not legal or immigration advice.
-            Always confirm details on official sources such as gov.uk.
+          {/* Premium Footer with Contact Us & Social Links */}
+          <footer className="relative z-10 border-t border-hairline bg-surface/40 backdrop-blur-md pt-12 pb-8">
+            <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+              <div className="md:col-span-2 space-y-3">
+                <Link
+                  to="/"
+                  className="flex items-center gap-2 text-body-lg font-podium font-bold tracking-tight text-ink"
+                >
+                  <span className="w-6 h-6 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)]">
+                    SY
+                  </span>
+                  StudYou
+                </Link>
+                <p className="text-caption text-ink-secondary max-w-sm leading-relaxed">
+                  A transparent, trackable roadmap for international students moving to the UK. Real
+                  costs, official sources, zero agency fees.
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="text-caption text-ink-tertiary font-medium mr-1">Socials:</span>
+                  <button
+                    type="button"
+                    title="Facebook - Coming Soon"
+                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <title>Facebook icon</title>
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    title="WhatsApp - Coming Soon"
+                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <title>WhatsApp icon</title>
+                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    title="Twitter / X - Coming Soon"
+                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <title>Twitter icon</title>
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    title="Instagram - Coming Soon"
+                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <title>Instagram icon</title>
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-body-sm font-bold text-ink mb-2">Platform Navigation</p>
+                <ul className="space-y-1.5 text-caption text-ink-secondary">
+                  <li>
+                    <Link to="/universities" className="hover:text-accent transition-colors">
+                      Search 200+ Universities
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/register" className="hover:text-accent transition-colors">
+                      Interactive Roadmap
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/login" className="hover:text-accent transition-colors">
+                      Sign in to Progress
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <p className="text-body-sm font-bold text-ink mb-2">Contact & Support</p>
+                <ul className="space-y-1.5 text-caption text-ink-secondary">
+                  <li className="flex items-center gap-1.5 text-ink-secondary">
+                    <Mail size={13} className="text-accent" />
+                    <a
+                      href="mailto:support@studyou.app"
+                      className="hover:text-accent transition-colors"
+                    >
+                      support@studyou.app
+                    </a>
+                  </li>
+                  <li className="text-ink-tertiary">London, United Kingdom</li>
+                  <li>
+                    <span className="inline-flex items-center gap-1 bg-positive-soft text-positive text-[10px] px-2 py-0.5 rounded-full font-semibold">
+                      Live Support Active
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="max-w-5xl mx-auto px-6 pt-6 border-t border-hairline/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-caption text-ink-tertiary text-center sm:text-left">
+              <p>
+                StudYou provides guidance and signposting only. It is not legal or immigration
+                advice. Always confirm details on official sources such as{' '}
+                <a
+                  href="https://gov.uk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  gov.uk
+                </a>
+                .
+              </p>
+              <p className="shrink-0 font-mono text-[11px] text-ink-tertiary">
+                &copy; {new Date().getFullYear()} StudYou. All rights reserved.
+              </p>
+            </div>
           </footer>
         </div>
       </div>
@@ -930,13 +1051,15 @@ const REGION_INFOCUS: Record<
 
 function InteractiveMapSection() {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
-  const [selectedRegion, setSelectedRegion] = useState<string>('London')
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([])
   const detailPanelRef = useRef<HTMLDivElement>(null)
   // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
   const flipStateRef = useRef<any>(null)
 
-  const activeRegionKey = hoveredRegion || selectedRegion
-  const details = REGION_INFOCUS[activeRegionKey] || REGION_INFOCUS.London
+  const activeRegionKey =
+    hoveredRegion ||
+    (selectedRegions.length > 0 ? selectedRegions[selectedRegions.length - 1] : null)
+  const details = activeRegionKey ? REGION_INFOCUS[activeRegionKey] || REGION_INFOCUS.London : null
 
   const presetCounts: Record<string, number> = {
     London: 40,
@@ -958,7 +1081,12 @@ function InteractiveMapSection() {
       const targets = detailPanelRef.current.querySelectorAll('[data-flip-id]')
       flipStateRef.current = Flip.getState(targets)
     }
-    setSelectedRegion(r)
+    setSelectedRegions((prev) => {
+      if (prev.includes(r)) {
+        return prev.filter((item) => item !== r)
+      }
+      return [...prev, r]
+    })
   }
 
   const handleHover = (r: string | null) => {
@@ -997,80 +1125,157 @@ function InteractiveMapSection() {
         <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-tertiary mb-3">
           Explore UK Geography
         </p>
-        <h2 className="text-title2 text-ink font-bold">Discover Regions & Costs</h2>
+        <h2 className="text-title2 text-ink font-bold font-podium">Discover Regions & Costs</h2>
         <p className="text-body text-ink-secondary mt-2 max-w-md mx-auto">
           Hover or click on any region on the interactive map to compare local living costs, average
           tuition ranges, and notable institutions.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 items-center bg-surface border border-hairline rounded-lg shadow-md p-6 md:p-8">
+      <div className="map-holding-box grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 items-center bg-surface border border-hairline rounded-lg shadow-md p-6 md:p-8 transform-gpu">
         <div className="flex flex-col items-center justify-center p-4 bg-surface-secondary/40 rounded-md border border-hairline max-w-sm mx-auto w-full">
           <UkGeoMap
-            selected={[selectedRegion]}
+            selected={selectedRegions}
             counts={presetCounts}
             onToggle={handleToggle}
             onHover={handleHover}
           />
           <p className="text-[10px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
-            Click to lock selection • Hover to inspect
+            Click once to select • Click again to unselect
           </p>
         </div>
 
         <div ref={detailPanelRef} className="flex flex-col h-full justify-between gap-5">
-          <div className="space-y-4">
-            <div
-              data-flip-id="map-header"
-              className="flex items-center justify-between border-b border-hairline pb-3"
-            >
-              <h3 className="text-title3 text-ink font-bold">{details.name}</h3>
-              <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
-                {details.unisCount} Universities
-              </span>
-            </div>
-
-            <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
-              {details.desc}
-            </p>
-
-            <div data-flip-id="map-stats" className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
-                <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
-                  Est. Living Expenses
-                </span>
-                <span className="text-body font-bold text-ink">{details.avgCost}</span>
-              </div>
-              <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
-                <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
-                  Avg. International Tuition
-                </span>
-                <span className="text-body font-bold text-emerald-600 dark:text-emerald-400">
-                  {details.tuition}
-                </span>
-              </div>
-            </div>
-
-            <div data-flip-id="map-unis" className="space-y-2 pt-2">
-              <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
-                Featured Institutions
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {details.famous.map((uni) => (
-                  <span
-                    key={uni}
-                    className="text-xs font-medium px-3 py-1 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
-                  >
-                    {uni}
+          {details ? (
+            <div className="space-y-4">
+              {/* Selected Regions Tag List */}
+              {selectedRegions.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 border-b border-hairline pb-3 mb-2">
+                  <span className="text-[10px] uppercase font-bold text-ink-tertiary mr-1">
+                    Selected:
                   </span>
-                ))}
+                  {selectedRegions.map((reg) => (
+                    <button
+                      key={reg}
+                      type="button"
+                      onClick={() => handleToggle(reg)}
+                      className="text-[11px] font-semibold bg-accent-soft text-accent px-2 py-0.5 rounded-full hover:bg-danger-soft hover:text-danger transition-colors flex items-center gap-1"
+                    >
+                      {reg}
+                      <span className="text-[9px] font-bold">&times;</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div
+                data-flip-id="map-header"
+                className="flex items-center justify-between border-b border-hairline pb-3"
+              >
+                <h3 className="text-title3 text-ink font-bold">{details.name}</h3>
+                <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
+                  {details.unisCount} Universities
+                </span>
+              </div>
+
+              <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
+                {details.desc}
+              </p>
+
+              <div data-flip-id="map-stats" className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
+                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                    Est. Living Expenses
+                  </span>
+                  <span className="text-body font-bold text-ink">{details.avgCost}</span>
+                </div>
+                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
+                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                    Avg. International Tuition
+                  </span>
+                  <span className="text-body font-bold text-emerald-600 dark:text-emerald-400">
+                    {details.tuition}
+                  </span>
+                </div>
+              </div>
+
+              <div data-flip-id="map-unis" className="space-y-2 pt-2">
+                <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
+                  Featured Institutions
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {details.famous.map((uni) => (
+                    <span
+                      key={uni}
+                      className="text-xs font-medium px-3 py-1 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
+                    >
+                      {uni}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="space-y-4">
+              <div
+                data-flip-id="map-header"
+                className="flex items-center justify-between border-b border-hairline pb-3"
+              >
+                <h3 className="text-title3 text-ink font-bold">Compare UK Regions</h3>
+                <span className="text-xs font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
+                  12 Regions total
+                </span>
+              </div>
+
+              <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
+                Explore local expenses, tuition levels, and universities by hovering over or
+                clicking on any UK region. Select multiple regions on the map to compare and
+                shortlist options for your customized degree roadmap.
+              </p>
+
+              <div data-flip-id="map-stats" className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
+                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                    UK Living Costs Range
+                  </span>
+                  <span className="text-body font-bold text-ink">£380 - £950 / month</span>
+                </div>
+                <div className="bg-canvas border border-hairline rounded-sm p-3.5 flex flex-col gap-1">
+                  <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
+                    Average Tuition Range
+                  </span>
+                  <span className="text-body font-bold text-emerald-600 dark:text-emerald-400">
+                    £13,500 - £35,000 / year
+                  </span>
+                </div>
+              </div>
+
+              <div data-flip-id="map-unis" className="space-y-2 pt-2">
+                <span className="text-[10px] font-bold text-ink-tertiary uppercase tracking-wider block">
+                  Shortlist Universities
+                </span>
+                <div className="flex flex-wrap gap-2 opacity-60">
+                  {['Oxford', 'Cambridge', 'Imperial', 'Edinburgh', 'Manchester', 'Bristol'].map(
+                    (uni) => (
+                      <span
+                        key={uni}
+                        className="text-xs font-medium px-3 py-1 bg-surface-secondary border border-hairline text-ink-secondary rounded-sm"
+                      >
+                        {uni}
+                      </span>
+                    ),
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           <div data-flip-id="map-cta" className="border-t border-hairline pt-4 mt-auto">
             <Link to="/register">
               <Button className="w-full sm:w-auto sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]">
-                Build my UK roadmap in {details.name}
+                {details
+                  ? `Build my UK roadmap in ${details.name}`
+                  : 'Start building my UK degree roadmap'}
                 <ArrowRight size={14} className="ml-1.5" />
               </Button>
             </Link>
@@ -1080,6 +1285,24 @@ function InteractiveMapSection() {
     </section>
   )
 }
+
+const pillars = [
+  {
+    icon: MapIcon,
+    title: 'A roadmap that tracks itself',
+    body: 'Five stages, twenty one official steps, each with a target date worked back from your intake. Tick things off and your budget and deadlines update live.',
+  },
+  {
+    icon: GraduationCap,
+    title: 'Find your university without a middleman',
+    body: 'The top 200 UK universities on a real map. Filter by region, compare tuition, swipe to shortlist, and open the official admissions page in one click.',
+  },
+  {
+    icon: BadgePoundSterling,
+    title: 'The true cost, in your currency',
+    body: 'Every fee from the English test to the health surcharge, added up in GBP and your home currency. No hidden commissions, because there are none.',
+  },
+]
 
 function PillarsSection() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -1183,9 +1406,12 @@ function ClosingCta() {
   return (
     <section className="cta-section relative z-10 max-w-5xl mx-auto px-6 py-16">
       <div className="relative overflow-hidden rounded-xl border border-hairline-strong p-10 sm:p-14 text-center">
+        <div className="absolute inset-0 opacity-35 pointer-events-none">
+          <ParticleCanvas pointerSize={3} pointerColor="#8cecff" />
+        </div>
         <div
           ref={auroraRef}
-          className="absolute inset-0 opacity-[0.14]"
+          className="absolute inset-0 opacity-[0.14] pointer-events-none"
           style={{
             background: 'var(--aurora)',
             backgroundSize: '200% 100%',

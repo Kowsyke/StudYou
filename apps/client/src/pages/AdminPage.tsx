@@ -3,6 +3,7 @@ import type { CategoryKey, Resource } from '@studyou/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowUpDown,
+  Check,
   ChevronDown,
   ChevronRight,
   ChevronUp,
@@ -11,6 +12,7 @@ import {
   Filter,
   Monitor,
   Moon,
+  Palette,
   Pencil,
   Plus,
   Printer,
@@ -355,89 +357,109 @@ export function AdminPage() {
         {activeTab === 'notes' && <AdminNotesManager />}
 
         {activeTab === 'settings' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 print:hidden">
-            <Card>
-              <CardHeader>
-                <CardKicker>Visual Settings</CardKicker>
-                <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
-                <CardDescription>Customize the application aesthetics</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-5">
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
-                  <div className="flex gap-2">
-                    <Button
-                      variant={themePreference === 'light' ? 'primary' : 'secondary'}
-                      size="sm"
-                      className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                      onClick={() => setTheme('light')}
-                    >
-                      <Sun size={14} />
-                      Light
-                    </Button>
-                    <Button
-                      variant={themePreference === 'dark' ? 'primary' : 'secondary'}
-                      size="sm"
-                      className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                      onClick={() => setTheme('dark')}
-                    >
-                      <Moon size={14} />
-                      Dark
-                    </Button>
-                    <Button
-                      variant={themePreference === 'system' ? 'primary' : 'secondary'}
-                      size="sm"
-                      className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
-                      onClick={() => setTheme('system')}
-                    >
-                      <Monitor size={14} />
-                      System
-                    </Button>
-                  </div>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start print:hidden">
+            {/* Admin Settings Sidebar */}
+            <div className="md:col-span-4 lg:col-span-3 bg-surface border border-hairline rounded-xl p-2 space-y-1 shadow-xs sticky top-20">
+              <div className="px-3 py-2 text-caption font-semibold uppercase tracking-wider text-accent">
+                Admin Settings
+              </div>
+              <div className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-bold text-ink bg-accent-soft border border-accent/20">
+                <Palette size={16} className="text-accent shrink-0" />
+                <span>Visuals & Branding</span>
+              </div>
+              <div className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium text-ink-secondary hover:text-ink hover:bg-surface-secondary/50">
+                <Download size={16} className="text-ink-tertiary shrink-0" />
+                <span>Reports & Exports</span>
+              </div>
+            </div>
 
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold text-ink-secondary">
-                    Brand Accent Color
-                  </Label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {Object.values(ACCENT_PRESETS).map((preset) => {
-                      const isActive = accentPreset === preset.key
-                      return (
-                        <button
-                          key={preset.key}
-                          onClick={() => setAccentPreset(preset.key)}
-                          className={cn(
-                            'relative flex items-center justify-between px-3 py-2 rounded-sm border text-left text-xs transition-all duration-150 hover:bg-surface-secondary',
-                            isActive
-                              ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
-                              : 'border-hairline bg-surface text-ink-secondary',
-                          )}
-                        >
-                          <span className="flex items-center gap-2">
-                            <span
-                              className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
-                              style={{ background: preset.accent }}
-                            />
-                            {preset.label}
-                          </span>
-                        </button>
-                      )
-                    })}
+            {/* Admin Settings Panels */}
+            <div className="md:col-span-8 lg:col-span-9 space-y-6">
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <CardKicker>Visual Settings</CardKicker>
+                  <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
+                  <CardDescription>
+                    Customize the application aesthetics and brand accents
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
+                    <div className="flex gap-2">
+                      <Button
+                        variant={themePreference === 'light' ? 'primary' : 'secondary'}
+                        size="sm"
+                        className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                        onClick={() => setTheme('light')}
+                      >
+                        <Sun size={14} />
+                        Light
+                      </Button>
+                      <Button
+                        variant={themePreference === 'dark' ? 'primary' : 'secondary'}
+                        size="sm"
+                        className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                        onClick={() => setTheme('dark')}
+                      >
+                        <Moon size={14} />
+                        Dark
+                      </Button>
+                      <Button
+                        variant={themePreference === 'system' ? 'primary' : 'secondary'}
+                        size="sm"
+                        className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                        onClick={() => setTheme('system')}
+                      >
+                        <Monitor size={14} />
+                        System
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
 
-            <Card>
-              <CardHeader>
-                <CardKicker>Data & Exports</CardKicker>
-                <CardTitle className="text-body font-semibold">Reports & Downloads</CardTitle>
-                <CardDescription>Export platform metrics and information</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-3 bg-surface-secondary rounded-sm border border-hairline flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-semibold text-ink-secondary">
+                      Brand Accent Color Presets
+                    </Label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {Object.values(ACCENT_PRESETS).map((preset) => {
+                        const isActive = accentPreset === preset.key
+                        return (
+                          <button
+                            key={preset.key}
+                            type="button"
+                            onClick={() => setAccentPreset(preset.key)}
+                            className={cn(
+                              'relative flex items-center justify-between px-3 py-2 rounded-md border text-left text-xs transition-all duration-150 cursor-pointer hover:bg-surface-secondary',
+                              isActive
+                                ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
+                                : 'border-hairline bg-surface text-ink-secondary',
+                            )}
+                          >
+                            <span className="flex items-center gap-2">
+                              <span
+                                className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+                                style={{ background: preset.accent }}
+                              />
+                              {preset.label}
+                            </span>
+                            {isActive && <Check size={12} className="text-accent" />}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <CardKicker>Data & Reports</CardKicker>
+                  <CardTitle className="text-body font-semibold">Reports & Downloads</CardTitle>
+                  <CardDescription>Export platform metrics and executive summaries</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-3 bg-surface-secondary/40 rounded-lg border border-hairline flex items-center justify-between">
                     <div className="min-w-0 pr-2">
                       <h4 className="text-xs font-semibold text-ink">Analytics Summary Report</h4>
                       <p className="text-caption text-ink-tertiary truncate">
@@ -447,16 +469,14 @@ export function AdminPage() {
                     <Button
                       size="sm"
                       onClick={handleDownloadAnalyticsCSV}
-                      className="flex items-center gap-1 shrink-0 h-7"
+                      className="flex items-center gap-1 shrink-0 h-8"
                     >
-                      <Download size={12} />
-                      CSV
+                      <Download size={13} />
+                      Export CSV
                     </Button>
                   </div>
-                </div>
 
-                <div className="p-3 bg-surface-secondary rounded-sm border border-hairline flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                  <div className="p-3 bg-surface-secondary/40 rounded-lg border border-hairline flex items-center justify-between">
                     <div className="min-w-0 pr-2">
                       <h4 className="text-xs font-semibold text-ink">Knowledge Base Export</h4>
                       <p className="text-caption text-ink-tertiary truncate">
@@ -466,26 +486,26 @@ export function AdminPage() {
                     <Button
                       size="sm"
                       onClick={handleDownloadResourcesCSV}
-                      className="flex items-center gap-1 shrink-0 h-7"
+                      className="flex items-center gap-1 shrink-0 h-8"
                     >
-                      <Download size={12} />
-                      CSV
+                      <Download size={13} />
+                      Export CSV
                     </Button>
                   </div>
-                </div>
 
-                <div className="pt-2">
-                  <Button
-                    variant="secondary"
-                    className="w-full flex items-center justify-center gap-2 h-9 text-xs"
-                    onClick={() => window.print()}
-                  >
-                    <Printer size={14} />
-                    Print Executive Summary
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="pt-2">
+                    <Button
+                      variant="secondary"
+                      className="w-full flex items-center justify-center gap-2 h-9 text-xs font-semibold"
+                      onClick={() => window.print()}
+                    >
+                      <Printer size={14} />
+                      Print Executive Summary Report
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         )}
       </div>

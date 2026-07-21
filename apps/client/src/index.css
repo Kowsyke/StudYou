@@ -91,9 +91,24 @@
   --elevation-overlay: 0 16px 48px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
-@theme inline {
+@font-face {
+  font-family: "FSP DEMO - PODIUM Sharp 4.11";
+  src: url("https://db.onlinewebfonts.com/t/8b75d9dcff6a48c35a46656192adf019.eot");
+  src: url("https://db.onlinewebfonts.com/t/8b75d9dcff6a48c35a46656192adf019.eot?#iefix")
+    format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/8b75d9dcff6a48c35a46656192adf019.woff2") format("woff2"),
+    url("https://db.onlinewebfonts.com/t/8b75d9dcff6a48c35a46656192adf019.woff") format("woff"),
+    url("https://db.onlinewebfonts.com/t/8b75d9dcff6a48c35a46656192adf019.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui,
     sans-serif;
+  --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-podium: "FSP DEMO - PODIUM Sharp 4.11", "Inter", sans-serif;
 
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
@@ -748,24 +763,18 @@ body {
   filter: blur(2px);
 }
 
-/* DrawSVG focus ring for input fields */
+/* Focus label brightening and input focus styling */
 .draw-focus {
   position: relative;
 }
 
-.draw-focus::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
-  border: 2px solid var(--accent);
-  border-radius: inherit;
-  pointer-events: none;
-  clip-path: inset(0 100% 0 0);
-  transition: clip-path 300ms var(--ease-swift);
+.draw-focus label {
+  transition: color 150ms ease, font-weight 150ms ease;
 }
 
-.draw-focus:focus-within::after {
-  clip-path: inset(0 0 0 0);
+.draw-focus:focus-within label {
+  color: var(--ink);
+  font-weight: 600;
 }
 
 /* Particle canvas behind hero sections */
@@ -829,4 +838,56 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.font-podium {
+  font-family: var(--font-podium);
+  letter-spacing: -0.01em;
+}
+
+.font-inter {
+  font-family: var(--font-inter);
+}
+
+.liquid-glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.18), inset 0
+    -1px 0 0 rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark .liquid-glass-card {
+  background: rgba(8, 12, 28, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08), inset 0
+    -1px 0 0 rgba(0, 0, 0, 0.2);
+}
+
+.liquid-glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.04) 30%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.04) 70%,
+    transparent
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.liquid-glass-card:hover::before {
+  left: 150%;
+  transition: all 0.95s cubic-bezier(0.25, 1, 0.5, 1);
 }

@@ -26,24 +26,24 @@ export function ParticleCanvas({ pointerSize = 4, pointerColor = 'white' }: Part
     window.addEventListener('resize', resizeCanvas)
 
     const opts = {
-      particles: 200,
-      particleBaseSize: 4,
-      particleAddedSize: 1,
-      particleMaxSize: 5,
-      particleBaseLight: 5,
-      particleAddedLight: 30,
-      particleBaseBaseAngSpeed: 0.001,
-      particleAddedBaseAngSpeed: 0.001,
-      particleBaseVariedAngSpeed: 0.0005,
-      particleAddedVariedAngSpeed: 0.0005,
-      sourceBaseSize: 3,
-      sourceAddedSize: 3,
-      sourceBaseAngSpeed: -0.01,
-      sourceVariedAngSpeed: 0.005,
-      sourceBaseDist: 130,
-      sourceVariedDist: 50,
-      particleTemplateColor: 'hsla(hue,80%,light%,alp)',
-      repaintColor: 'rgba(0,0,0,.1)',
+      particles: 340,
+      particleBaseSize: 5,
+      particleAddedSize: 3,
+      particleMaxSize: 9,
+      particleBaseLight: 18,
+      particleAddedLight: 55,
+      particleBaseBaseAngSpeed: 0.003,
+      particleAddedBaseAngSpeed: 0.003,
+      particleBaseVariedAngSpeed: 0.002,
+      particleAddedVariedAngSpeed: 0.002,
+      sourceBaseSize: 5,
+      sourceAddedSize: 4,
+      sourceBaseAngSpeed: -0.02,
+      sourceVariedAngSpeed: 0.01,
+      sourceBaseDist: 220,
+      sourceVariedDist: 95,
+      particleTemplateColor: 'hsla(hue,85%,light%,alp)',
+      repaintColor: 'rgba(0,0,0,.08)',
       enableTrails: false,
     }
 
@@ -97,7 +97,7 @@ export function ParticleCanvas({ pointerSize = 4, pointerColor = 'white' }: Part
       size: number
 
       constructor() {
-        this.dist = (Math.sqrt(Math.random()) * s) / 2
+        this.dist = (Math.sqrt(Math.random()) * s) / 1.7
         this.rad = Math.random() * util.tau
         this.baseAngSpeed =
           opts.particleBaseBaseAngSpeed + opts.particleAddedBaseAngSpeed * Math.random()
@@ -115,16 +115,26 @@ export function ParticleCanvas({ pointerSize = 4, pointerColor = 'white' }: Part
         const squareDist = util.square(x - source.x) + util.square(y - source.y)
         const sizeProp = Math.sqrt(s) / Math.sqrt(squareDist)
         const color = opts.particleTemplateColor
-          .replace('hue', ((this.rad / util.tau) * 360 + tick).toString())
+          .replace('hue', ((this.rad / util.tau) * 360 + tick * 1.5).toString())
           .replace(
             'light',
             (opts.particleBaseLight + sizeProp * opts.particleAddedLight).toString(),
           )
-          .replace('alp', '0.8')
+          .replace('alp', '0.9')
+
+        // High-energy jitter & firefly oscillation
+        const jitterX = Math.sin(tick * 0.25 + this.rad * 3) * 5 + (Math.random() - 0.5) * 2.5
+        const jitterY = Math.cos(tick * 0.25 + this.rad * 3) * 5 + (Math.random() - 0.5) * 2.5
 
         ctx.fillStyle = color
         ctx.beginPath()
-        ctx.arc(x, y, Math.min(this.size * sizeProp, opts.particleMaxSize), 0, util.tau)
+        ctx.arc(
+          x + jitterX,
+          y + jitterY,
+          Math.min(this.size * sizeProp, opts.particleMaxSize),
+          0,
+          util.tau,
+        )
         ctx.fill()
       }
     }
@@ -150,7 +160,22 @@ export function ParticleCanvas({ pointerSize = 4, pointerColor = 'white' }: Part
 
     ctx.fillStyle = '#000'
     ctx.fillRect(0, 0, c.width, c.height)
-    anim()
+
+    // Respect reduced motion: leave a still dark canvas, run no loop at all.
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    if (!reduced) anim()
+
+    // Pause the loop whenever the tab is hidden so it never burns CPU in the
+    // background or competes with scrolling elsewhere; resume when visible.
+    const onVisibility = () => {
+      if (document.hidden) {
+        window.cancelAnimationFrame(rafId)
+        rafId = 0
+      } else if (!reduced && !rafId) {
+        anim()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibility)
 
     const handleMouseMove = (e: MouseEvent) => {
       const bbox = c.getBoundingClientRect()
@@ -173,6 +198,7 @@ export function ParticleCanvas({ pointerSize = 4, pointerColor = 'white' }: Part
     return () => {
       window.cancelAnimationFrame(rafId)
       window.removeEventListener('resize', resizeCanvas)
+      document.removeEventListener('visibilitychange', onVisibility)
       c.removeEventListener('mousemove', handleMouseMove)
       c.removeEventListener('mouseleave', handleMouseLeave)
     }

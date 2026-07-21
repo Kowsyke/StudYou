@@ -18,6 +18,7 @@ export function UkGeoMap({ selected, counts, onToggle, onHover }: UkGeoMapProps)
     <svg
       viewBox={UK_MAP_VIEWBOX}
       className="w-full max-w-[340px] select-none"
+      style={{ overflow: 'visible' }}
       // biome-ignore lint/a11y/useSemanticElements: an SVG map cannot be replaced with a fieldset, the group role communicates the region collection to assistive tech.
       role="group"
       aria-label="UK regions map, select one or more regions"
