@@ -15,14 +15,12 @@ import {
   LifeBuoy,
   LogOut,
   Map as MapIcon,
-  Menu,
   Palette,
   SlidersHorizontal,
   Users,
-  X,
 } from 'lucide-react'
-import { type FormEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { type FormEvent, useCallback, useRef, useState } from 'react'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useSubmitReport } from '../hooks/useAdmin'
 import { ScrambleTextPlugin } from '../lib/gsap/ScrambleTextPlugin.js'
 import { gsap } from '../lib/gsap/index.js'
