@@ -52,8 +52,12 @@ jobs:
           SCM_PASSWORD: ${{ secrets.AZURE_SCM_PASSWORD }}
         run: |
           cd deploy && zip -qr ../app.zip . && cd ..
-          curl -sS -f -X POST \
+          echo "SCM password length (should be > 0): ${#SCM_PASSWORD}"
+          code=$(curl -sS -w '%{http_code}' -o /tmp/kudu.txt -X POST \
             --user "\$studyou-app-7097:$SCM_PASSWORD" \
             --data-binary @app.zip \
             -H 'Content-Type: application/zip' \
-            "https://studyou-app-7097.scm.azurewebsites.net/api/zipdeploy?isAsync=false"
+            "https://studyou-app-7097.scm.azurewebsites.net/api/zipdeploy?isAsync=false")
+          echo "Kudu HTTP status: $code"
+          echo "Kudu response:"; cat /tmp/kudu.txt 2>/dev/null || true; echo
+          case "$code" in 2*) echo "deploy ok" ;; *) echo "deploy FAILED (see status above)"; exit 1 ;; esac
