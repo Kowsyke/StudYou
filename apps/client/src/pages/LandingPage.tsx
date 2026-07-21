@@ -507,7 +507,7 @@ export function LandingPage() {
 
       <div id="smooth-wrapper" className="relative min-h-screen bg-transparent overflow-x-hidden">
         <div id="smooth-content">
-          <nav className="relative z-10 max-w-5xl mx-auto flex items-center justify-between px-6 py-5">
+          <nav className="relative z-10 max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
             <Link
               to="/"
               aria-label="StudYou home"
@@ -520,12 +520,12 @@ export function LandingPage() {
             </Link>
             <div className="flex items-center gap-2">
               <Link to="/login">
-                <Button variant="ghost" size="sm">
+                <Button variant="ghost" size="sm" className="px-2.5 sm:px-3 text-xs sm:text-sm">
                   Sign in
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm">
+                <Button size="sm" className="px-3 text-xs sm:text-sm">
                   Get started
                   <ArrowRight size={14} />
                 </Button>
@@ -533,49 +533,53 @@ export function LandingPage() {
             </div>
           </nav>
 
-          <main className="hero-container relative z-10 max-w-5xl mx-auto px-6 pt-14 pb-10 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+          <main className="hero-container relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-10 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-center text-center lg:text-left">
             <canvas ref={canvasRef} className="particle-canvas" />
-            <div>
-              <div className="hero-fade inline-flex items-center gap-1.5 bg-accent-soft text-accent text-caption font-semibold uppercase tracking-[0.05em] px-2.5 py-1 rounded-full mb-5">
+            <div className="flex flex-col items-center lg:items-start">
+              <div className="hero-fade inline-flex items-center gap-1.5 bg-accent-soft text-accent text-xs sm:text-caption font-semibold uppercase tracking-[0.05em] px-3 py-1 rounded-full mb-4 sm:mb-5 mx-auto lg:mx-0">
                 <ShieldCheck size={12} />
                 Every step from official sources
               </div>
 
-              <h1 className="hero-headline text-title1 text-ink font-podium font-black tracking-tight max-w-xl scramble-active">
+              <h1 className="hero-headline text-2xl sm:text-title1 text-ink font-podium font-black tracking-tight max-w-xl mx-auto lg:mx-0 scramble-active text-center lg:text-left leading-tight sm:leading-none">
                 &nbsp;
               </h1>
 
-              <p className="hero-fade text-body-lg text-ink-secondary max-w-md mt-5 leading-relaxed">
+              <p className="hero-fade text-sm sm:text-body-lg text-ink-secondary max-w-md mt-4 sm:mt-5 leading-relaxed mx-auto lg:mx-0 text-center lg:text-left">
                 A personal, trackable roadmap through every official step of studying in the UK.
                 Real costs, real deadlines, official sources. No commissions, no middlemen.
               </p>
 
-              <div className="hero-fade flex flex-wrap items-center gap-3 mt-8">
-                <Link to="/register">
-                  <Button size="lg" className="magnetic-cta magnetic-btn">
+              <div className="hero-fade flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mt-6 sm:mt-8 w-full sm:w-auto">
+                <Link to="/register" className="w-full sm:w-auto">
+                  <Button size="lg" className="magnetic-cta magnetic-btn w-full sm:w-auto">
                     Start your roadmap
                     <ArrowRight size={16} />
                   </Button>
                 </Link>
-                <Link to="/login">
-                  <Button variant="secondary" size="lg" className="magnetic-cta magnetic-btn">
+                <Link to="/login" className="w-full sm:w-auto">
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    className="magnetic-cta magnetic-btn w-full sm:w-auto"
+                  >
                     Sign in
                   </Button>
                 </Link>
               </div>
 
               {/* Frameless Interactive Glow Text Stats */}
-              <div className="hero-fade grid grid-cols-4 gap-4 mt-10 max-w-md select-none">
+              <div className="hero-fade grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 sm:mt-10 max-w-md w-full mx-auto lg:mx-0 select-none text-center lg:text-left">
                 {stats.map((stat) => (
                   <div key={stat.label} className="group cursor-pointer">
                     <p
-                      className="stat-counter text-title3 text-ink tabular-nums font-black transition-all duration-300 group-hover:text-accent group-hover:scale-105 origin-left [text-shadow:0_0_0px_transparent] group-hover:[text-shadow:0_0_18px_rgba(140,236,255,0.7),0_0_36px_rgba(140,236,255,0.4)]"
+                      className="stat-counter text-xl sm:text-title3 text-ink tabular-nums font-black transition-all duration-300 group-hover:text-accent group-hover:scale-105 origin-center lg:origin-left [text-shadow:0_0_0px_transparent] group-hover:[text-shadow:0_0_18px_rgba(140,236,255,0.7),0_0_36px_rgba(140,236,255,0.4)]"
                       data-target={stat.value}
                       data-currency={stat.isCurrency ? 'true' : 'false'}
                     >
                       0
                     </p>
-                    <p className="text-caption font-semibold text-ink-secondary group-hover:text-ink transition-colors duration-200 mt-0.5">
+                    <p className="text-xs sm:text-caption font-semibold text-ink-secondary group-hover:text-ink transition-colors duration-200 mt-0.5">
                       {stat.label}
                     </p>
                   </div>
@@ -1609,86 +1613,139 @@ function FloatingPreview() {
   const circumference = 2 * Math.PI * 30
 
   return (
-    <div
-      ref={containerRef}
-      className="relative h-[360px] w-full hidden lg:block select-none"
-      aria-hidden="true"
-    >
-      <div className="draggable-widget widget-1 absolute top-2 left-4 w-64 bg-surface border border-hairline rounded-lg shadow-lg p-4 cursor-grab active:cursor-grabbing z-10">
-        <div className="flex items-start gap-2.5">
-          <span
-            className={`mt-0.5 h-4 w-4 shrink-0 rounded-xs border-[1.5px] flex items-center justify-center transition-colors duration-200 ${
-              ticked ? 'bg-accent-solid border-accent-solid' : 'border-ink-tertiary bg-surface'
-            }`}
-          >
-            <Check
-              size={11}
-              strokeWidth={4}
-              className={`text-white transition-opacity duration-200 ${ticked ? 'opacity-100' : 'opacity-0'}`}
+    <>
+      {/* Mobile Centered Preview Showcase */}
+      <div className="lg:hidden flex flex-col gap-3 w-full max-w-sm mx-auto mt-6 select-none text-left">
+        <div className="bg-surface/80 backdrop-blur-md border border-hairline rounded-lg shadow-md p-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <svg width={48} height={48} className="-rotate-90" role="presentation">
+              <circle
+                cx={24}
+                cy={24}
+                r={20}
+                fill="none"
+                stroke="var(--surface-secondary)"
+                strokeWidth={5}
+              />
+              <circle
+                cx={24}
+                cy={24}
+                r={20}
+                fill="none"
+                stroke="var(--accent)"
+                strokeWidth={5}
+                strokeLinecap="round"
+                strokeDasharray={2 * Math.PI * 20}
+                strokeDashoffset={2 * Math.PI * 20 * (1 - percent / 100)}
+                style={{ transition: 'stroke-dashoffset 400ms var(--ease-swift)' }}
+              />
+            </svg>
+            <div>
+              <p className="text-body font-bold text-ink tabular-nums">{percent}% complete</p>
+              <p className="text-caption text-ink-secondary">Roadmap progress</p>
+            </div>
+          </div>
+          <span className="text-caption font-semibold text-accent bg-accent-soft px-2.5 py-1 rounded-full">
+            Active
+          </span>
+        </div>
+
+        <div className="bg-surface/80 backdrop-blur-md border border-hairline rounded-lg shadow-md p-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="h-8 w-8 rounded-sm bg-warning-soft text-warning flex items-center justify-center shrink-0">
+              <CalendarClock size={16} />
+            </span>
+            <div>
+              <p className="text-body font-semibold text-ink">Student Visa Application</p>
+              <p className="text-caption text-warning font-medium">Due in 12 days</p>
+            </div>
+          </div>
+          <span className="text-caption font-semibold text-ink-tertiary">£524</span>
+        </div>
+      </div>
+
+      {/* Desktop Physics Interactive Draggable Canvas */}
+      <div
+        ref={containerRef}
+        className="relative h-[360px] w-full hidden lg:block select-none"
+        aria-hidden="true"
+      >
+        <div className="draggable-widget widget-1 absolute top-2 left-4 w-64 bg-surface border border-hairline rounded-lg shadow-lg p-4 cursor-grab active:cursor-grabbing z-10">
+          <div className="flex items-start gap-2.5">
+            <span
+              className={`mt-0.5 h-4 w-4 shrink-0 rounded-xs border-[1.5px] flex items-center justify-center transition-colors duration-200 ${
+                ticked ? 'bg-accent-solid border-accent-solid' : 'border-ink-tertiary bg-surface'
+              }`}
+            >
+              <Check
+                size={11}
+                strokeWidth={4}
+                className={`text-white transition-opacity duration-200 ${ticked ? 'opacity-100' : 'opacity-0'}`}
+              />
+            </span>
+            <span
+              className={`text-body font-medium transition-colors duration-200 ${
+                ticked ? 'line-through text-ink-tertiary' : 'text-ink'
+              }`}
+            >
+              Book and sit an approved English test
+            </span>
+          </div>
+          <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-hairline text-caption text-ink-tertiary">
+            <span className="font-semibold text-ink-secondary">£229</span>
+            <span>Target 25 Nov</span>
+          </div>
+        </div>
+
+        <div className="draggable-widget widget-2 absolute top-40 left-0 bg-surface border border-hairline rounded-lg shadow-lg p-4 flex items-center gap-4 cursor-grab active:cursor-grabbing z-10">
+          <svg width={68} height={68} className="-rotate-90" role="presentation">
+            <circle
+              cx={34}
+              cy={34}
+              r={30}
+              fill="none"
+              stroke="var(--surface-secondary)"
+              strokeWidth={7}
             />
+            <circle
+              cx={34}
+              cy={34}
+              r={30}
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth={7}
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={circumference * (1 - percent / 100)}
+              style={{ transition: 'stroke-dashoffset 400ms var(--ease-swift)' }}
+            />
+          </svg>
+          <div>
+            <p className="text-body-lg font-bold text-ink tabular-nums">{percent}%</p>
+            <p className="text-caption text-ink-secondary">Roadmap complete</p>
+          </div>
+        </div>
+
+        <div className="draggable-widget widget-3 absolute top-56 right-0 bg-surface border border-hairline rounded-lg shadow-lg p-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing z-10">
+          <span className="h-8 w-8 rounded-sm bg-warning-soft text-warning flex items-center justify-center">
+            <CalendarClock size={15} />
           </span>
-          <span
-            className={`text-body font-medium transition-colors duration-200 ${
-              ticked ? 'line-through text-ink-tertiary' : 'text-ink'
-            }`}
-          >
-            Book and sit an approved English test
+          <div>
+            <p className="text-body font-semibold text-ink">Visa application</p>
+            <p className="text-caption text-warning font-medium">Due in 12 days</p>
+          </div>
+        </div>
+
+        <div className="draggable-widget widget-4 absolute top-8 right-4 bg-surface border border-hairline rounded-lg shadow-lg p-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing z-10">
+          <span className="h-8 w-8 rounded-sm bg-positive-soft text-positive flex items-center justify-center">
+            <Wallet size={15} />
           </span>
-        </div>
-        <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-hairline text-caption text-ink-tertiary">
-          <span className="font-semibold text-ink-secondary">£229</span>
-          <span>Target 25 Nov</span>
-        </div>
-      </div>
-
-      <div className="draggable-widget widget-2 absolute top-40 left-0 bg-surface border border-hairline rounded-lg shadow-lg p-4 flex items-center gap-4 cursor-grab active:cursor-grabbing z-10">
-        <svg width={68} height={68} className="-rotate-90" role="presentation">
-          <circle
-            cx={34}
-            cy={34}
-            r={30}
-            fill="none"
-            stroke="var(--surface-secondary)"
-            strokeWidth={7}
-          />
-          <circle
-            cx={34}
-            cy={34}
-            r={30}
-            fill="none"
-            stroke="var(--accent)"
-            strokeWidth={7}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={circumference * (1 - percent / 100)}
-            style={{ transition: 'stroke-dashoffset 400ms var(--ease-swift)' }}
-          />
-        </svg>
-        <div>
-          <p className="text-body-lg font-bold text-ink tabular-nums">{percent}%</p>
-          <p className="text-caption text-ink-secondary">Roadmap complete</p>
+          <div>
+            <p className="text-body font-semibold text-ink tabular-nums">£3,337 true cost</p>
+            <p className="text-caption text-ink-secondary">GBP and home currency</p>
+          </div>
         </div>
       </div>
-
-      <div className="draggable-widget widget-3 absolute top-56 right-0 bg-surface border border-hairline rounded-lg shadow-lg p-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing z-10">
-        <span className="h-8 w-8 rounded-sm bg-warning-soft text-warning flex items-center justify-center">
-          <CalendarClock size={15} />
-        </span>
-        <div>
-          <p className="text-body font-semibold text-ink">Visa application</p>
-          <p className="text-caption text-warning font-medium">Due in 12 days</p>
-        </div>
-      </div>
-
-      <div className="draggable-widget widget-4 absolute top-8 right-4 bg-surface border border-hairline rounded-lg shadow-lg p-3.5 flex items-center gap-3 cursor-grab active:cursor-grabbing z-10">
-        <span className="h-8 w-8 rounded-sm bg-positive-soft text-positive flex items-center justify-center">
-          <Wallet size={15} />
-        </span>
-        <div>
-          <p className="text-body font-semibold text-ink tabular-nums">£3,337 true cost</p>
-          <p className="text-caption text-ink-secondary">GBP and home currency</p>
-        </div>
-      </div>
-    </div>
+    </>
   )
 }
