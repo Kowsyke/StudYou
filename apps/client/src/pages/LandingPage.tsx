@@ -2,12 +2,11 @@ import { motion } from 'framer-motion'
 import {
   ArrowRight,
   BadgePoundSterling,
-  Building2,
-  Calculator,
   CalendarClock,
   Check,
   CheckCircle2,
   Clock,
+  FolderTree,
   GraduationCap,
   Mail,
   Map as MapIcon,
@@ -21,6 +20,7 @@ import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
 import { ContainerScroll } from '../components/ui/container-scroll-animation'
 import { ParticleCanvas } from '../components/ui/particle-canvas'
+import ScrollBaseAnimation from '../components/ui/scroll-text-marquee'
 import { WebGLLiquid } from '../components/ui/webgl-liquid'
 import { useAuthStore } from '../store/authStore'
 
@@ -590,94 +590,26 @@ export function LandingPage() {
             <FloatingPreview />
           </main>
 
-          {/* Spacious Classy Feature Showcase Marquee */}
-          <div className="relative z-10 border-y border-hairline bg-surface/30 backdrop-blur-md py-6 overflow-hidden select-none">
-            <div className="marquee-track flex gap-5">
-              {[
-                {
-                  title: '200+ Verified UK Universities',
-                  subtitle: 'Official UCAS & Portal Links',
-                  quote:
-                    'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
-                  author: 'Ken Masters',
-                  role: 'MSc Computer Science, Manchester',
-                  icon: Building2,
-                },
-                {
-                  title: 'Step-by-Step CAS & Milestone Tracker',
-                  subtitle: 'Zero Missed Deadlines',
-                  quote:
-                    'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
-                  author: 'Kira Athrun',
-                  role: 'BEng Mechanical, Bristol',
-                  icon: CheckCircle2,
-                },
-                {
-                  title: 'Real Cost & Proof of Funds Calc',
-                  subtitle: 'Live Currency Conversion',
-                  quote:
-                    'Calculate living expenses and tuition converted into your home currency with real exchange rates.',
-                  author: 'Jessica Lin',
-                  role: 'LLM Law, Edinburgh',
-                  icon: Calculator,
-                },
-                {
-                  title: 'Official Visa & IHS Guidance',
-                  subtitle: 'GOV.UK Signposting',
-                  quote:
-                    'Direct signposts to official UKVI visa applications, IHS health surcharges, and financial requirements.',
-                  author: 'David Wright',
-                  role: 'BA Business, Birmingham',
-                  icon: ShieldCheck,
-                },
-                {
-                  title: '200+ Verified UK Universities',
-                  subtitle: 'Official UCAS & Portal Links',
-                  quote:
-                    'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
-                  author: 'Ken Masters',
-                  role: 'MSc Computer Science, Manchester',
-                  icon: Building2,
-                },
-                {
-                  title: 'Step-by-Step CAS & Milestone Tracker',
-                  subtitle: 'Zero Missed Deadlines',
-                  quote:
-                    'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
-                  author: 'Kira Athrun',
-                  role: 'BEng Mechanical, Bristol',
-                  icon: CheckCircle2,
-                },
-              ].map((card, index) => {
-                const Icon = card.icon
-                return (
-                  <div
-                    key={`marquee-card-${card.title}-${index}`}
-                    className="shrink-0 w-80 p-4 rounded-xl liquid-glass-card hover:border-accent/40 hover:shadow-[0_8px_32px_rgba(0,102,204,0.12)] group"
-                  >
-                    <div className="flex items-center gap-3 mb-2.5">
-                      <div className="w-9 h-9 rounded-full overflow-hidden border border-hairline shrink-0 bg-accent-soft flex items-center justify-center">
-                        <Icon size={18} className="text-accent" />
-                      </div>
-                      <div className="overflow-hidden">
-                        <p className="text-body-sm font-bold text-ink truncate group-hover:text-accent transition-colors">
-                          {card.title}
-                        </p>
-                        <p className="text-[11px] font-mono text-ink-tertiary truncate">
-                          {card.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-caption text-ink-secondary leading-relaxed line-clamp-2">
-                      "{card.quote}"
-                    </p>
-                    <div className="mt-3 pt-2 border-t border-hairline/50 flex items-center justify-between text-[11px]">
-                      <span className="font-semibold text-ink">{card.author}</span>
-                      <span className="text-accent font-medium">{card.role}</span>
-                    </div>
-                  </div>
-                )
-              })}
+          {/* Reflection Text Marquee Section */}
+          <div className="relative z-10 py-8 border-y border-hairline bg-surface/20 backdrop-blur-md overflow-hidden select-none space-y-1.5">
+            {/* Top Marquee Row moving Left */}
+            <ScrollBaseAnimation
+              baseVelocity={-3}
+              delay={100}
+              clasname="font-extrabold text-ink tracking-tight uppercase"
+            >
+              200+ Verified UK Universities • Official CAS & Visa Tracker • Live Cost Calculator •
+            </ScrollBaseAnimation>
+
+            {/* Bottom Reflection Marquee Row moving Right with Reflection Opacity & Flip */}
+            <div className="opacity-25 blur-[0.4px] transform scale-y-[-1] origin-center">
+              <ScrollBaseAnimation
+                baseVelocity={3}
+                delay={100}
+                clasname="font-extrabold text-accent tracking-tight uppercase"
+              >
+                Official GOV.UK Guidance • Free Student Roadmap • No Middleman Fees •
+              </ScrollBaseAnimation>
             </div>
           </div>
 
@@ -761,6 +693,34 @@ export function LandingPage() {
                 </div>
               </div>
             </ContainerScroll>
+          </section>
+
+          {/* Knowledge Tree Quick Resource Banner */}
+          <section className="relative z-10 max-w-4xl mx-auto px-4 my-8 text-center">
+            <div className="p-6 sm:p-8 rounded-2xl bg-surface/50 backdrop-blur-xl border border-hairline hover:border-accent/40 shadow-xl transition-all duration-300 group flex flex-col md:flex-row items-center justify-between gap-6 text-left">
+              <div className="space-y-2 max-w-xl">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-accent-soft text-accent text-caption font-semibold uppercase tracking-wider">
+                  <FolderTree size={14} />
+                  Knowledge Tree
+                </div>
+                <h3 className="text-xl sm:text-title2 font-bold text-ink">
+                  Find all official guides & resources in our Knowledge Tree.
+                </h3>
+                <p className="text-body-sm text-ink-secondary leading-relaxed">
+                  Direct GOV.UK, NHS, and UCAS guidance — 100% verified and free. No hidden costs or
+                  middlemen.
+                </p>
+              </div>
+              <Link to="/resources" className="shrink-0 w-full md:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full md:w-auto flex items-center justify-center gap-2 group-hover:scale-105 transition-transform"
+                >
+                  Explore Knowledge Base
+                  <ArrowRight size={16} />
+                </Button>
+              </Link>
+            </div>
           </section>
 
           <InteractiveMapSection />

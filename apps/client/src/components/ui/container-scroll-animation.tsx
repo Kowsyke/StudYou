@@ -35,11 +35,11 @@ export function ContainerScroll({ titleComponent, children }: ContainerScrollPro
 
   return (
     <div
-      className="min-h-[48rem] md:min-h-[64rem] flex items-center justify-center relative p-2 md:p-10 select-none overflow-hidden"
+      className="min-h-[32rem] md:min-h-[42rem] flex items-center justify-center relative p-2 md:p-6 select-none"
       ref={containerRef}
     >
       <div
-        className="py-6 md:py-16 w-full relative overflow-hidden"
+        className="py-4 md:py-8 w-full relative"
         style={{
           perspective: '1000px',
         }}
@@ -64,7 +64,7 @@ export function Header({ translate, titleComponent }: HeaderProps) {
       style={{
         translateY: translate,
       }}
-      className="max-w-5xl mx-auto text-center"
+      className="max-w-5xl mx-auto text-center mb-6"
     >
       {titleComponent}
     </motion.div>
@@ -86,9 +86,9 @@ export function Card({ rotate, scale, children }: CardProps) {
         boxShadow:
           '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
       }}
-      className="max-w-5xl -mt-12 mx-auto min-h-[34rem] md:min-h-[42rem] h-auto w-full border-2 border-hairline/50 p-2 md:p-6 bg-surface/30 backdrop-blur-xl rounded-[30px] shadow-2xl overflow-hidden"
+      className="max-w-5xl mx-auto min-h-[22rem] md:min-h-[28rem] h-auto w-full border-2 border-hairline/50 p-2 md:p-5 bg-surface/30 backdrop-blur-xl rounded-[24px] sm:rounded-[30px] shadow-2xl overflow-hidden"
     >
-      <div className="h-full w-full overflow-hidden rounded-2xl bg-surface-secondary/20 border border-hairline/40 p-2 md:p-6">
+      <div className="h-full w-full overflow-hidden rounded-xl sm:rounded-2xl bg-surface-secondary/20 border border-hairline/40 p-2 md:p-5">
         {children}
       </div>
     </motion.div>

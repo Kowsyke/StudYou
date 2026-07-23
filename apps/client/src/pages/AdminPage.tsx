@@ -26,6 +26,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 import { ReportsPanel, UsersPanel } from '../components/AdminControl'
 import { InfrastructurePanel } from '../components/AdminInfra'
 import { QueryError } from '../components/QueryError'
+import { MinimalProfessionalCard } from '../components/ui/analytics-dashboard'
 import { Badge } from '../components/ui/badge'
 import { Button } from '../components/ui/button'
 import {
@@ -271,6 +272,17 @@ export function AdminPage() {
             />
           ) : (
             <>
+              <div className="mb-6">
+                <MinimalProfessionalCard
+                  totalStudents={analytics.totalStudents}
+                  totalJourneys={analytics.totalJourneys}
+                  averageCompletion={analytics.averageCompletion}
+                  usersCount={analytics.totalUsers.toLocaleString()}
+                  sessionsCount={analytics.activeUsers.toLocaleString()}
+                  conversionRate={`${analytics.averageCompletion}%`}
+                />
+              </div>
+
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
                 <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
                   <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">

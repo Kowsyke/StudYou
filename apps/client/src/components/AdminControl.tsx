@@ -5,7 +5,10 @@ import {
   CircleCheck,
   CircleDot,
   Clock,
+  ExternalLink,
   Inbox,
+  Mail,
+  MessageSquare,
   Search,
   ShieldCheck,
   UserRound,
@@ -16,7 +19,6 @@ import { formatDate } from '../lib/format'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
 import { toast } from '../store/toastStore'
-import { EmptyState } from './EmptyState'
 import { QueryError } from './QueryError'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
@@ -150,9 +152,9 @@ export function UsersPanel() {
 }
 
 const statusStyles: Record<ReportStatus, string> = {
-  open: 'bg-danger-soft text-danger',
-  in_progress: 'bg-warning-soft text-warning',
-  resolved: 'bg-positive-soft text-positive',
+  open: 'bg-danger/20 text-danger border-danger/30',
+  in_progress: 'bg-warning/20 text-warning border-warning/30',
+  resolved: 'bg-positive/20 text-positive border-positive/30',
 }
 
 const statusLabels: Record<ReportStatus, string> = {
@@ -161,8 +163,16 @@ const statusLabels: Record<ReportStatus, string> = {
   resolved: 'Resolved',
 }
 
-/* Bug and feedback triage: filter by status, step each report through
-   open, in progress and resolved. */
+const avatarColors = [
+  'bg-blue-600 text-white',
+  'bg-emerald-600 text-white',
+  'bg-purple-600 text-white',
+  'bg-indigo-600 text-white',
+  'bg-amber-600 text-white',
+  'bg-rose-600 text-white',
+]
+
+/* Telegram Chat Message Style Bug Reports & Customer Support Queue */
 export function ReportsPanel() {
   const { data: reports, isPending, error, refetch, isRefetching } = useAdminReports(true)
   const updateReport = useUpdateReport()
@@ -199,94 +209,204 @@ export function ReportsPanel() {
     )
   }
 
+  const getMailtoLink = (report: BugReport) => {
+    const subject = encodeURIComponent(`Re: [StudYou Support] Bug Report: ${report.category}`)
+    const body = encodeURIComponent(
+      `Hi ${report.userName || 'Student'},\n\nThank you for submitting a report regarding:\n"${report.message}"\n\nOur team has reviewed your report and...`,
+    )
+    return `mailto:${report.userEmail ?? ''}?subject=${subject}&body=${body}`
+  }
+
   return (
-    <section aria-label="Bug reports">
-      <fieldset className="flex flex-wrap gap-1.5 mb-4 border-0" aria-label="Filter by status">
+    <section aria-label="Bug reports stream" className="space-y-4">
+      {/* Filter Tabs */}
+      <fieldset className="flex flex-wrap gap-1.5 border-0" aria-label="Filter by status">
         {(['all', 'open', 'in_progress', 'resolved'] as const).map((value) => (
           <button
             key={value}
+            type="button"
             onClick={() => setStatusFilter(value)}
             aria-pressed={statusFilter === value}
             className={cn(
-              'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms]',
+              'text-xs font-medium px-3.5 py-1.5 rounded-full border transition-all duration-150 cursor-pointer',
               statusFilter === value
                 ? 'bg-accent-solid border-transparent text-white shadow-sm [background-image:var(--accent-gradient)]'
                 : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
             )}
           >
-            {value === 'all' ? `All (${(reports ?? []).length})` : statusLabels[value]}
+            {value === 'all' ? `All Reports (${(reports ?? []).length})` : statusLabels[value]}
           </button>
         ))}
       </fieldset>
 
-      {filtered.length === 0 ? (
-        <EmptyState
-          icon={Inbox}
-          title="No reports here"
-          body="When students report a bug or share feedback from the sidebar, it lands in this queue."
-        />
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {filtered.map((report) => (
-            <li key={report.id} className="aurora-card rounded-lg shadow-md p-4">
-              <div className="flex flex-wrap items-center gap-2 mb-2">
-                <span className="inline-flex items-center gap-1 text-micro font-semibold uppercase tracking-[0.05em] px-1.5 py-0.5 rounded-xs bg-surface-secondary text-ink-secondary">
-                  <Bug size={10} />
-                  {report.category}
-                </span>
-                <span
-                  className={cn(
-                    'text-micro font-semibold uppercase tracking-[0.05em] px-1.5 py-0.5 rounded-xs',
-                    statusStyles[report.status],
-                  )}
-                >
-                  {statusLabels[report.status]}
-                </span>
-                {report.pagePath && (
-                  <span className="font-mono text-micro text-ink-tertiary bg-canvas border border-hairline rounded-xs px-1.5 py-0.5">
-                    {report.pagePath}
-                  </span>
-                )}
-                <span className="ml-auto text-caption text-ink-tertiary">
-                  {formatDate(report.createdAt)}
-                </span>
-              </div>
-              <p className="text-body text-ink leading-relaxed">{report.message}</p>
-              <p className="text-caption text-ink-tertiary mt-1.5">
-                From {report.userName ?? 'Unknown'} ({report.userEmail ?? 'no email'})
+      {/* Telegram Wallpaper Window Header */}
+      <div className="bg-[#17212b] border border-hairline/40 rounded-xl overflow-hidden shadow-xl">
+        <div className="bg-[#0e1621] px-4 py-3 border-b border-hairline/30 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold text-xs">
+              <MessageSquare size={16} />
+            </div>
+            <div>
+              <h3 className="text-xs font-bold text-white flex items-center gap-2">
+                Telegram Support Feed
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              </h3>
+              <p className="text-[11px] text-gray-400">
+                Live customer bug reports & feedback queue
               </p>
-              <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-hairline">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={report.status === 'open' || updateReport.isPending}
-                  onClick={() => setStatus(report, 'open')}
-                >
-                  <CircleDot size={12} />
-                  Open
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  disabled={report.status === 'in_progress' || updateReport.isPending}
-                  onClick={() => setStatus(report, 'in_progress')}
-                >
-                  <Clock size={12} />
-                  In progress
-                </Button>
-                <Button
-                  size="sm"
-                  disabled={report.status === 'resolved' || updateReport.isPending}
-                  onClick={() => setStatus(report, 'resolved')}
-                >
-                  <CircleCheck size={12} />
-                  Resolve
-                </Button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+            </div>
+          </div>
+          <span className="text-[11px] font-mono text-gray-400 bg-white/5 px-2 py-1 rounded-md border border-white/10">
+            {filtered.length} messages
+          </span>
+        </div>
+
+        {/* Telegram Chat Wallpaper Message Body */}
+        <div className="p-4 sm:p-6 bg-[#0e1621] bg-[radial-gradient(#17212b_1px,transparent_1px)] [background-size:16px_16px] min-h-[300px]">
+          {filtered.length === 0 ? (
+            <div className="py-12 text-center text-gray-400 space-y-2">
+              <Inbox className="mx-auto text-gray-500" size={32} />
+              <p className="text-sm font-semibold text-gray-300">No messages in this filter</p>
+              <p className="text-xs text-gray-500">
+                When students send bug reports or feature feedback, they will appear here as
+                Telegram chat bubbles.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-6 max-w-3xl mx-auto">
+              {filtered.map((report, idx) => {
+                const initial = (report.userName ?? 'Student').charAt(0).toUpperCase()
+                const avatarColor = avatarColors[idx % avatarColors.length]
+
+                return (
+                  <div key={report.id} className="flex items-start gap-3 group animate-fadeIn">
+                    {/* User Avatar Circle */}
+                    <div
+                      className={cn(
+                        'w-9 h-9 rounded-full flex items-center justify-center font-bold text-xs shrink-0 shadow-md border border-white/10',
+                        avatarColor,
+                      )}
+                    >
+                      {initial}
+                    </div>
+
+                    {/* Telegram Speech Bubble */}
+                    <div className="relative flex-1 bg-[#182533] border border-white/10 rounded-2xl rounded-tl-xs p-4 shadow-lg text-left">
+                      {/* Telegram Message Header */}
+                      <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-white/5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-blue-300">
+                            {report.userName ?? 'Unknown Student'}
+                          </span>
+                          <span className="text-[11px] text-gray-400">
+                            ({report.userEmail ?? 'no-email'})
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-micro font-mono bg-white/10 text-gray-300 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            <Bug size={10} className="inline mr-1 text-amber-400" />
+                            {report.category}
+                          </span>
+                          <span
+                            className={cn(
+                              'text-micro font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border',
+                              statusStyles[report.status],
+                            )}
+                          >
+                            {statusLabels[report.status]}
+                          </span>
+                          <span className="text-[10px] font-mono text-gray-400">
+                            {formatDate(report.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Message Content */}
+                      <p className="text-sm text-gray-100 leading-relaxed font-sans whitespace-pre-wrap">
+                        {report.message}
+                      </p>
+
+                      {report.pagePath && (
+                        <div className="mt-2 text-[11px] font-mono text-blue-400/90 bg-blue-500/10 border border-blue-500/20 rounded-md px-2 py-1 inline-block">
+                          Path: {report.pagePath}
+                        </div>
+                      )}
+
+                      {/* Telegram Message Action Bar (Email Reply + Status Controls) */}
+                      <div className="mt-3 pt-2.5 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
+                        {/* Direct Email Reply Button */}
+                        {report.userEmail ? (
+                          <a
+                            href={getMailtoLink(report)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                          >
+                            <Mail size={13} />
+                            Reply to {report.userEmail}
+                            <ExternalLink size={11} className="opacity-70" />
+                          </a>
+                        ) : (
+                          <span className="text-xs text-gray-500">No email provided</span>
+                        )}
+
+                        {/* Status Change Chips */}
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            disabled={report.status === 'open' || updateReport.isPending}
+                            onClick={() => setStatus(report, 'open')}
+                            className={cn(
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer',
+                              report.status === 'open'
+                                ? 'bg-danger/20 text-danger font-bold border border-danger/30'
+                                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white',
+                            )}
+                          >
+                            <CircleDot size={11} className="inline mr-1" />
+                            Open
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={report.status === 'in_progress' || updateReport.isPending}
+                            onClick={() => setStatus(report, 'in_progress')}
+                            className={cn(
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer',
+                              report.status === 'in_progress'
+                                ? 'bg-warning/20 text-warning font-bold border border-warning/30'
+                                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white',
+                            )}
+                          >
+                            <Clock size={11} className="inline mr-1" />
+                            In Progress
+                          </button>
+
+                          <button
+                            type="button"
+                            disabled={report.status === 'resolved' || updateReport.isPending}
+                            onClick={() => setStatus(report, 'resolved')}
+                            className={cn(
+                              'px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer',
+                              report.status === 'resolved'
+                                ? 'bg-positive/20 text-positive font-bold border border-positive/30'
+                                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white',
+                            )}
+                          >
+                            <CircleCheck size={11} className="inline mr-1" />
+                            Resolve
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   )
 }
