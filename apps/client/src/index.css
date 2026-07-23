@@ -821,7 +821,7 @@ textarea {
   animation: orbit-glow 1.2s ease-in-out infinite alternate;
 }
 
-/* Scramble text container — monospace during decode, then normal */
+/* Scramble text container - monospace during decode, then normal */
 .scramble-active {
   font-variant-numeric: tabular-nums;
 }
