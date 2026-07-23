@@ -22,7 +22,7 @@ import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
 import { ContainerScroll } from '../components/ui/container-scroll-animation'
 import { ParticleCanvas } from '../components/ui/particle-canvas'
-import ScrollBaseAnimation from '../components/ui/scroll-text-marquee'
+import { InteractiveCardMarquee } from '../components/ui/scroll-text-marquee'
 import { WebGLLiquid } from '../components/ui/webgl-liquid'
 import { useAuthStore } from '../store/authStore'
 
@@ -592,118 +592,76 @@ export function LandingPage() {
             <FloatingPreview />
           </main>
 
-          {/* Spacious Feature Showcase Marquee & Reflection Text Marquee */}
-          <div className="relative z-10 py-6 bg-surface/10 backdrop-blur-md overflow-hidden select-none space-y-6">
-            {/* Feature Showcase Cards Track */}
-            <div className="marquee-track flex gap-5">
-              {[
-                {
-                  title: '200+ Verified UK Universities',
-                  subtitle: 'Official UCAS & Portal Links',
-                  quote:
-                    'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
-                  author: 'Ken Masters',
-                  role: 'MSc Computer Science, Manchester',
-                  icon: Building2,
-                },
-                {
-                  title: 'Step-by-Step CAS & Milestone Tracker',
-                  subtitle: 'Zero Missed Deadlines',
-                  quote:
-                    'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
-                  author: 'Kira Athrun',
-                  role: 'BEng Mechanical, Bristol',
-                  icon: CheckCircle2,
-                },
-                {
-                  title: 'Real Cost & Proof of Funds Calc',
-                  subtitle: 'Live Currency Conversion',
-                  quote:
-                    'Calculate living expenses and tuition converted into your home currency with real exchange rates.',
-                  author: 'Jessica Lin',
-                  role: 'LLM Law, Edinburgh',
-                  icon: Calculator,
-                },
-                {
-                  title: 'Official Visa & IHS Guidance',
-                  subtitle: 'GOV.UK Signposting',
-                  quote:
-                    'Direct signposts to official UKVI visa applications, IHS health surcharges, and financial requirements.',
-                  author: 'David Wright',
-                  role: 'BA Business, Birmingham',
-                  icon: ShieldCheck,
-                },
-                {
-                  title: '200+ Verified UK Universities',
-                  subtitle: 'Official UCAS & Portal Links',
-                  quote:
-                    'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
-                  author: 'Ken Masters',
-                  role: 'MSc Computer Science, Manchester',
-                  icon: Building2,
-                },
-                {
-                  title: 'Step-by-Step CAS & Milestone Tracker',
-                  subtitle: 'Zero Missed Deadlines',
-                  quote:
-                    'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
-                  author: 'Kira Athrun',
-                  role: 'BEng Mechanical, Bristol',
-                  icon: CheckCircle2,
-                },
-              ].map((card, index) => {
-                const Icon = card.icon
-                return (
-                  <div
-                    key={`marquee-card-${card.title}-${index}`}
-                    className="shrink-0 w-80 p-4 rounded-xl liquid-glass-card hover:border-accent/40 hover:shadow-[0_8px_32px_rgba(0,102,204,0.12)] group"
-                  >
-                    <div className="flex items-center gap-3 mb-2.5">
-                      <div className="w-9 h-9 rounded-full overflow-hidden border border-hairline shrink-0 bg-accent-soft flex items-center justify-center">
-                        <Icon size={18} className="text-accent" />
-                      </div>
-                      <div className="overflow-hidden">
-                        <p className="text-body-sm font-bold text-ink truncate group-hover:text-accent transition-colors">
-                          {card.title}
-                        </p>
-                        <p className="text-[11px] font-mono text-ink-tertiary truncate">
-                          {card.subtitle}
-                        </p>
-                      </div>
+          {/* Interactive Feature Cards Marquee with Mouse Drag & Physics */}
+          <InteractiveCardMarquee
+            cards={[
+              {
+                title: '200+ Verified UK Universities',
+                subtitle: 'Official UCAS & Portal Links',
+                quote:
+                  'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
+                author: 'Ken Masters',
+                role: 'MSc Computer Science, Manchester',
+                icon: Building2,
+              },
+              {
+                title: 'Step-by-Step CAS & Milestone Tracker',
+                subtitle: 'Zero Missed Deadlines',
+                quote:
+                  'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
+                author: 'Kira Athrun',
+                role: 'BEng Mechanical, Bristol',
+                icon: CheckCircle2,
+              },
+              {
+                title: 'Real Cost & Proof of Funds Calc',
+                subtitle: 'Live Currency Conversion',
+                quote:
+                  'Calculate living expenses and tuition converted into your home currency with real exchange rates.',
+                author: 'Jessica Lin',
+                role: 'LLM Law, Edinburgh',
+                icon: Calculator,
+              },
+              {
+                title: 'Official Visa & IHS Guidance',
+                subtitle: 'GOV.UK Signposting',
+                quote:
+                  'Direct signposts to official UKVI visa applications, IHS health surcharges, and financial requirements.',
+                author: 'David Wright',
+                role: 'BA Business, Birmingham',
+                icon: ShieldCheck,
+              },
+            ].map((card, index) => {
+              const Icon = card.icon
+              return (
+                <div
+                  key={`marquee-card-${card.title}-${index}`}
+                  className="shrink-0 w-80 p-4 rounded-xl liquid-glass-card hover:border-accent/40 hover:shadow-[0_8px_32px_rgba(0,102,204,0.12)] group transition-all"
+                >
+                  <div className="flex items-center gap-3 mb-2.5">
+                    <div className="w-9 h-9 rounded-full overflow-hidden border border-hairline shrink-0 bg-accent-soft flex items-center justify-center">
+                      <Icon size={18} className="text-accent" />
                     </div>
-                    <p className="text-caption text-ink-secondary leading-relaxed line-clamp-2">
-                      "{card.quote}"
-                    </p>
-                    <div className="mt-3 pt-2 border-t border-hairline/50 flex items-center justify-between text-[11px]">
-                      <span className="font-semibold text-ink">{card.author}</span>
-                      <span className="text-accent font-medium">{card.role}</span>
+                    <div className="overflow-hidden">
+                      <p className="text-body-sm font-bold text-ink truncate group-hover:text-accent transition-colors">
+                        {card.title}
+                      </p>
+                      <p className="text-[11px] font-mono text-ink-tertiary truncate">
+                        {card.subtitle}
+                      </p>
                     </div>
                   </div>
-                )
-              })}
-            </div>
-
-            {/* Reflection Marquee Text Rows */}
-            <div className="space-y-1 pt-2">
-              <ScrollBaseAnimation
-                baseVelocity={-3}
-                delay={100}
-                clasname="font-extrabold text-ink tracking-tight uppercase"
-              >
-                200+ Verified UK Universities • Official CAS & Visa Tracker • Live Cost Calculator •
-              </ScrollBaseAnimation>
-
-              <div className="opacity-25 blur-[0.4px] transform scale-y-[-1] origin-center">
-                <ScrollBaseAnimation
-                  baseVelocity={3}
-                  delay={100}
-                  clasname="font-extrabold text-accent tracking-tight uppercase"
-                >
-                  Official GOV.UK Guidance • Free Student Roadmap • No Middleman Fees •
-                </ScrollBaseAnimation>
-              </div>
-            </div>
-          </div>
+                  <p className="text-caption text-ink-secondary leading-relaxed line-clamp-2">
+                    "{card.quote}"
+                  </p>
+                  <div className="mt-3 pt-2 border-t border-hairline/50 flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-ink">{card.author}</span>
+                    <span className="text-accent font-medium">{card.role}</span>
+                  </div>
+                </div>
+              )
+            })}
+          />
 
           <ProblemSection />
 
