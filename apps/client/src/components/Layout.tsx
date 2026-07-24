@@ -282,8 +282,11 @@ export function Layout() {
         </div>
       </main>
 
-      {/* Mobile Sticky Bottom Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 bg-surface/85 backdrop-blur-md border-t border-hairline lg:hidden pb-[safe-area-inset-bottom] pt-2 px-2 flex justify-around items-center select-none shadow-lg">
+      {/* Mobile Sticky Bottom Navigation Bar. Scrolls horizontally with
+          snapping instead of squeezing every item to fit, so the admin
+          nav (7 items) stays readable on a narrow phone the same way the
+          student nav (5 items, fits without scrolling) does. */}
+      <nav className="fixed bottom-0 left-0 right-0 z-20 bg-surface/85 backdrop-blur-md border-t border-hairline lg:hidden pb-[calc(env(safe-area-inset-bottom)+8px)] pt-2 px-1 flex items-center gap-0.5 overflow-x-auto snap-x snap-mandatory select-none shadow-lg">
         {nav.map((item) => (
           <NavLink
             key={item.to}
@@ -291,7 +294,7 @@ export function Layout() {
             end={item.to === '/' || item.to === '/admin'}
             className={({ isActive }) =>
               cn(
-                'flex flex-col items-center justify-center flex-1 py-1 gap-1 text-[10px] font-medium transition-colors duration-[120ms] relative',
+                'flex flex-col items-center justify-center shrink-0 min-w-[64px] py-1 gap-1 text-[10px] font-medium transition-colors duration-[120ms] relative snap-center',
                 isActive ? 'text-accent' : 'text-ink-secondary hover:text-ink',
               )
             }

@@ -19,11 +19,13 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { UkGeoMap } from '../components/UkGeoMap'
+import { AnimatedGradientBackground } from '../components/ui/animated-gradient-background'
 import { Button } from '../components/ui/button'
 import { ContainerScroll } from '../components/ui/container-scroll-animation'
+import { GlowingEffect } from '../components/ui/glowing-effect'
 import { ParticleCanvas } from '../components/ui/particle-canvas'
 import { InteractiveCardMarquee } from '../components/ui/scroll-text-marquee'
-import { WebGLLiquid } from '../components/ui/webgl-liquid'
+import { WavyBackground } from '../components/ui/wavy'
 import { useAuthStore } from '../store/authStore'
 
 import { useGSAP } from '@gsap/react'
@@ -65,11 +67,29 @@ const stats = [
   { value: '0', label: 'Agency fees', isCurrency: true },
 ]
 
+// The hero and footer particle canvases are pure mouse-proximity effects
+// (repulsion / attraction from cursor position) that do nothing meaningful
+// on a touch device, yet are the heaviest CPU-bound work on this page. Both
+// call this to skip mounting on coarse-pointer (touch) devices, so phones
+// get a lighter, smoother page instead of idle particle simulations.
+function useIsCoarsePointer(): boolean {
+  const [isCoarsePointer, setIsCoarsePointer] = useState(
+    () => window.matchMedia?.('(pointer: coarse)').matches ?? false,
+  )
+  useEffect(() => {
+    const mql = window.matchMedia('(pointer: coarse)')
+    const onChange = () => setIsCoarsePointer(mql.matches)
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
+  return isCoarsePointer
+}
+
 export function LandingPage() {
   const token = useAuthStore((s) => s.token)
   const haloRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const liquidRef = useRef<HTMLDivElement>(null)
+  const isCoarsePointer = useIsCoarsePointer()
 
   useEffect(() => {
     const halo = haloRef.current
@@ -118,24 +138,6 @@ export function LandingPage() {
       smooth: prefersReducedMotion ? 0 : 1.2,
       effects: !prefersReducedMotion,
     })
-
-    // Scroll-driven parallax and scale of the background WebGL liquid
-    const liquid = liquidRef.current
-    if (liquid) {
-      if (!prefersReducedMotion) {
-        gsap.to(liquid, {
-          y: '12vh',
-          scale: 1.1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#smooth-content',
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: true,
-          },
-        })
-      }
-    }
 
     // ScrambleText hero decode - characters resolve from symbols
     gsap.to('.hero-headline', {
@@ -483,31 +485,22 @@ export function LandingPage() {
 
   return (
     <>
-      <div ref={haloRef} className="cursor-halo" aria-hidden="true" />
-
-      {/* Cinematic WebGL Liquid Animated Background */}
-      <WebGLLiquid
-        className="fixed inset-0 w-full h-full pointer-events-none z-0"
-        title=""
-        subtitle=""
-        description=""
-        colorDeep="#040714"
-        colorMid="#1a4ca6"
-        colorHighlight="#38bdf8"
-        speed={0.25}
-        flowStrength={0.3}
-        grain={0.015}
-        contrast={1.25}
-        opacity={0.85}
+      <div
+        ref={haloRef}
+        className="cursor-halo bg-white/10 blur-[80px] w-96 h-96 pointer-events-none rounded-full fixed -translate-x-1/2 -translate-y-1/2"
+        aria-hidden="true"
       />
 
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute inset-0 scanner-grid pointer-events-none opacity-40" />
-        <div className="absolute inset-0 bg-gradient-to-b from-canvas/10 via-canvas/35 to-canvas/85 pointer-events-none" />
-        <div className="absolute inset-0 radial-blender pointer-events-none opacity-60" />
-      </div>
-
-      <div id="smooth-wrapper" className="relative min-h-screen bg-transparent overflow-x-hidden">
+      <AnimatedGradientBackground
+        Breathing={true}
+        animationSpeed={0.03}
+        containerClassName="!fixed z-0 pointer-events-none w-screen h-screen opacity-70"
+      />
+      <WavyBackground className="!fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" />
+      <div
+        id="smooth-wrapper"
+        className="dark bg-transparent relative min-h-screen text-ink overflow-x-hidden font-sans"
+      >
         <div id="smooth-content">
           <nav className="relative z-10 max-w-5xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5">
             <Link
@@ -536,18 +529,18 @@ export function LandingPage() {
           </nav>
 
           <main className="hero-container relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-10 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 lg:gap-12 items-center text-center lg:text-left">
-            <canvas ref={canvasRef} className="particle-canvas" />
+            {!isCoarsePointer && <canvas ref={canvasRef} className="particle-canvas" />}
             <div className="flex flex-col items-center lg:items-start">
               <div className="hero-fade inline-flex items-center gap-1.5 bg-accent-soft text-accent text-xs sm:text-caption font-semibold uppercase tracking-[0.05em] px-3 py-1 rounded-full mb-4 sm:mb-5 mx-auto lg:mx-0">
                 <ShieldCheck size={12} />
                 Every step from official sources
               </div>
 
-              <h1 className="hero-headline text-2xl sm:text-title1 text-ink font-podium font-black tracking-tight max-w-xl mx-auto lg:mx-0 scramble-active text-center lg:text-left leading-tight sm:leading-none">
+              <h1 className="hero-headline text-5xl sm:text-7xl lg:text-[6rem] text-white font-podium font-black tracking-tighter max-w-2xl mx-auto lg:mx-0 scramble-active text-center lg:text-left leading-[0.9] text-outline-white relative z-10">
                 &nbsp;
               </h1>
 
-              <p className="hero-fade text-sm sm:text-body-lg text-ink-secondary max-w-md mt-4 sm:mt-5 leading-relaxed mx-auto lg:mx-0 text-center lg:text-left">
+              <p className="hero-fade text-sm sm:text-lg lg:text-xl text-white max-w-md mt-6 sm:mt-8 leading-relaxed mx-auto lg:mx-0 text-center lg:text-left font-medium text-outline-white relative z-10">
                 A personal, trackable roadmap through every official step of studying in the UK.
                 Real costs, real deadlines, official sources. No commissions, no middlemen.
               </p>
@@ -571,17 +564,17 @@ export function LandingPage() {
               </div>
 
               {/* Frameless Interactive Glow Text Stats */}
-              <div className="hero-fade grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 sm:mt-10 max-w-md w-full mx-auto lg:mx-0 select-none text-center lg:text-left">
+              <div className="hero-fade grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 sm:mt-10 max-w-md w-full mx-auto lg:mx-0 select-none text-center lg:text-left relative z-10">
                 {stats.map((stat) => (
                   <div key={stat.label} className="group cursor-pointer">
                     <p
-                      className="stat-counter text-xl sm:text-title3 text-ink tabular-nums font-black transition-all duration-300 group-hover:text-accent group-hover:scale-105 origin-center lg:origin-left [text-shadow:0_0_0px_transparent] group-hover:[text-shadow:0_0_18px_rgba(140,236,255,0.7),0_0_36px_rgba(140,236,255,0.4)]"
+                      className="stat-counter text-xl sm:text-title3 text-white tabular-nums font-black transition-all duration-300 group-hover:text-accent origin-center lg:origin-left text-outline-white"
                       data-target={stat.value}
                       data-currency={stat.isCurrency ? 'true' : 'false'}
                     >
                       0
                     </p>
-                    <p className="text-xs sm:text-caption font-semibold text-ink-secondary group-hover:text-ink transition-colors duration-200 mt-0.5">
+                    <p className="text-xs sm:text-caption font-semibold text-white group-hover:text-ink transition-colors duration-200 mt-0.5 text-outline-white">
                       {stat.label}
                     </p>
                   </div>
@@ -589,7 +582,9 @@ export function LandingPage() {
               </div>
             </div>
 
-            <FloatingPreview />
+            <div className="relative z-10">
+              <FloatingPreview />
+            </div>
           </main>
 
           {/* Interactive Feature Cards Marquee with Mouse Drag & Physics */}
@@ -636,26 +631,26 @@ export function LandingPage() {
               return (
                 <div
                   key={`marquee-card-${card.title}-${index}`}
-                  className="shrink-0 w-80 p-4 rounded-xl liquid-glass-card hover:border-accent/40 hover:shadow-[0_8px_32px_rgba(0,102,204,0.12)] group transition-all"
+                  className="shrink-0 w-80 p-5 rounded-2xl bg-[#0d101d]/95 backdrop-blur-xl border border-white/15 hover:border-accent/40 hover:bg-[#121629] shadow-2xl group transition-all duration-300 relative overflow-hidden"
                 >
-                  <div className="flex items-center gap-3 mb-2.5">
-                    <div className="w-9 h-9 rounded-full overflow-hidden border border-hairline shrink-0 bg-accent-soft flex items-center justify-center">
-                      <Icon size={18} className="text-accent" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="relative z-10 flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border border-white/15 shrink-0 bg-white/10 flex items-center justify-center">
+                      <Icon
+                        size={18}
+                        className="text-white group-hover:text-accent transition-colors duration-300"
+                      />
                     </div>
                     <div className="overflow-hidden">
-                      <p className="text-body-sm font-bold text-ink truncate group-hover:text-accent transition-colors">
-                        {card.title}
-                      </p>
-                      <p className="text-[11px] font-mono text-ink-tertiary truncate">
-                        {card.subtitle}
-                      </p>
+                      <p className="text-sm font-bold text-white truncate">{card.title}</p>
+                      <p className="text-xs font-mono text-gray-400 truncate">{card.subtitle}</p>
                     </div>
                   </div>
-                  <p className="text-caption text-ink-secondary leading-relaxed line-clamp-2">
+                  <p className="relative z-10 text-xs text-gray-300 leading-relaxed line-clamp-3 mb-4">
                     "{card.quote}"
                   </p>
-                  <div className="mt-3 pt-2 border-t border-hairline/50 flex items-center justify-between text-[11px]">
-                    <span className="font-semibold text-ink">{card.author}</span>
+                  <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-[11px]">
+                    <span className="font-semibold text-white">{card.author}</span>
                     <span className="text-accent font-medium">{card.role}</span>
                   </div>
                 </div>
@@ -1064,69 +1059,6 @@ const REGION_INFOCUS: Record<
   },
 }
 
-function Draggable3DMapWrapper({ children }: { children: React.ReactNode }) {
-  const [isDragging, setIsDragging] = useState(false)
-  const [rotation, setRotation] = useState({ x: 0, y: 0 })
-  const startPosRef = useRef({ x: 0, y: 0 })
-
-  const handlePointerDown = (e: React.PointerEvent) => {
-    setIsDragging(true)
-    startPosRef.current = { x: e.clientX - rotation.y * 3, y: e.clientY + rotation.x * 3 }
-  }
-
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging) return
-    const deltaX = e.clientX - startPosRef.current.x
-    const deltaY = e.clientY - startPosRef.current.y
-
-    const rotY = Math.max(-28, Math.min(28, deltaX * 0.35))
-    const rotX = Math.max(-28, Math.min(28, -deltaY * 0.35))
-    setRotation({ x: rotX, y: rotY })
-  }
-
-  const handlePointerUp = () => {
-    setIsDragging(false)
-    setRotation({ x: 0, y: 0 })
-  }
-
-  return (
-    <div
-      style={{ perspective: 1000, touchAction: 'pan-y' }}
-      className="relative cursor-grab active:cursor-grabbing select-none w-full flex flex-col items-center py-1"
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
-    >
-      <motion.div
-        animate={{
-          rotateX: rotation.x,
-          rotateY: rotation.y,
-          scale: isDragging ? 1.06 : 1,
-          y: isDragging ? -6 : 0,
-        }}
-        transition={{
-          rotateX: {
-            type: 'spring',
-            stiffness: isDragging ? 400 : 250,
-            damping: isDragging ? 30 : 20,
-          },
-          rotateY: {
-            type: 'spring',
-            stiffness: isDragging ? 400 : 250,
-            damping: isDragging ? 30 : 20,
-          },
-          scale: { duration: 0.2 },
-          y: { duration: 0.2 },
-        }}
-        className="w-full flex flex-col items-center justify-center transform-gpu"
-      >
-        {children}
-      </motion.div>
-    </div>
-  )
-}
-
 function InteractiveMapSection() {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
   const [selectedRegions, setSelectedRegions] = useState<string[]>([])
@@ -1198,33 +1130,45 @@ function InteractiveMapSection() {
   }, [activeRegionKey])
 
   return (
-    <section className="scroll-container-section map-section relative z-10 max-w-5xl mx-auto px-4 sm:px-6 overflow-hidden">
-      <ContainerScroll
-        titleComponent={
-          <div className="text-center mb-6">
-            <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-tertiary mb-2">
-              Explore UK Geography
-            </p>
-            <h2 className="text-title1 text-ink font-bold font-apple">Discover Regions & Costs</h2>
-            <p className="text-body text-ink-secondary mt-2 max-w-md mx-auto">
-              Hover or click on any region on the interactive map to compare local living costs,
-              average tuition ranges, and notable institutions.
-            </p>
-          </div>
-        }
+    <section className="scroll-container-section map-section relative z-10 max-w-5xl mx-auto px-4 sm:px-6 my-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30, scale: 0.98 }}
+        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="w-full"
       >
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 items-center h-full w-full p-3 md:p-6 text-left overflow-hidden">
-          <div className="flex flex-col items-center justify-center p-4 bg-surface-secondary/20 rounded-2xl border border-hairline/60 w-full overflow-hidden">
-            <Draggable3DMapWrapper>
-              <UkGeoMap
-                selected={selectedRegions}
-                counts={presetCounts}
-                onToggle={handleToggle}
-                onHover={handleHover}
-              />
-            </Draggable3DMapWrapper>
-            <p className="text-[10px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
-              Click & drag to tilt map in 3D • Click region to select
+        <div className="text-center mb-8">
+          <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-tertiary mb-2">
+            Explore UK Geography
+          </p>
+          <h2 className="text-title1 text-ink font-bold font-apple text-outline-white">
+            Discover Regions & Costs
+          </h2>
+          <p className="text-body text-ink-secondary mt-2 max-w-md mx-auto">
+            Hover or click on any region on the interactive map to compare local living costs,
+            average tuition ranges, and notable institutions.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 items-center h-full w-full p-4 md:p-8 text-left overflow-hidden bg-surface/40 backdrop-blur-md rounded-3xl border border-hairline relative">
+          <GlowingEffect
+            spread={40}
+            glow={true}
+            disabled={false}
+            proximity={64}
+            inactiveZone={0.01}
+            borderWidth={2}
+          />
+          <div className="flex flex-col items-center justify-center p-5 bg-surface-secondary/30 rounded-2xl border border-hairline/60 w-full overflow-hidden relative">
+            <UkGeoMap
+              selected={selectedRegions}
+              counts={presetCounts}
+              onToggle={handleToggle}
+              onHover={handleHover}
+            />
+            <p className="text-[11px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
+              Click region on map to filter live data
             </p>
           </div>
 
@@ -1380,7 +1324,7 @@ function InteractiveMapSection() {
             </div>
           </div>
         </div>
-      </ContainerScroll>
+      </motion.div>
     </section>
   )
 }
@@ -1456,13 +1400,25 @@ function PillarsSection() {
         {pillars.map((pillar) => (
           <article
             key={pillar.title}
-            className="pillar-card spotlight-card card-lift rounded-lg shadow-md p-6 border border-hairline group"
+            className="pillar-card spotlight-card card-lift relative overflow-hidden rounded-2xl shadow-md p-6 border border-hairline group bg-surface/50 backdrop-blur-md"
           >
-            <span className="pillar-icon-span inline-flex h-11 w-11 rounded-md bg-accent-soft text-accent items-center justify-center mb-4 group-hover:glow-pulse transition-shadow duration-300">
+            <GlowingEffect
+              spread={40}
+              glow={true}
+              disabled={false}
+              proximity={64}
+              inactiveZone={0.01}
+              borderWidth={2}
+            />
+            <span className="pillar-icon-span relative z-10 inline-flex h-11 w-11 rounded-md bg-accent-soft text-accent items-center justify-center mb-4 group-hover:glow-pulse transition-shadow duration-300">
               <pillar.icon size={20} />
             </span>
-            <h3 className="text-body-lg font-bold text-ink leading-snug">{pillar.title}</h3>
-            <p className="text-body text-ink-secondary leading-relaxed mt-2">{pillar.body}</p>
+            <h3 className="relative z-10 text-body-lg font-bold text-ink leading-snug">
+              {pillar.title}
+            </h3>
+            <p className="relative z-10 text-body text-ink-secondary leading-relaxed mt-2">
+              {pillar.body}
+            </p>
           </article>
         ))}
       </div>
@@ -1473,6 +1429,7 @@ function PillarsSection() {
 function ClosingCta() {
   const auroraRef = useRef<HTMLDivElement>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
+  const isCoarsePointer = useIsCoarsePointer()
 
   useGSAP(() => {
     if (auroraRef.current) {
@@ -1506,7 +1463,7 @@ function ClosingCta() {
     <section className="cta-section relative z-10 max-w-5xl mx-auto px-6 py-16">
       <div className="relative overflow-hidden rounded-xl border border-hairline-strong p-10 sm:p-14 text-center">
         <div className="absolute inset-0 opacity-35 pointer-events-none">
-          <ParticleCanvas pointerSize={3} pointerColor="#8cecff" />
+          {!isCoarsePointer && <ParticleCanvas pointerSize={3} pointerColor="#8cecff" />}
         </div>
         <div
           ref={auroraRef}

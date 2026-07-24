@@ -60,12 +60,15 @@ export function UniversitiesPage() {
   const shortlistBarRef = useRef<HTMLDivElement>(null)
   const searchBarUnderlineRef = useRef<SVGPathElement>(null)
 
+  const isInitializedRef = useRef(false)
+
   useEffect(() => {
-    if (overview?.journey?.regions) {
+    if (overview?.journey?.regions && !isInitializedRef.current) {
       setFilters((f) => ({
         ...f,
         regions: overview.journey.regions ?? [],
       }))
+      isInitializedRef.current = true
     }
   }, [overview])
 

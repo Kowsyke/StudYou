@@ -14,9 +14,10 @@ import {
 } from 'lucide-react'
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { AnimatedGradientBackground } from '../components/ui/animated-gradient-background'
 import { Button } from '../components/ui/button'
 import { Input, Label } from '../components/ui/input'
-import { WebGLLiquid } from '../components/ui/webgl-liquid'
+import { WavyBackground } from '../components/ui/wavy'
 import { useLogin } from '../hooks/useAuth'
 import { apiErrorMessage } from '../lib/api'
 import { CustomEase } from '../lib/gsap/CustomEase.js'
@@ -124,22 +125,13 @@ export function LoginPage() {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden bg-[#02040b]">
-      {/* GPU WebGL Fluid Field Background */}
-      <WebGLLiquid
-        className="fixed inset-0 w-full h-full pointer-events-none z-0"
-        title=""
-        subtitle=""
-        description=""
-        colorDeep="#040714"
-        colorMid="#1e58bc"
-        colorHighlight="#38bdf8"
-        speed={0.7}
-        flowStrength={0.8}
-        grain={0.02}
-        contrast={1.2}
-        opacity={0.8}
-        reveal
+      {/* Global Animated Gradient + Wavy Shader Background */}
+      <AnimatedGradientBackground
+        Breathing={true}
+        animationSpeed={0.04}
+        containerClassName="!fixed z-0 pointer-events-none w-screen h-screen opacity-70"
       />
+      <WavyBackground className="!fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" />
 
       <div className="pointer-events-none absolute inset-0 scanner-grid opacity-30 z-0" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-canvas/15 via-canvas/45 to-canvas/85 z-0" />

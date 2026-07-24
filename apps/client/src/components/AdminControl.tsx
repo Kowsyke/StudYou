@@ -172,7 +172,7 @@ const avatarColors = [
   'bg-rose-600 text-white',
 ]
 
-/* Telegram Chat Message Style Bug Reports & Customer Support Queue */
+/* Live support chat style bug report and feedback queue */
 export function ReportsPanel() {
   const { data: reports, isPending, error, refetch, isRefetching } = useAdminReports(true)
   const updateReport = useUpdateReport()
@@ -239,7 +239,7 @@ export function ReportsPanel() {
         ))}
       </fieldset>
 
-      {/* Telegram Wallpaper Window Header */}
+      {/* Live Support Window Header */}
       <div className="bg-[#17212b] border border-hairline/40 rounded-xl overflow-hidden shadow-xl">
         <div className="bg-[#0e1621] px-4 py-3 border-b border-hairline/30 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -248,7 +248,7 @@ export function ReportsPanel() {
             </div>
             <div>
               <h3 className="text-xs font-bold text-white flex items-center gap-2">
-                Telegram Support Feed
+                Live Support Feed
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               </h3>
               <p className="text-[11px] text-gray-400">
@@ -261,15 +261,15 @@ export function ReportsPanel() {
           </span>
         </div>
 
-        {/* Telegram Chat Wallpaper Message Body */}
+        {/* Chat Message Body */}
         <div className="p-4 sm:p-6 bg-[#0e1621] bg-[radial-gradient(#17212b_1px,transparent_1px)] [background-size:16px_16px] min-h-[300px]">
           {filtered.length === 0 ? (
             <div className="py-12 text-center text-gray-400 space-y-2">
               <Inbox className="mx-auto text-gray-500" size={32} />
               <p className="text-sm font-semibold text-gray-300">No messages in this filter</p>
               <p className="text-xs text-gray-500">
-                When students send bug reports or feature feedback, they will appear here as
-                Telegram chat bubbles.
+                When students send bug reports or feature feedback, they will appear here in the
+                live support feed.
               </p>
             </div>
           ) : (
@@ -290,9 +290,9 @@ export function ReportsPanel() {
                       {initial}
                     </div>
 
-                    {/* Telegram Speech Bubble */}
+                    {/* Message bubble */}
                     <div className="relative flex-1 bg-[#182533] border border-white/10 rounded-2xl rounded-tl-xs p-4 shadow-lg text-left">
-                      {/* Telegram Message Header */}
+                      {/* Message header */}
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-white/5">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-bold text-blue-300">
@@ -333,7 +333,7 @@ export function ReportsPanel() {
                         </div>
                       )}
 
-                      {/* Telegram Message Action Bar (Email Reply + Status Controls) */}
+                      {/* Message action bar (email reply and status controls) */}
                       <div className="mt-3 pt-2.5 border-t border-white/5 flex flex-wrap items-center justify-between gap-2">
                         {/* Direct Email Reply Button */}
                         {report.userEmail ? (

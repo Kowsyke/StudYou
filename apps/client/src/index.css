@@ -913,3 +913,14 @@ textarea {
   left: 150%;
   transition: all 0.95s cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+/* Ensure legibility on top of dynamic animated backgrounds */
+.text-outline-white {
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.3);
+}
+
+.dark .text-outline-white {
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
+  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.15);
+}

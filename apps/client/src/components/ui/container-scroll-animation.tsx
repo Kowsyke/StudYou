@@ -29,9 +29,9 @@ export function ContainerScroll({ titleComponent, children }: ContainerScrollPro
     return isMobile ? [0.7, 0.9] : [1.05, 1]
   }
 
-  const rotate = useTransform(scrollYProgress, [0, 1], [20, 0])
+  const rotate = useTransform(scrollYProgress, [0, 1], [35, 0])
   const scale = useTransform(scrollYProgress, [0, 1], scaleDimensions())
-  const translate = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const translate = useTransform(scrollYProgress, [0, 1], [0, -120])
 
   return (
     <div
@@ -84,11 +84,11 @@ export function Card({ rotate, scale, children }: CardProps) {
         rotateX: rotate,
         scale,
         boxShadow:
-          '0 0 #0000004d, 0 9px 20px #0000004a, 0 37px 37px #00000042, 0 84px 50px #00000026, 0 149px 60px #0000000a, 0 233px 65px #00000003',
+          '0 0 0 1px rgba(255,255,255,0.05), 0 20px 40px rgba(0,0,0,0.5), 0 40px 80px rgba(100,50,255,0.15), 0 80px 120px rgba(0,100,255,0.1)',
       }}
-      className="max-w-5xl mx-auto min-h-[22rem] md:min-h-[28rem] h-auto w-full border-2 border-hairline/50 p-2 md:p-5 bg-surface/30 backdrop-blur-xl rounded-[24px] sm:rounded-[30px] shadow-2xl overflow-hidden"
+      className="max-w-5xl mx-auto min-h-[22rem] md:min-h-[28rem] h-auto w-full p-2 md:p-5 bg-white/5 backdrop-blur-3xl rounded-[24px] sm:rounded-[30px] overflow-hidden"
     >
-      <div className="h-full w-full overflow-hidden rounded-xl sm:rounded-2xl bg-surface-secondary/20 border border-hairline/40 p-2 md:p-5">
+      <div className="h-full w-full overflow-hidden rounded-xl sm:rounded-2xl bg-black/60 border border-white/10 p-2 md:p-5 shadow-[inset_0_0_20px_rgba(255,255,255,0.02)]">
         {children}
       </div>
     </motion.div>

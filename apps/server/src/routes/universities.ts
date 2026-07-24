@@ -25,7 +25,30 @@ const listQuerySchema = z.object({
   country: z.string().length(2).default('GB'),
 })
 
-function toUniversity(row: typeof universities.$inferSelect): University {
+// Matches exactly the columns selected below, not the full DB row (which
+// also carries createdAt, never sent over the API).
+type UniversityRow = Pick<
+  typeof universities.$inferSelect,
+  | 'id'
+  | 'countryId'
+  | 'rank'
+  | 'name'
+  | 'city'
+  | 'region'
+  | 'website'
+  | 'internationalUrl'
+  | 'ugAdmissionsUrl'
+  | 'russellGroup'
+  | 'notes'
+  | 'tuitionIntlMinGbp'
+  | 'tuitionIntlMaxGbp'
+  | 'tuitionHomeGbp'
+  | 'scholarshipsUrl'
+  | 'accommodationUrl'
+  | 'lastUpdated'
+>
+
+function toUniversity(row: UniversityRow): University {
   return {
     id: row.id,
     countryId: row.countryId,
