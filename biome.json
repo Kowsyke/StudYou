@@ -14,7 +14,8 @@
       "test-results",
       "research",
       "design",
-      "apps/client/src/lib/gsap"
+      "apps/client/src/lib/gsap",
+      ".agents"
     ]
   },
   "formatter": {

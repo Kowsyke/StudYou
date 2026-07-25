@@ -924,3 +924,49 @@ textarea {
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9);
   -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.15);
 }
+
+/* Animated shimmer for two-tone gradient headings */
+.gradient-shimmer {
+  background-size: 200% 100%;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Respect reduced motion for shimmer */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-shimmer {
+    animation: none;
+    background-size: 100% 100%;
+  }
+}
+
+/* Gentle drift for the journey story's ambient floating objects. Combined
+   with the scroll-driven fade-in, this gives the scene continuous life. */
+.journey-float {
+  animation: journey-float 6s ease-in-out infinite;
+}
+
+@keyframes journey-float {
+  0%,
+  100% {
+    transform: translate(-50%, calc(-50% - 6px));
+  }
+  50% {
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-float {
+    animation: none;
+  }
+}

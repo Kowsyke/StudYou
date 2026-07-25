@@ -35,9 +35,9 @@ export function InteractiveCardMarquee({ cards, className }: InteractiveCardMarq
   const dragFactor = useRef(0)
 
   useAnimationFrame((_t, delta) => {
-    // Top track moves left by default (-3% per sec + scroll/drag influence)
+    // Top track moves left by default (-1.75% per sec + scroll/drag influence)
     const topMove =
-      (-3.5 + dragFactor.current * 8) * (delta / 1000) * (1 + Math.abs(velocityFactor.get()))
+      (-1.75 + dragFactor.current * 8) * (delta / 1000) * (1 + Math.abs(velocityFactor.get()))
     baseXTop.set(baseXTop.get() + topMove)
 
     // Smooth decay drag factor back to zero when released

@@ -2,8 +2,6 @@ import { motion } from 'framer-motion'
 import {
   ArrowRight,
   BadgePoundSterling,
-  Building2,
-  Calculator,
   CalendarClock,
   Check,
   CheckCircle2,
@@ -18,13 +16,20 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
+import { AmbientBlobs } from '../components/AmbientBlobs'
+import { BrandOutro } from '../components/BrandOutro'
+import { CardTilt } from '../components/CardTilt'
+import { ChoosePathSection } from '../components/ChoosePathSection'
+import { JourneyScrollStory } from '../components/JourneyScrollStory'
+import { LandingFaq } from '../components/LandingFaq'
+import { OfficialSourcesOrbit } from '../components/OfficialSourcesOrbit'
+import { ScrollProgress } from '../components/ScrollProgress'
 import { UkGeoMap } from '../components/UkGeoMap'
 import { AnimatedGradientBackground } from '../components/ui/animated-gradient-background'
 import { Button } from '../components/ui/button'
 import { ContainerScroll } from '../components/ui/container-scroll-animation'
 import { GlowingEffect } from '../components/ui/glowing-effect'
 import { ParticleCanvas } from '../components/ui/particle-canvas'
-import { InteractiveCardMarquee } from '../components/ui/scroll-text-marquee'
 import { WavyBackground } from '../components/ui/wavy'
 import { useAuthStore } from '../store/authStore'
 
@@ -35,13 +40,11 @@ import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
 import { Flip } from '../lib/gsap/Flip.js'
 import { InertiaPlugin } from '../lib/gsap/InertiaPlugin.js'
 import { MotionPathPlugin } from '../lib/gsap/MotionPathPlugin.js'
-import { Physics2DPlugin } from '../lib/gsap/Physics2DPlugin.js'
 import { ScrambleTextPlugin } from '../lib/gsap/ScrambleTextPlugin.js'
 import { ScrollSmoother } from '../lib/gsap/ScrollSmoother.js'
 import { ScrollTrigger } from '../lib/gsap/ScrollTrigger.js'
 import { SplitText } from '../lib/gsap/SplitText.js'
 import { TextPlugin } from '../lib/gsap/TextPlugin.js'
-// GSAP Imports
 import { gsap } from '../lib/gsap/index.js'
 
 gsap.registerPlugin(
@@ -55,7 +58,6 @@ gsap.registerPlugin(
   DrawSVGPlugin,
   TextPlugin,
   CustomEase,
-  Physics2DPlugin,
   MotionPathPlugin,
   Flip,
 )
@@ -131,7 +133,9 @@ export function LandingPage() {
 
     // Initialize smooth scrolling. When reduced motion is requested, fall back
     // to native instant scroll (no inertia, no scroll-driven effects) so the
-    // page never feels heavy or janky for those users.
+    // page never feels heavy or janky for those users. ScrollSmoother routes
+    // pinned ScrollTriggers (the journey story) through transform-based pinning
+    // automatically, so the cinematic and the smoothing coexist cleanly.
     ScrollSmoother.create({
       wrapper: '#smooth-wrapper',
       content: '#smooth-content',
@@ -140,15 +144,25 @@ export function LandingPage() {
     })
 
     // ScrambleText hero decode - characters resolve from symbols
-    gsap.to('.hero-headline', {
+    gsap.to('.hero-headline-a', {
       duration: 1.2,
       scrambleText: {
-        text: 'Your UK study journey, without the agencies.',
+        text: 'Your UK study ',
         chars: '!<>- _\\/[] {}-=+* ^? #$@%&01',
         speed: 0.35,
         revealDelay: 0.4,
       },
       delay: 0.2,
+    })
+    gsap.to('.hero-headline-b', {
+      duration: 1.2,
+      scrambleText: {
+        text: 'journey, without the agencies.',
+        chars: '!<>- _\\/[] {}-=+* ^? #$@%&01',
+        speed: 0.35,
+        revealDelay: 0.4,
+      },
+      delay: 0.4,
     })
 
     // Hero content elements fade in
@@ -376,7 +390,7 @@ export function LandingPage() {
         const resize = () => {
           canvas.width = canvas.offsetWidth * window.devicePixelRatio
           canvas.height = canvas.offsetHeight * window.devicePixelRatio
-          ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+          ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0)
         }
         resize()
         window.addEventListener('resize', resize)
@@ -485,6 +499,8 @@ export function LandingPage() {
 
   return (
     <>
+      <ScrollProgress />
+
       <div
         ref={haloRef}
         className="cursor-halo bg-white/10 blur-[80px] w-96 h-96 pointer-events-none rounded-full fixed -translate-x-1/2 -translate-y-1/2"
@@ -497,6 +513,7 @@ export function LandingPage() {
         containerClassName="!fixed z-0 pointer-events-none w-screen h-screen opacity-70"
       />
       <WavyBackground className="!fixed inset-0 z-0 pointer-events-none opacity-40 mix-blend-screen" />
+      <AmbientBlobs />
       <div
         id="smooth-wrapper"
         className="dark bg-transparent relative min-h-screen text-ink overflow-x-hidden font-sans"
@@ -536,8 +553,32 @@ export function LandingPage() {
                 Every step from official sources
               </div>
 
-              <h1 className="hero-headline text-5xl sm:text-7xl lg:text-[6rem] text-white font-podium font-black tracking-tighter max-w-2xl mx-auto lg:mx-0 scramble-active text-center lg:text-left leading-[0.9] text-outline-white relative z-10">
-                &nbsp;
+              <h1 className="text-5xl sm:text-7xl lg:text-[6rem] text-white font-podium font-black tracking-tighter max-w-2xl mx-auto lg:mx-0 text-center lg:text-left leading-[0.9] text-outline-white relative z-10 flex flex-wrap items-center justify-center lg:justify-start gap-x-2 sm:gap-x-3">
+                <span className="hero-headline-a inline">Your UK study</span>
+                <span
+                  className="inline-flex items-center justify-center text-accent relative z-10"
+                  aria-hidden="true"
+                >
+                  <svg
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 -rotate-12"
+                    aria-hidden="true"
+                    role="presentation"
+                  >
+                    <path d="M2 12h20" />
+                    <path d="M13 2l9 10-9 10" />
+                  </svg>
+                </span>
+                <span className="hero-headline-b inline text-2xl sm:text-4xl lg:text-[2.75rem] font-bold text-white/85 self-center">
+                  journey, without the agencies.
+                </span>
               </h1>
 
               <p className="hero-fade text-sm sm:text-lg lg:text-xl text-white max-w-md mt-6 sm:mt-8 leading-relaxed mx-auto lg:mx-0 text-center lg:text-left font-medium text-outline-white relative z-10">
@@ -587,78 +628,14 @@ export function LandingPage() {
             </div>
           </main>
 
-          {/* Interactive Feature Cards Marquee with Mouse Drag & Physics */}
-          <InteractiveCardMarquee
-            cards={[
-              {
-                title: '200+ Verified UK Universities',
-                subtitle: 'Official UCAS & Portal Links',
-                quote:
-                  'Direct entry requirements, tuition fee breakdowns, and degree options from official sources.',
-                author: 'Ken Masters',
-                role: 'MSc Computer Science, Manchester',
-                icon: Building2,
-              },
-              {
-                title: 'Step-by-Step CAS & Milestone Tracker',
-                subtitle: 'Zero Missed Deadlines',
-                quote:
-                  'Track your IELTS prep, CAS statement, TB test, and ATAS certificate in chronological order.',
-                author: 'Kira Athrun',
-                role: 'BEng Mechanical, Bristol',
-                icon: CheckCircle2,
-              },
-              {
-                title: 'Real Cost & Proof of Funds Calc',
-                subtitle: 'Live Currency Conversion',
-                quote:
-                  'Calculate living expenses and tuition converted into your home currency with real exchange rates.',
-                author: 'Jessica Lin',
-                role: 'LLM Law, Edinburgh',
-                icon: Calculator,
-              },
-              {
-                title: 'Official Visa & IHS Guidance',
-                subtitle: 'GOV.UK Signposting',
-                quote:
-                  'Direct signposts to official UKVI visa applications, IHS health surcharges, and financial requirements.',
-                author: 'David Wright',
-                role: 'BA Business, Birmingham',
-                icon: ShieldCheck,
-              },
-            ].map((card, index) => {
-              const Icon = card.icon
-              return (
-                <div
-                  key={`marquee-card-${card.title}-${index}`}
-                  className="shrink-0 w-80 p-5 rounded-2xl bg-[#0d101d]/95 backdrop-blur-xl border border-white/15 hover:border-accent/40 hover:bg-[#121629] shadow-2xl group transition-all duration-300 relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                  <div className="relative z-10 flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border border-white/15 shrink-0 bg-white/10 flex items-center justify-center">
-                      <Icon
-                        size={18}
-                        className="text-white group-hover:text-accent transition-colors duration-300"
-                      />
-                    </div>
-                    <div className="overflow-hidden">
-                      <p className="text-sm font-bold text-white truncate">{card.title}</p>
-                      <p className="text-xs font-mono text-gray-400 truncate">{card.subtitle}</p>
-                    </div>
-                  </div>
-                  <p className="relative z-10 text-xs text-gray-300 leading-relaxed line-clamp-3 mb-4">
-                    "{card.quote}"
-                  </p>
-                  <div className="relative z-10 pt-3 border-t border-white/10 flex items-center justify-between text-[11px]">
-                    <span className="font-semibold text-white">{card.author}</span>
-                    <span className="text-accent font-medium">{card.role}</span>
-                  </div>
-                </div>
-              )
-            })}
-          />
+          {/* Cinematic three-act paper-airplane journey (leave agencies -> costs & deadlines -> arrive in the UK), pinned and scroll-scrubbed. */}
+          <JourneyScrollStory />
 
           <ProblemSection />
+
+          {/* Where StudYou's information actually comes from: a fanned arc of
+              official source categories with a rotating highlight. */}
+          <OfficialSourcesOrbit />
 
           {/* 3D Perspective Container Scroll Showcase */}
           <section className="scroll-container-section relative z-10 my-4">
@@ -666,7 +643,11 @@ export function LandingPage() {
               titleComponent={
                 <div className="space-y-2 max-w-2xl mx-auto">
                   <h2 className="text-title1 sm:text-[2.8rem] font-extrabold text-ink tracking-tight leading-none">
-                    Track every step of your UK degree.
+                    Track every step of your{' '}
+                    <span className="gradient-shimmer bg-clip-text text-transparent [background-image:var(--accent-gradient)]">
+                      UK degree
+                    </span>
+                    .
                   </h2>
                   <p className="text-body text-ink-secondary mt-2">
                     Official target dates, verified cost calculators, and direct admissions links.
@@ -770,132 +751,143 @@ export function LandingPage() {
 
           <InteractiveMapSection />
           <PillarsSection />
+          <ChoosePathSection />
+          <LandingFaq />
           <ClosingCta />
 
-          {/* Premium Footer with Contact Us & Social Links */}
-          <footer className="relative z-10 border-t border-hairline bg-surface/40 backdrop-blur-md pt-12 pb-8">
-            <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
-              <div className="md:col-span-2 space-y-3">
-                <Link
-                  to="/"
-                  className="flex items-center gap-2 text-body-lg font-podium font-bold tracking-tight text-ink"
-                >
-                  <span className="w-6 h-6 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)]">
-                    SY
-                  </span>
-                  StudYou
-                </Link>
-                <p className="text-caption text-ink-secondary max-w-sm leading-relaxed">
-                  A transparent, trackable roadmap for international students moving to the UK. Real
-                  costs, official sources, zero agency fees.
-                </p>
-                <div className="flex items-center gap-2 pt-1">
-                  <span className="text-caption text-ink-tertiary font-medium mr-1">Socials:</span>
-                  <button
-                    type="button"
-                    title="Facebook - Coming Soon"
-                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+          {/* Full-viewport finale: the oversized brand wordmark centers in the
+              space above the footer, so the outro owns the screen with only
+              the footer beneath it. */}
+          <div className="relative z-10 flex min-h-[100svh] flex-col">
+            <BrandOutro />
+
+            {/* Premium Footer with Contact Us & Social Links */}
+            <footer className="relative z-10 border-t border-hairline bg-surface/40 backdrop-blur-md pt-12 pb-8">
+              <div className="max-w-5xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+                <div className="md:col-span-2 space-y-3">
+                  <Link
+                    to="/"
+                    className="flex items-center gap-2 text-body-lg font-podium font-bold tracking-tight text-ink"
                   >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <title>Facebook icon</title>
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="WhatsApp - Coming Soon"
-                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <title>WhatsApp icon</title>
-                      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="Twitter / X - Coming Soon"
-                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <title>Twitter icon</title>
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="Instagram - Coming Soon"
-                    className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                      <title>Instagram icon</title>
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                    </svg>
-                  </button>
+                    <span className="w-6 h-6 rounded-xs bg-accent-solid text-white text-caption font-extrabold flex items-center justify-center [background-image:var(--accent-gradient)]">
+                      SY
+                    </span>
+                    StudYou
+                  </Link>
+                  <p className="text-caption text-ink-secondary max-w-sm leading-relaxed">
+                    A transparent, trackable roadmap for international students moving to the UK.
+                    Real costs, official sources, zero agency fees.
+                  </p>
+                  <div className="flex items-center gap-2 pt-1">
+                    <span className="text-caption text-ink-tertiary font-medium mr-1">
+                      Socials:
+                    </span>
+                    <button
+                      type="button"
+                      title="Facebook - Coming Soon"
+                      className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <title>Facebook icon</title>
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      title="WhatsApp - Coming Soon"
+                      className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <title>WhatsApp icon</title>
+                        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      title="Twitter / X - Coming Soon"
+                      className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <title>Twitter icon</title>
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      title="Instagram - Coming Soon"
+                      className="p-2 rounded-md bg-surface-secondary/40 border border-hairline/60 text-ink-secondary hover:text-accent hover:border-accent/40 transition-colors"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <title>Instagram icon</title>
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-body-sm font-bold text-ink mb-2">Platform Navigation</p>
+                  <ul className="space-y-1.5 text-caption text-ink-secondary">
+                    <li>
+                      <Link to="/universities" className="hover:text-accent transition-colors">
+                        Search 200+ Universities
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/register" className="hover:text-accent transition-colors">
+                        Interactive Roadmap
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="/login" className="hover:text-accent transition-colors">
+                        Sign in to Progress
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <p className="text-body-sm font-bold text-ink mb-2">Contact & Support</p>
+                  <ul className="space-y-1.5 text-caption text-ink-secondary">
+                    <li className="flex items-center gap-1.5 text-ink-secondary">
+                      <Mail size={13} className="text-accent" />
+                      <a
+                        href="mailto:support@studyou.app"
+                        className="hover:text-accent transition-colors"
+                      >
+                        support@studyou.app
+                      </a>
+                    </li>
+                    <li className="text-ink-tertiary">London, United Kingdom</li>
+                    <li>
+                      <span className="inline-flex items-center gap-1 bg-positive-soft text-positive text-[10px] px-2 py-0.5 rounded-full font-semibold">
+                        Live Support Active
+                      </span>
+                    </li>
+                  </ul>
                 </div>
               </div>
 
-              <div>
-                <p className="text-body-sm font-bold text-ink mb-2">Platform Navigation</p>
-                <ul className="space-y-1.5 text-caption text-ink-secondary">
-                  <li>
-                    <Link to="/universities" className="hover:text-accent transition-colors">
-                      Search 200+ Universities
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/register" className="hover:text-accent transition-colors">
-                      Interactive Roadmap
-                    </Link>
-                  </li>
-                  <li>
-                    <Link to="/login" className="hover:text-accent transition-colors">
-                      Sign in to Progress
-                    </Link>
-                  </li>
-                </ul>
+              <div className="max-w-5xl mx-auto px-6 pt-6 border-t border-hairline/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-caption text-ink-tertiary text-center sm:text-left">
+                <p>
+                  StudYou provides guidance and signposting only. It is not legal or immigration
+                  advice. Always confirm details on official sources such as{' '}
+                  <a
+                    href="https://gov.uk"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-accent hover:underline"
+                  >
+                    gov.uk
+                  </a>
+                  .
+                </p>
+                <p className="shrink-0 font-mono text-[11px] text-ink-tertiary">
+                  &copy; {new Date().getFullYear()} StudYou. All rights reserved.
+                </p>
               </div>
-
-              <div>
-                <p className="text-body-sm font-bold text-ink mb-2">Contact & Support</p>
-                <ul className="space-y-1.5 text-caption text-ink-secondary">
-                  <li className="flex items-center gap-1.5 text-ink-secondary">
-                    <Mail size={13} className="text-accent" />
-                    <a
-                      href="mailto:support@studyou.app"
-                      className="hover:text-accent transition-colors"
-                    >
-                      support@studyou.app
-                    </a>
-                  </li>
-                  <li className="text-ink-tertiary">London, United Kingdom</li>
-                  <li>
-                    <span className="inline-flex items-center gap-1 bg-positive-soft text-positive text-[10px] px-2 py-0.5 rounded-full font-semibold">
-                      Live Support Active
-                    </span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="max-w-5xl mx-auto px-6 pt-6 border-t border-hairline/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-caption text-ink-tertiary text-center sm:text-left">
-              <p>
-                StudYou provides guidance and signposting only. It is not legal or immigration
-                advice. Always confirm details on official sources such as{' '}
-                <a
-                  href="https://gov.uk"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-accent hover:underline"
-                >
-                  gov.uk
-                </a>
-                .
-              </p>
-              <p className="shrink-0 font-mono text-[11px] text-ink-tertiary">
-                &copy; {new Date().getFullYear()} StudYou. All rights reserved.
-              </p>
-            </div>
-          </footer>
+            </footer>
+          </div>
         </div>
       </div>
     </>
@@ -911,13 +903,9 @@ function ProblemSection() {
       gsap.set(split.words, { position: 'relative', display: 'inline-block' })
       gsap.from(split.words, {
         opacity: 0,
-        physics2D: {
-          velocity: () => Math.random() * 50 + 30,
-          angle: () => Math.random() * 40 + 250, // slightly upwards and sideways
-          gravity: 350,
-        },
-        stagger: 0.015,
-        duration: 1.2,
+        y: 24,
+        stagger: 0.02,
+        duration: 0.6,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: containerRef.current,
@@ -1143,7 +1131,10 @@ function InteractiveMapSection() {
             Explore UK Geography
           </p>
           <h2 className="text-title1 text-ink font-bold font-apple text-outline-white">
-            Discover Regions & Costs
+            Discover Regions &{' '}
+            <span className="bg-clip-text text-transparent [background-image:var(--accent-gradient)]">
+              Costs
+            </span>
           </h2>
           <p className="text-body text-ink-secondary mt-2 max-w-md mx-auto">
             Hover or click on any region on the interactive map to compare local living costs,
@@ -1151,7 +1142,7 @@ function InteractiveMapSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 items-center h-full w-full p-4 md:p-8 text-left overflow-hidden bg-surface/40 backdrop-blur-md rounded-3xl border border-hairline relative">
+        <div className="map-holding-box grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 items-center w-full p-4 md:p-8 text-left overflow-hidden bg-surface/40 backdrop-blur-md rounded-3xl border border-hairline relative">
           <GlowingEffect
             spread={40}
             glow={true}
@@ -1161,12 +1152,14 @@ function InteractiveMapSection() {
             borderWidth={2}
           />
           <div className="flex flex-col items-center justify-center p-5 bg-surface-secondary/30 rounded-2xl border border-hairline/60 w-full overflow-hidden relative">
-            <UkGeoMap
-              selected={selectedRegions}
-              counts={presetCounts}
-              onToggle={handleToggle}
-              onHover={handleHover}
-            />
+            <div className="relative w-full max-w-[380px]">
+              <UkGeoMap
+                selected={selectedRegions}
+                counts={presetCounts}
+                onToggle={handleToggle}
+                onHover={handleHover}
+              />
+            </div>
             <p className="text-[11px] text-ink-tertiary mt-3 uppercase tracking-wider font-semibold">
               Click region on map to filter live data
             </p>
@@ -1398,28 +1391,27 @@ function PillarsSection() {
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {pillars.map((pillar) => (
-          <article
-            key={pillar.title}
-            className="pillar-card spotlight-card card-lift relative overflow-hidden rounded-2xl shadow-md p-6 border border-hairline group bg-surface/50 backdrop-blur-md"
-          >
-            <GlowingEffect
-              spread={40}
-              glow={true}
-              disabled={false}
-              proximity={64}
-              inactiveZone={0.01}
-              borderWidth={2}
-            />
-            <span className="pillar-icon-span relative z-10 inline-flex h-11 w-11 rounded-md bg-accent-soft text-accent items-center justify-center mb-4 group-hover:glow-pulse transition-shadow duration-300">
-              <pillar.icon size={20} />
-            </span>
-            <h3 className="relative z-10 text-body-lg font-bold text-ink leading-snug">
-              {pillar.title}
-            </h3>
-            <p className="relative z-10 text-body text-ink-secondary leading-relaxed mt-2">
-              {pillar.body}
-            </p>
-          </article>
+          <CardTilt key={pillar.title} intensity={6} className="h-full">
+            <article className="pillar-card spotlight-card card-lift relative overflow-hidden rounded-2xl shadow-md p-6 border border-hairline group bg-surface/50 backdrop-blur-md h-full">
+              <GlowingEffect
+                spread={40}
+                glow={true}
+                disabled={false}
+                proximity={64}
+                inactiveZone={0.01}
+                borderWidth={2}
+              />
+              <span className="pillar-icon-span relative z-10 inline-flex h-11 w-11 rounded-md bg-accent-soft text-accent items-center justify-center mb-4 group-hover:glow-pulse transition-shadow duration-300">
+                <pillar.icon size={20} />
+              </span>
+              <h3 className="relative z-10 text-body-lg font-bold text-ink leading-snug">
+                {pillar.title}
+              </h3>
+              <p className="relative z-10 text-body text-ink-secondary leading-relaxed mt-2">
+                {pillar.body}
+              </p>
+            </article>
+          </CardTilt>
         ))}
       </div>
     </section>
@@ -1504,6 +1496,7 @@ function ClosingCta() {
 function FloatingPreview() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [ticked, setTicked] = useState(false)
+  const draggableRef = useRef<Draggable[] | null>(null)
 
   useEffect(() => {
     const timer = setInterval(() => setTicked((t) => !t), 2600)
@@ -1512,8 +1505,7 @@ function FloatingPreview() {
 
   useGSAP(
     () => {
-      // Draggable components physics
-      Draggable.create('.draggable-widget', {
+      draggableRef.current = Draggable.create('.draggable-widget', {
         type: 'x,y',
         bounds: containerRef.current,
         edgeResistance: 0.65,
@@ -1576,6 +1568,16 @@ function FloatingPreview() {
     { scope: containerRef },
   )
 
+  useEffect(() => {
+    const onResize = () => {
+      for (const d of draggableRef.current ?? []) {
+        d.applyBounds(containerRef.current)
+      }
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
   const percent = ticked ? 43 : 38
   const circumference = 2 * Math.PI * 30
 
@@ -1634,7 +1636,7 @@ function FloatingPreview() {
       {/* Desktop Physics Interactive Draggable Canvas */}
       <div
         ref={containerRef}
-        className="relative h-[360px] w-full hidden lg:block select-none"
+        className="relative min-h-[360px] max-h-[500px] h-[45vh] w-full hidden lg:block select-none"
         aria-hidden="true"
       >
         <div className="draggable-widget widget-1 absolute top-2 left-4 w-64 bg-surface border border-hairline rounded-lg shadow-lg p-4 cursor-grab active:cursor-grabbing z-10">
