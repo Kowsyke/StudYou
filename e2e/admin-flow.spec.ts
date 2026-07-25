@@ -38,16 +38,19 @@ test('admin creates, edits and deletes a knowledge base resource', async ({ page
 
   // Open the Knowledge Base manager tab by its route.
   await page.goto('/admin/kb')
-  await expect(page.locator('#kb-title')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Add resource' })).toBeVisible()
   await page.waitForTimeout(500)
 
-  // Create
+  // Create. The add and edit form lives in a slide over drawer, so it has to
+  // be opened before any of its fields exist.
+  await page.getByRole('button', { name: 'Add resource' }).click()
+  await expect(page.locator('#kb-title')).toBeVisible()
   await page.fill('#kb-title', CREATED_TITLE)
   await page.fill('#kb-summary', 'Temporary entry created by the e2e suite.')
   await page.selectOption('#kb-category', 'documents')
   await page.fill('#kb-cost', '12.50')
   await page.fill('#kb-source', 'https://www.gov.uk/e2e-temporary')
-  await page.getByRole('button', { name: 'Add resource' }).click()
+  await page.getByRole('button', { name: 'Save resource' }).click()
 
   await expect(page.getByText('Resource saved.')).toBeVisible()
   await expect(page.getByRole('cell', { name: CREATED_TITLE, exact: true })).toBeVisible()

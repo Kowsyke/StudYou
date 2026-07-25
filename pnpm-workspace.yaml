@@ -4,3 +4,8 @@ packages:
 allowBuilds:
   esbuild: true
   '@biomejs/biome': true
+minimumReleaseAgeExclude:
+  - axios@1.19.0
+  - hono@4.12.32
+  - react-router-dom@7.18.2
+  - react-router@7.18.2

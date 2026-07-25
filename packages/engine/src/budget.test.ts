@@ -26,7 +26,8 @@ describe('computeBudget', () => {
   it('flags when the projected total exceeds the student budget', () => {
     expect(computeBudget(tasks, 100000).overBudget).toBe(true)
     expect(computeBudget(tasks, 200000).overBudget).toBe(false)
-    expect(computeBudget(tasks, 0).overBudget).toBe(false)
+    // A budget of 0 is a real limit: costs above it are over budget.
+    expect(computeBudget(tasks, 0).overBudget).toBe(true)
   })
 
   it('converts totals to the home currency when a rate is given', () => {

@@ -19,9 +19,12 @@ export async function authMiddleware(c: Context<AppEnv>, next: Next) {
   }
 
   // Suspension applies to existing sessions immediately: a suspended
-  // account's valid token is rejected on every request.
+  // account's valid token is rejected on every request. Role is read fresh
+  // from the same row too, so a role change (revocation or promotion in the
+  // database) takes effect on the next request rather than only when the
+  // token expires; authorization never trusts the role baked into the token.
   const [row] = await db
-    .select({ suspended: users.suspended, lastSeenAt: users.lastSeenAt })
+    .select({ role: users.role, suspended: users.suspended, lastSeenAt: users.lastSeenAt })
     .from(users)
     .where(eq(users.id, payload.sub))
   if (!row) {
@@ -42,6 +45,6 @@ export async function authMiddleware(c: Context<AppEnv>, next: Next) {
       .where(eq(users.id, payload.sub))
   }
 
-  c.set('user', payload)
+  c.set('user', { ...payload, role: row.role })
   await next()
 }

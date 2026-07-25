@@ -8,6 +8,9 @@ import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
 import type { AppEnv } from '../types'
 
+// Hard ceiling on rows returned in one call, well above the current data set.
+const MAX_PAGE_SIZE = 500
+
 const listQuerySchema = z.object({
   search: z.string().max(200).optional(),
   // Comma separated region names, validated against the known region set.
@@ -23,6 +26,7 @@ const listQuerySchema = z.object({
   russellGroup: z.enum(['true', 'false']).optional(),
   sort: z.enum(['rank', 'name']).default('rank'),
   country: z.string().length(2).default('GB'),
+  limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(MAX_PAGE_SIZE),
 })
 
 // Matches exactly the columns selected below, not the full DB row (which
@@ -114,6 +118,7 @@ universityRoutes.get('/', validate('query', listQuerySchema), async (c) => {
     .innerJoin(countries, eq(universities.countryId, countries.id))
     .where(and(...conditions))
     .orderBy(query.sort === 'rank' ? asc(universities.rank) : asc(universities.name))
+    .limit(query.limit)
 
   const response: ApiResponse<University[]> = { success: true, data: rows.map(toUniversity) }
   return c.json(response)

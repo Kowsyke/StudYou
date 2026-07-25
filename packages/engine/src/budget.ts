@@ -47,7 +47,10 @@ export function computeBudget(
     spentPence,
     remainingPence,
     budgetPence,
-    overBudget: budgetPence > 0 && totalPence > budgetPence,
+    // Over budget whenever costs exceed the declared limit. A limit of 0 is a
+    // real value (a student with no funds), not a sentinel for "unset", so a
+    // student who set 0 and has any mandatory cost is correctly flagged.
+    overBudget: totalPence > budgetPence,
     homeCurrencyCode: homeRate?.currencyCode ?? null,
     ratePerGbp: homeRate?.ratePerGbp ?? null,
     totalHome: toHome(totalPence),

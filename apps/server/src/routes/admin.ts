@@ -105,12 +105,16 @@ adminRoutes.get('/analytics', async (c) => {
 
   const tasksByDay = new Map(tasksByDayRows.map((r) => [r.day, r.count]))
   const signupsByDay = new Map(signupsByDayRows.map((r) => [r.day, r.count]))
+  // Everything here is UTC so the bucket key, the map lookup, and the label
+  // all refer to the same calendar day. The Postgres to_char buckets above
+  // are UTC (timestamps are stored as UTC wall-clock), so mixing in local
+  // date arithmetic here would mislabel a day's activity near midnight.
   const dailyActivityTrend = Array.from({ length: 14 }).map((_, idx) => {
     const day = new Date(now)
-    day.setDate(now.getDate() - (13 - idx))
+    day.setUTCDate(now.getUTCDate() - (13 - idx))
     const key = day.toISOString().slice(0, 10)
     return {
-      date: day.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+      date: day.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', timeZone: 'UTC' }),
       tasksCompleted: tasksByDay.get(key) ?? 0,
       newSignups: signupsByDay.get(key) ?? 0,
     }

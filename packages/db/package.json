@@ -19,7 +19,7 @@
     "@studyou/types": "workspace:*",
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.5.0",
-    "drizzle-orm": "^0.43.1",
+    "drizzle-orm": "^0.45.2",
     "postgres": "^3.4.5"
   },
   "devDependencies": {

@@ -9,12 +9,33 @@ import { authMiddleware } from '../middleware/auth'
 import { requireRole } from '../middleware/rbac'
 import type { AppEnv } from '../types'
 
+// Hard ceiling on rows returned in one call. Well above the current data set
+// so nothing is truncated today, but it stops an unbounded response as the
+// country-agnostic data set grows. Proper paging is a later sprint.
+const MAX_PAGE_SIZE = 500
+
+// z.string().url() accepts any scheme the WHATWG URL parser accepts, including
+// javascript: and data:, which then execute if rendered as an href. Resource
+// links are only ever official web pages, so restrict to http and https.
+const webUrl = z
+  .string()
+  .url()
+  .refine((value) => {
+    try {
+      const { protocol } = new URL(value)
+      return protocol === 'http:' || protocol === 'https:'
+    } catch {
+      return false
+    }
+  }, 'Source URL must be an http or https link')
+
 const listQuerySchema = z.object({
   search: z.string().max(200).optional(),
   category: z.enum(['visa', 'health', 'finance', 'housing', 'documents', 'arrival']).optional(),
   sort: z.enum(['cost', 'deadline', 'updated', 'title']).default('title'),
   order: z.enum(['asc', 'desc']).default('asc'),
   country: z.string().length(2).default('GB'),
+  limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(MAX_PAGE_SIZE),
 })
 
 const resourceBodySchema = z.object({
@@ -23,7 +44,7 @@ const resourceBodySchema = z.object({
   summary: z.string().min(1).max(2000),
   costPence: z.number().int().min(0).max(100_000_000).nullable(),
   deadlineDaysBeforeIntake: z.number().int().min(-365).max(1095).nullable(),
-  sourceUrl: z.string().url(),
+  sourceUrl: webUrl,
   country: z.string().length(2).default('GB'),
 })
 
@@ -90,6 +111,7 @@ resourceRoutes.get('/', validate('query', listQuerySchema), async (c) => {
         ? sql`${sortColumn} asc nulls last`
         : sql`${sortColumn} desc nulls last`,
     )
+    .limit(query.limit)
 
   const response: ApiResponse<Resource[]> = { success: true, data: rows.map(toResource) }
   return c.json(response)
