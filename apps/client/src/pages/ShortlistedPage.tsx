@@ -1,5 +1,4 @@
 import type { University } from '@studyou/types'
-import { motion } from 'framer-motion'
 import {
   ArrowUpRight,
   BookOpen,
@@ -13,15 +12,16 @@ import {
   MapPin,
   Trash2,
 } from 'lucide-react'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
 import { Button } from '../components/ui/button'
 import { ProgressBar } from '../components/ui/progress'
+import { RevealGroup, RevealItem } from '../components/ui/reveal'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useUniversities } from '../hooks/useUniversities'
-import { formatGbpWhole } from '../lib/format'
+import { formatGbpWhole, safeExternalUrl } from '../lib/format'
 import { cn } from '../lib/utils'
 import { useProfileStore } from '../store/profileStore'
 import {
@@ -41,6 +41,7 @@ export function ShortlistedPage() {
 
   const progress = useShortlistProgressStore((s) => s.progress)
   const toggleStep = useShortlistProgressStore((s) => s.toggleStep)
+  const setStep = useShortlistProgressStore((s) => s.setStep)
 
   // Fetch all universities using search filter defaults to filter locally
   const {
@@ -62,10 +63,14 @@ export function ShortlistedPage() {
     return allUniversities.filter((u) => shortlistIds.includes(u.id))
   }, [allUniversities, shortlistIds])
 
-  // Get synchronized progress map
+  // Build the display map purely: derive each university's progress with the
+  // 'applied' milestone reconciled against the profile store, WITHOUT mutating
+  // the stored object. The earlier version wrote p.applied inside this memo,
+  // which mutated Zustand state during render, bypassing the store's setter so
+  // the change never persisted to localStorage and never notified subscribers.
   const synchronizedUnis = useMemo(() => {
     return shortlistedUnis.map((uni) => {
-      const p = progress[uni.id] ?? {
+      const stored = progress[uni.id] ?? {
         docsReady: false,
         applied: false,
         offer: false,
@@ -74,16 +79,25 @@ export function ShortlistedPage() {
         enrolled: false,
       }
       const isAppliedInProfile = appliedIds.includes(uni.id)
-
-      // Auto-sync if out of step
-      if (p.applied !== isAppliedInProfile) {
-        p.applied = isAppliedInProfile
-      }
-
+      const p =
+        stored.applied === isAppliedInProfile ? stored : { ...stored, applied: isAppliedInProfile }
       const percent = getUniProgressPercent(p)
       return { uni, progress: p, percent }
     })
   }, [shortlistedUnis, progress, appliedIds])
+
+  // Persist the applied reconciliation through the store's setter (as an
+  // effect, not during render) so it survives a reload and notifies other
+  // subscribers. Converges: once stored matches the profile, this is a no-op.
+  useEffect(() => {
+    for (const uni of shortlistedUnis) {
+      const isAppliedInProfile = appliedIds.includes(uni.id)
+      const currentApplied = progress[uni.id]?.applied ?? false
+      if (currentApplied !== isAppliedInProfile) {
+        setStep(uni.id, 'applied', isAppliedInProfile)
+      }
+    }
+  }, [shortlistedUnis, progress, appliedIds, setStep])
 
   // Aggregate Stats
   const totalUnis = shortlistedUnis.length
@@ -159,19 +173,19 @@ export function ShortlistedPage() {
           <div className="flex flex-wrap items-center gap-3 shrink-0 bg-surface-secondary/40 p-3 rounded-md border border-hairline">
             <div className="text-center px-3 border-r border-hairline">
               <span className="block text-title3 font-bold text-ink">{totalUnis}</span>
-              <span className="text-[10px] text-ink-secondary uppercase tracking-wider">
+              <span className="text-micro text-ink-secondary uppercase tracking-wider">
                 Shortlisted
               </span>
             </div>
             <div className="text-center px-3 border-r border-hairline">
               <span className="block text-title3 font-bold text-ink">{totalApplied}</span>
-              <span className="text-[10px] text-ink-secondary uppercase tracking-wider">
+              <span className="text-micro text-ink-secondary uppercase tracking-wider">
                 Applied
               </span>
             </div>
             <div className="text-center px-3">
               <span className="block text-title3 font-bold text-accent">{avgProgress}%</span>
-              <span className="text-[10px] text-ink-secondary uppercase tracking-wider">
+              <span className="text-micro text-ink-secondary uppercase tracking-wider">
                 Avg Progress
               </span>
             </div>
@@ -195,23 +209,18 @@ export function ShortlistedPage() {
         />
       ) : (
         <div className="space-y-5">
-          <div className="flex items-center gap-2 px-1 text-xs text-ink-secondary bg-surface p-3 rounded-md border border-hairline shadow-2xs">
-            <Info size={14} className="text-accent shrink-0" />
-            <p>
+          <div className="flex items-start gap-2 text-xs text-ink-secondary bg-surface p-3 rounded-md border border-hairline shadow-2xs">
+            <Info size={14} className="text-accent shrink-0 mt-0.5" />
+            <p className="leading-relaxed">
               Use the steppers below to update your application progress per university. Changes
               sync with your profile settings.
             </p>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <RevealGroup className="flex flex-col gap-4" stagger={0.04}>
             {synchronizedUnis.map(({ uni, progress: uniProg, percent }) => (
-              <motion.div
+              <RevealItem
                 key={uni.id}
-                layout
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
                 className="glass-reflect bg-surface border border-hairline rounded-lg shadow-sm overflow-hidden"
               >
                 {/* University Info Block */}
@@ -220,7 +229,7 @@ export function ShortlistedPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <h2 className="text-body-lg font-bold text-ink leading-tight">{uni.name}</h2>
                       {uni.russellGroup && (
-                        <span className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-xs">
+                        <span className="bg-warning-soft text-warning border border-warning/20 text-micro font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-xs">
                           Russell Group
                         </span>
                       )}
@@ -252,19 +261,19 @@ export function ShortlistedPage() {
                   {/* Tuition Cost Section */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-surface-secondary/30 p-3.5 rounded-md border border-hairline">
                     <div>
-                      <span className="text-[10px] text-ink-tertiary font-semibold uppercase tracking-wider block mb-1">
+                      <span className="text-micro text-ink-tertiary font-semibold uppercase tracking-wider block mb-1">
                         Indicative International Tuition
                       </span>
                       <span className="text-body font-bold text-positive tabular-nums">
                         {uni.tuitionIntlMinGbp && uni.tuitionIntlMaxGbp
-                          ? `${formatGbpWhole(uni.tuitionIntlMinGbp)} – ${formatGbpWhole(
+                          ? `${formatGbpWhole(uni.tuitionIntlMinGbp)} to ${formatGbpWhole(
                               uni.tuitionIntlMaxGbp,
                             )}`
                           : 'Check website'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[10px] text-ink-tertiary font-semibold uppercase tracking-wider block mb-1">
+                      <span className="text-micro text-ink-tertiary font-semibold uppercase tracking-wider block mb-1">
                         Indicative Home Tuition
                       </span>
                       <span className="text-body font-semibold text-ink-secondary tabular-nums">
@@ -300,7 +309,7 @@ export function ShortlistedPage() {
                           >
                             <span
                               className={cn(
-                                'h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold mb-1 transition-all',
+                                'h-5 w-5 rounded-full flex items-center justify-center text-micro font-bold mb-1 transition-all',
                                 isDone
                                   ? 'bg-accent text-white'
                                   : 'bg-surface-secondary text-ink-tertiary border border-hairline group-hover:bg-hairline',
@@ -308,7 +317,7 @@ export function ShortlistedPage() {
                             >
                               {isDone ? <Check size={10} strokeWidth={3} /> : idx + 1}
                             </span>
-                            <span className="text-[10px] font-bold tracking-tight block truncate w-full">
+                            <span className="text-micro font-bold tracking-tight block truncate w-full">
                               {MILESTONE_LABELS[key]}
                             </span>
                           </button>
@@ -320,7 +329,7 @@ export function ShortlistedPage() {
                   {/* Quick Action Links */}
                   <div className="border-t border-hairline pt-4 flex flex-wrap gap-2 text-xs">
                     <a
-                      href={uni.website}
+                      href={safeExternalUrl(uni.website)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-surface border border-hairline rounded-sm hover:bg-surface-secondary text-ink-secondary transition-colors"
@@ -330,7 +339,7 @@ export function ShortlistedPage() {
                       <ExternalLink size={10} className="text-ink-tertiary" />
                     </a>
                     <a
-                      href={uni.internationalUrl}
+                      href={safeExternalUrl(uni.internationalUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-surface border border-hairline rounded-sm hover:bg-surface-secondary text-ink-secondary transition-colors"
@@ -340,7 +349,7 @@ export function ShortlistedPage() {
                       <ExternalLink size={10} className="text-ink-tertiary" />
                     </a>
                     <a
-                      href={uni.ugAdmissionsUrl}
+                      href={safeExternalUrl(uni.ugAdmissionsUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1 px-3 py-1.5 bg-accent-soft text-accent border border-accent/20 rounded-sm hover:bg-accent-soft/80 font-medium transition-colors"
@@ -350,7 +359,7 @@ export function ShortlistedPage() {
                     </a>
                     {uni.scholarshipsUrl && (
                       <a
-                        href={uni.scholarshipsUrl}
+                        href={safeExternalUrl(uni.scholarshipsUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-surface border border-hairline rounded-sm hover:bg-surface-secondary text-ink-secondary transition-colors"
@@ -362,7 +371,7 @@ export function ShortlistedPage() {
                     )}
                     {uni.accommodationUrl && (
                       <a
-                        href={uni.accommodationUrl}
+                        href={safeExternalUrl(uni.accommodationUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 px-3 py-1.5 bg-surface border border-hairline rounded-sm hover:bg-surface-secondary text-ink-secondary transition-colors"
@@ -374,9 +383,9 @@ export function ShortlistedPage() {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       )}
     </div>

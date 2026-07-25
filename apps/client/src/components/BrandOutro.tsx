@@ -134,7 +134,7 @@ export function BrandOutro() {
           </div>
 
           <div className="mt-6 flex items-center justify-center gap-2">
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent-solid text-white text-body-sm font-bold shadow-lg shadow-accent/20 group-hover:shadow-accent/40 group-hover:scale-105 transition-all duration-300">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-accent-solid text-white text-body font-bold shadow-lg shadow-accent/20 group-hover:shadow-accent/40 group-hover:scale-105 transition-all duration-300">
               Sign in to your roadmap
               <ArrowRight
                 size={16}

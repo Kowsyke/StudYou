@@ -20,11 +20,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
 import { QueryError } from '../components/QueryError'
+import { categoryLabels } from '../components/ui/badge'
 import { Input, Select } from '../components/ui/input'
+import { RevealGroup, RevealItem } from '../components/ui/reveal'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useCategories } from '../hooks/useMeta'
 import { type ResourceFilters, useDeleteResource, useResources } from '../hooks/useResources'
-import { formatDate, formatGbp } from '../lib/format'
+import { formatDate, formatGbp, safeExternalUrl } from '../lib/format'
 import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
 import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
@@ -158,44 +160,48 @@ export function ResourcesPage() {
     }
   }, [searchParams, resources])
 
-  const gridClass = 'grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-4'
+  // Cards stay readable at every step: one column on phones, two from medium,
+  // three once the viewport is wide enough that two columns leave dead space.
+  const gridClass = 'grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 items-stretch'
+  const resultCount = (resources ?? []).length
 
   return (
     <div className="space-y-6">
       <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 rounded-lg bg-surface border border-hairline shadow-sm card-lift">
-        <div>
+        <div className="space-y-1">
           <h1 className="text-title3 text-ink font-bold text-gradient">Resource Library</h1>
-          <p className="text-xs text-ink-secondary mt-1">
+          <p className="text-xs text-ink-secondary">
             Every rule, cost, and requirement, sourced from official UK resources.
           </p>
-          <div className="flex items-center gap-2 mt-4 pt-1.5 border-t border-hairline">
-            <span className="text-caption text-ink-tertiary">Layout View:</span>
-            <div className="flex p-0.5 bg-surface-secondary rounded-sm border border-hairline">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={cn(
-                  'text-micro font-semibold px-2.5 py-1 rounded-xs transition-all duration-200 flex items-center gap-1 cursor-pointer',
-                  viewMode === 'grid'
-                    ? 'bg-surface text-ink shadow-xs'
-                    : 'text-ink-secondary hover:text-ink',
-                )}
-              >
-                <Grid size={11} />
-                Classic Grid
-              </button>
-              <button
-                onClick={() => setViewMode('tree')}
-                className={cn(
-                  'text-micro font-semibold px-2.5 py-1 rounded-xs transition-all duration-200 flex items-center gap-1 cursor-pointer',
-                  viewMode === 'tree'
-                    ? 'bg-surface text-ink shadow-xs'
-                    : 'text-ink-secondary hover:text-ink',
-                )}
-              >
-                <Network size={11} />
-                Knowledge Tree
-              </button>
-            </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-caption text-ink-tertiary hidden sm:inline">Layout View:</span>
+          <div className="flex p-0.5 bg-surface-secondary rounded-sm border border-hairline">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={cn(
+                'text-micro font-semibold px-2.5 py-1 rounded-xs transition-colors duration-200 flex items-center gap-1 cursor-pointer',
+                viewMode === 'grid'
+                  ? 'bg-surface text-ink shadow-xs'
+                  : 'text-ink-secondary hover:text-ink',
+              )}
+            >
+              <Grid size={11} />
+              Classic Grid
+            </button>
+            <button
+              onClick={() => setViewMode('tree')}
+              className={cn(
+                'text-micro font-semibold px-2.5 py-1 rounded-xs transition-colors duration-200 flex items-center gap-1 cursor-pointer',
+                viewMode === 'tree'
+                  ? 'bg-surface text-ink shadow-xs'
+                  : 'text-ink-secondary hover:text-ink',
+              )}
+            >
+              <Network size={11} />
+              Knowledge Tree
+            </button>
           </div>
         </div>
       </header>
@@ -203,64 +209,79 @@ export function ResourcesPage() {
       <main className="min-h-[500px]">
         {viewMode === 'grid' ? (
           <div className="space-y-5">
-            {/* Grid Filters */}
-            <div className="flex flex-wrap items-center gap-3">
-              <SearchField
-                value={filters.search}
-                onChange={(val) => setFilters({ ...filters, search: val })}
-              />
-
-              <fieldset
-                className="flex flex-wrap items-center gap-1.5 border-0"
-                aria-label="Filter by category"
-              >
-                <CategoryPill
-                  label="All"
-                  active={filters.category === ''}
-                  onClick={() => setFilters({ ...filters, category: '' })}
+            {/* Grid toolbar: query row on top, category row beneath a hairline */}
+            <div className="rounded-md bg-surface border border-hairline shadow-2xs overflow-hidden">
+              <div className="flex flex-wrap items-center gap-3 p-3">
+                <SearchField
+                  value={filters.search}
+                  onChange={(val) => setFilters({ ...filters, search: val })}
                 />
-                {(categories ?? []).map((c) => (
-                  <CategoryPill
-                    key={c.id}
-                    label={c.label}
-                    active={filters.category === c.key}
-                    onClick={() => setFilters({ ...filters, category: c.key })}
-                  />
-                ))}
-              </fieldset>
 
-              <div className="flex items-center gap-2 ml-auto">
-                <Select
-                  aria-label="Sort by"
-                  className="w-40 h-8 text-xs bg-surface border-hairline"
-                  value={filters.sort}
-                  onChange={(e) =>
-                    setFilters({ ...filters, sort: e.target.value as ResourceFilters['sort'] })
-                  }
+                <div className="flex items-center gap-2 ml-auto">
+                  <Select
+                    aria-label="Sort by"
+                    className="w-40 h-9 text-xs"
+                    value={filters.sort}
+                    onChange={(e) =>
+                      setFilters({ ...filters, sort: e.target.value as ResourceFilters['sort'] })
+                    }
+                  >
+                    <option value="title">Sort by title</option>
+                    <option value="lastUpdated">Sort by updated date</option>
+                    <option value="cost">Sort by cost</option>
+                  </Select>
+                  <button
+                    onClick={() =>
+                      setFilters({
+                        ...filters,
+                        order: filters.order === 'asc' ? 'desc' : 'asc',
+                      })
+                    }
+                    className="h-9 w-9 inline-flex items-center justify-center border border-hairline-strong rounded-sm bg-surface hover:bg-surface-secondary text-ink-secondary hover:text-ink transition-colors duration-[120ms] cursor-pointer shrink-0"
+                    title="Reverse sort direction"
+                    aria-label="Order direction"
+                  >
+                    <ArrowDownUp size={14} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-hairline bg-surface-secondary/30 px-3 py-2.5">
+                <span className="text-micro font-semibold uppercase tracking-wider text-ink-tertiary shrink-0">
+                  Category
+                </span>
+                <fieldset
+                  className="flex flex-wrap items-center gap-1.5 border-0 p-0 m-0"
+                  aria-label="Filter by category"
                 >
-                  <option value="title">Sort by title</option>
-                  <option value="lastUpdated">Sort by updated date</option>
-                  <option value="cost">Sort by cost</option>
-                </Select>
-                <button
-                  onClick={() =>
-                    setFilters({
-                      ...filters,
-                      order: filters.order === 'asc' ? 'desc' : 'asc',
-                    })
-                  }
-                  className="p-2 border border-hairline rounded-sm hover:bg-surface-secondary text-ink-secondary hover:text-ink transition-colors duration-[120ms] cursor-pointer"
-                  title="Reverse sort direction"
-                  aria-label="Order direction"
-                >
-                  <ArrowDownUp size={14} />
-                </button>
+                  <CategoryPill
+                    label="All"
+                    active={filters.category === ''}
+                    onClick={() => setFilters({ ...filters, category: '' })}
+                  />
+                  {(categories ?? []).map((c) => (
+                    <CategoryPill
+                      key={c.id}
+                      label={c.label}
+                      active={filters.category === c.key}
+                      onClick={() => setFilters({ ...filters, category: c.key })}
+                    />
+                  ))}
+                </fieldset>
+                {!isPending && !error && (
+                  <span className="text-micro text-ink-tertiary tabular-nums ml-auto shrink-0">
+                    {resultCount} {resultCount === 1 ? 'resource' : 'resources'}
+                  </span>
+                )}
               </div>
             </div>
 
             {/* Grid Contents */}
             {isPending ? (
               <div className={gridClass}>
+                <CardSkeleton />
+                <CardSkeleton />
+                <CardSkeleton />
                 <CardSkeleton />
                 <CardSkeleton />
                 <CardSkeleton />
@@ -282,11 +303,15 @@ export function ResourcesPage() {
                 }
               />
             ) : (
-              <div className={gridClass}>
+              // Short stagger: the library runs to dozens of cards, so anything
+              // longer would leave the tail of the grid visibly lagging.
+              <RevealGroup className={gridClass} stagger={0.025}>
                 {(resources ?? []).map((r) => (
-                  <ResourceCard key={r.id} resource={r} />
+                  <RevealItem key={r.id} className="h-full">
+                    <ResourceCard resource={r} />
+                  </RevealItem>
                 ))}
-              </div>
+              </RevealGroup>
             )}
           </div>
         ) : (
@@ -332,13 +357,15 @@ interface KnowledgeTreeCanvasProps {
   setSelectedResource: (res: Resource | null) => void
 }
 
+// Reads the shared category palette from index.css so the tree, the badges and
+// the rest of the app stay in step, and so both themes are handled for free.
 const CATEGORY_COLORS: Record<string, string> = {
-  visa: '#ec4899', // Pink
-  health: '#10b981', // Emerald
-  finance: '#f59e0b', // Amber
-  housing: '#f97316', // Orange
-  documents: '#3b82f6', // Blue
-  arrival: '#8b5cf6', // Violet
+  visa: 'var(--category-visa)',
+  health: 'var(--category-health)',
+  finance: 'var(--category-finance)',
+  housing: 'var(--category-housing)',
+  documents: 'var(--category-documents)',
+  arrival: 'var(--category-arrival)',
 }
 
 /* Selected Concentric Radiating Pulse Rings */
@@ -655,7 +682,7 @@ function KnowledgeTreeCanvas({
           shiftedLeafNodes.map((leaf) => {
             const isSelected = selectedResource?.id === leaf.id
             const isHovered = hoveredResource?.id === leaf.id
-            const leafColor = CATEGORY_COLORS[leaf.categoryKey] || '#00f0ff'
+            const leafColor = CATEGORY_COLORS[leaf.categoryKey] || 'var(--accent)'
             const isDimmed = activeResource !== null && !isSelected && !isHovered
 
             return (
@@ -963,7 +990,7 @@ function KnowledgeTreeCanvas({
 
               <div className="flex gap-2 mt-3.5">
                 <a
-                  href={activeResource.sourceUrl}
+                  href={safeExternalUrl(activeResource.sourceUrl)}
                   target="_blank"
                   rel="noreferrer"
                   className="flex-1 h-8 rounded-sm bg-accent-solid hover:bg-accent-solid-hover text-white flex items-center justify-center gap-1.5 text-xs font-semibold transition-colors duration-150"
@@ -1023,9 +1050,16 @@ function ResourceCard({ resource }: { resource: Resource }) {
   const deleteResource = useDeleteResource()
 
   return (
-    <article className="aurora-card relative rounded-md shadow-sm p-4 flex flex-col gap-3 group card-lift">
+    <article className="aurora-card relative h-full rounded-md shadow-sm p-4 flex flex-col gap-3 group card-lift">
       <div className="flex justify-between items-center text-caption text-ink-tertiary pr-6">
-        <span className="capitalize">{resource.categoryKey}</span>
+        <span className="inline-flex items-center gap-1.5 font-medium text-ink-secondary">
+          <span
+            aria-hidden="true"
+            className="w-1.5 h-1.5 rounded-full shrink-0"
+            style={{ backgroundColor: CATEGORY_COLORS[resource.categoryKey] ?? 'var(--accent)' }}
+          />
+          {categoryLabels[resource.categoryKey]}
+        </span>
         <span>Updated {formatDate(resource.lastUpdated)}</span>
       </div>
       <button
@@ -1055,7 +1089,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
           {user?.role === 'admin' && (
             <>
               <Link
-                to={'/admin/kb?id={resource.id}'}
+                to={`/admin/kb?id=${resource.id}`}
                 className="inline-flex items-center gap-1 text-accent font-semibold hover:underline rounded-xs"
               >
                 Edit
@@ -1080,7 +1114,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
             </>
           )}
           <a
-            href={resource.sourceUrl}
+            href={safeExternalUrl(resource.sourceUrl)}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-ink-secondary hover:underline rounded-xs"

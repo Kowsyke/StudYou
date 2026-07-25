@@ -1,7 +1,8 @@
 import type { University } from '@studyou/types'
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion'
 import { ExternalLink, Heart, RotateCcw, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { safeExternalUrl } from '../lib/format'
 import { EmptyState } from './EmptyState'
 import { Button } from './ui/button'
 
@@ -29,6 +30,15 @@ export function SwipeDeck({
 }) {
   const top = deck[0]
   const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null)
+  // Track the pending exit timer so it can be cancelled if the deck unmounts
+  // (for example the user switches to Browse mode) before it fires, which
+  // would otherwise invoke onShortlist/onSkip against a gone view.
+  const exitTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => {
+    return () => {
+      if (exitTimer.current) clearTimeout(exitTimer.current)
+    }
+  }, [])
 
   if (!top) {
     return (
@@ -47,8 +57,12 @@ export function SwipeDeck({
   }
 
   const triggerSwipe = (dir: 'left' | 'right') => {
+    // Ignore repeat clicks while a card is already animating out, so the same
+    // card cannot be shortlisted or skipped twice.
+    if (exitDirection) return
     setExitDirection(dir)
-    setTimeout(() => {
+    exitTimer.current = setTimeout(() => {
+      exitTimer.current = null
       if (dir === 'right') onShortlist(top)
       else onSkip(top)
       setExitDirection(null)
@@ -86,16 +100,18 @@ export function SwipeDeck({
         <button
           type="button"
           onClick={() => triggerSwipe('left')}
+          disabled={exitDirection !== null}
           aria-label={`Skip ${top.name}`}
-          className="h-12 w-12 rounded-full border border-danger/30 bg-surface-secondary/80 text-danger shadow-md transition-transform duration-150 hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer"
+          className="h-12 w-12 rounded-full border border-danger/30 bg-surface-secondary/80 text-danger shadow-md transition-transform duration-150 hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <X size={20} />
         </button>
         <button
           type="button"
           onClick={() => triggerSwipe('right')}
+          disabled={exitDirection !== null}
           aria-label={`Shortlist ${top.name}`}
-          className="h-14 px-6 rounded-full bg-accent-solid text-white font-bold shadow-lg shadow-accent/25 transition-transform duration-150 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer [background-image:var(--accent-gradient)]"
+          className="h-14 px-6 rounded-full bg-accent-solid text-white font-bold shadow-lg shadow-accent/25 transition-transform duration-150 hover:scale-105 active:scale-95 flex items-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed [background-image:var(--accent-gradient)]"
         >
           <Heart size={18} className="fill-current" />
           Shortlist
@@ -215,7 +231,7 @@ export function SwipeCard({
         </p>
       </div>
 
-      <p className="text-body-sm text-ink-secondary leading-relaxed grow line-clamp-3">{u.notes}</p>
+      <p className="text-body text-ink-secondary leading-relaxed grow line-clamp-3">{u.notes}</p>
 
       {u.tuitionIntlMinGbp !== null && u.tuitionIntlMaxGbp !== null && (
         <div className="bg-surface-secondary/40 rounded-lg p-2.5 border border-hairline/60">
@@ -228,7 +244,7 @@ export function SwipeCard({
 
       <div className="flex items-center gap-3 border-t border-hairline pt-3 text-xs font-semibold">
         <a
-          href={u.internationalUrl}
+          href={safeExternalUrl(u.internationalUrl)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
@@ -238,7 +254,7 @@ export function SwipeCard({
           <ExternalLink size={11} />
         </a>
         <a
-          href={u.ugAdmissionsUrl}
+          href={safeExternalUrl(u.ugAdmissionsUrl)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs ml-auto"

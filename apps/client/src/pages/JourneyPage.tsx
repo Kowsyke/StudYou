@@ -17,9 +17,10 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import { QueryError } from '../components/QueryError'
 import { Badge } from '../components/ui/badge'
 import { ProgressRing } from '../components/ui/progress'
+import { RevealGroup, RevealItem } from '../components/ui/reveal'
 import { Skeleton } from '../components/ui/skeleton'
 import { hasNoJourney, useJourney, useToggleTask } from '../hooks/useJourney'
-import { formatDate, formatGbp } from '../lib/format'
+import { formatDate, formatGbp, safeExternalUrl } from '../lib/format'
 import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
 import { Flip } from '../lib/gsap/Flip.js'
 import { MotionPathPlugin } from '../lib/gsap/MotionPathPlugin.js'
@@ -139,7 +140,7 @@ function SourceLink({ url, title }: { url: string; title: string }) {
 
   return (
     <a
-      href={url}
+      href={safeExternalUrl(url)}
       target="_blank"
       rel="noreferrer"
       onMouseEnter={onEnter}
@@ -206,12 +207,15 @@ function WalletDeckView({
   // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
   const flipStateRef = useRef<any>(null)
 
+  // One hue per pass, stepping through the brand palette cool to warm and
+  // landing on green for the final arrival stage. Single hue per card (12% to
+  // 5%) rather than two, which keeps the passes calm next to each other.
   const cardGradientStyles = [
-    'from-red-500/12 to-rose-500/5 border-red-300/40',
-    'from-orange-500/12 to-amber-500/5 border-orange-300/40',
-    'from-green-500/12 to-emerald-500/5 border-green-300/40',
-    'from-sky-500/12 to-cyan-500/5 border-sky-300/40',
-    'from-blue-500/12 to-indigo-500/5 border-blue-300/40',
+    'from-category-arrival/12 to-category-arrival/5 border-category-arrival/30',
+    'from-category-visa/12 to-category-visa/5 border-category-visa/30',
+    'from-category-housing/12 to-category-housing/5 border-category-housing/30',
+    'from-category-finance/12 to-category-finance/5 border-category-finance/30',
+    'from-category-health/12 to-category-health/5 border-category-health/30',
   ]
 
   const getStageIcon = (title: string): LucideIcon => {
@@ -348,9 +352,15 @@ function WalletDeckView({
                 >
                   {stageProgress.done} / {stageProgress.total} Complete
                 </span>
-                <div className="w-16 h-1.5 bg-surface rounded-full overflow-hidden hidden sm:block">
+                <div
+                  className="hidden sm:block w-24 h-2 rounded-full bg-surface-secondary border border-hairline-strong overflow-hidden"
+                  aria-hidden="true"
+                >
                   <div
-                    className="h-full rounded-full [background-image:var(--accent-gradient)]"
+                    className={cn(
+                      'h-full rounded-full transition-[width] duration-300 [transition-timing-function:var(--ease-calm)]',
+                      isComplete ? 'bg-positive' : '[background-image:var(--accent-gradient)]',
+                    )}
                     style={{
                       width: `${stageProgress.total === 0 ? 0 : (stageProgress.done / stageProgress.total) * 100}%`,
                     }}
@@ -368,13 +378,13 @@ function WalletDeckView({
                       No checklist tasks available for this stage.
                     </p>
                   ) : (
-                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <RevealGroup className="grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
                       {stageProgress.tasks.map((task) => (
-                        <li key={task.id}>
+                        <RevealItem key={task.id} className="h-full">
                           <TaskCard task={task} />
-                        </li>
+                        </RevealItem>
                       ))}
-                    </ul>
+                    </RevealGroup>
                   )}
                 </div>
               </div>
@@ -407,66 +417,71 @@ function TaskCard({ task }: { task: JourneyTask }) {
     <div
       id={`task-${task.id}`}
       className={cn(
-        'aurora-card rounded-md shadow-xs p-3.5 flex flex-col gap-2.5 transition-all duration-200 border bg-surface card-lift',
+        'aurora-card rounded-md shadow-xs p-3.5 h-full flex items-start gap-3 transition-all duration-200 border bg-surface card-lift',
         done
           ? 'border-hairline bg-surface/60 opacity-90'
           : 'border-hairline-strong hover:shadow-sm',
       )}
     >
-      <div className="flex items-start gap-3">
-        {/* Animated Checkbox */}
-        <button
-          type="button"
-          onClick={onToggle}
-          disabled={toggleTask.isPending}
-          className={cn(
-            'mt-px h-5 w-5 shrink-0 rounded-xs border flex items-center justify-center transition-colors duration-[120ms] cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent active:scale-90',
-            done
-              ? 'bg-accent-solid border-accent-solid text-white shadow-xs'
-              : 'border-ink-tertiary hover:border-accent bg-surface text-transparent',
-          )}
-          aria-label={done ? `Mark ${task.title} as pending` : `Mark ${task.title} as done`}
-        >
-          <CheckboxIcon done={done} />
-        </button>
+      {/* Animated Checkbox */}
+      <button
+        type="button"
+        onClick={onToggle}
+        disabled={toggleTask.isPending}
+        className={cn(
+          'mt-0.5 h-5 w-5 shrink-0 rounded-xs border flex items-center justify-center transition-colors duration-[120ms] cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent active:scale-90',
+          done
+            ? 'bg-accent-solid border-accent-solid text-white shadow-xs'
+            : 'border-ink-tertiary hover:border-accent bg-surface text-transparent',
+        )}
+        aria-label={done ? `Mark ${task.title} as pending` : `Mark ${task.title} as done`}
+      >
+        <CheckboxIcon done={done} />
+      </button>
 
-        <div className="space-y-1 min-w-0">
-          <span
+      {/* Title leads, then description, then metadata, then the cost and date footer */}
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
+        <div className="min-w-0">
+          <h4
             className={cn(
-              'text-xs font-semibold leading-snug transition-colors duration-[120ms] block truncate',
+              'text-body font-semibold leading-snug transition-colors duration-[120ms] break-words',
               done ? 'line-through text-ink-tertiary' : 'text-ink',
             )}
           >
-            {task.sourceUrl ? <SourceLink url={task.sourceUrl} title={task.title} /> : task.title}
-          </span>
-          <p className="text-caption text-ink-secondary leading-snug">{task.description}</p>
+            {task.title}
+          </h4>
+          {task.description && (
+            <p className="text-caption text-ink-secondary leading-relaxed mt-1 break-words">
+              {task.description}
+            </p>
+          )}
         </div>
-      </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 mt-1">
-        <Badge category={task.categoryKey} />
-        {task.costType === 'optional' && task.costPence !== null && task.costPence > 0 && (
-          <Badge>Optional</Badge>
-        )}
-        <Link
-          to={`/resources?category=${task.categoryKey}`}
-          className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-accent-soft text-accent border border-accent-soft/20 hover:bg-accent hover:text-white transition-all duration-[120ms] inline-flex items-center gap-0.5"
-        >
-          Related Resources
-        </Link>
-      </div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Badge category={task.categoryKey} />
+          {task.costType === 'optional' && task.costPence !== null && task.costPence > 0 && (
+            <Badge>Optional</Badge>
+          )}
+          <Link
+            to={`/resources?category=${task.categoryKey}`}
+            className="text-micro font-semibold uppercase tracking-[0.02em] px-1.5 py-0.5 rounded-xs bg-accent-soft text-accent hover:bg-accent-solid hover:text-white transition-colors duration-[120ms] inline-flex items-center"
+          >
+            Related Resources
+          </Link>
+        </div>
 
-      <div className="flex items-center justify-between border-t border-hairline/80 pt-2 mt-auto text-micro text-ink-tertiary">
-        <span className="font-bold text-positive tabular-nums">
-          {task.costPence !== null && task.costPence > 0 ? formatGbp(task.costPence) : 'Free'}
-        </span>
-        <span className="flex items-center gap-2">
-          <span className="flex items-center gap-1">
-            <Calendar size={10} />
-            {formatDate(task.targetDate)}
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-hairline pt-2 mt-auto text-micro text-ink-tertiary">
+          <span className="font-bold text-positive tabular-nums">
+            {task.costPence !== null && task.costPence > 0 ? formatGbp(task.costPence) : 'Free'}
           </span>
-          {task.sourceUrl && <SourceLink url={task.sourceUrl} title="Source" />}
-        </span>
+          <span className="flex items-center gap-2 min-w-0">
+            <span className="flex items-center gap-1 whitespace-nowrap">
+              <Calendar size={10} className="shrink-0" />
+              {formatDate(task.targetDate)}
+            </span>
+            {task.sourceUrl && <SourceLink url={task.sourceUrl} title="Source" />}
+          </span>
+        </div>
       </div>
     </div>
   )

@@ -71,7 +71,7 @@ import { useAnalytics, useCategories } from '../hooks/useMeta'
 import { useDeleteResource, useResources, useSaveResource } from '../hooks/useResources'
 import { useUniversities } from '../hooks/useUniversities'
 import { apiErrorMessage } from '../lib/api'
-import { formatGbp } from '../lib/format'
+import { formatGbp, safeExternalUrl } from '../lib/format'
 import { Draggable } from '../lib/gsap/Draggable.js'
 import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
@@ -586,9 +586,7 @@ export function AdminPage() {
                         className="bg-surface border border-hairline rounded-2xl p-4 space-y-3 shadow-xs hover:border-accent/30 transition-colors"
                       >
                         <div className="flex items-center justify-between">
-                          <h4 className="text-body-sm font-semibold text-ink">
-                            {cat.categoryName}
-                          </h4>
+                          <h4 className="text-body font-semibold text-ink">{cat.categoryName}</h4>
                           <span className="text-caption font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
                             {cat.completionRate}% Done
                           </span>
@@ -648,7 +646,7 @@ export function AdminPage() {
                 type="button"
                 onClick={() => setSettingsSubTab('visuals')}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body-sm font-semibold transition-all duration-150 cursor-pointer text-left',
+                  'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body font-semibold transition-all duration-150 cursor-pointer text-left',
                   settingsSubTab === 'visuals'
                     ? 'bg-accent-soft border border-accent/30 text-accent shadow-xs'
                     : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/60 border border-transparent',
@@ -665,7 +663,7 @@ export function AdminPage() {
                 type="button"
                 onClick={() => setSettingsSubTab('exports')}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body-sm font-semibold transition-all duration-150 cursor-pointer text-left',
+                  'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body font-semibold transition-all duration-150 cursor-pointer text-left',
                   settingsSubTab === 'exports'
                     ? 'bg-accent-soft border border-accent/30 text-accent shadow-xs'
                     : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/60 border border-transparent',
@@ -1202,7 +1200,7 @@ function KnowledgeBaseManager() {
               className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary"
             />
             <Input
-              className="pl-9 pr-14 text-body-sm h-9 bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent"
+              className="pl-9 pr-14 text-body h-9 bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent"
               placeholder="Search title or keyword..."
               value={tableSearch}
               onChange={(e) => setTableSearch(e.target.value)}
@@ -1343,7 +1341,7 @@ function KnowledgeBaseManager() {
             transition={{ duration: 0.18 }}
             className="mb-3 flex items-center justify-between gap-3 rounded-xl border border-accent/30 bg-accent-soft px-4 py-2.5"
           >
-            <span className="text-body-sm font-semibold text-ink tabular-nums">
+            <span className="text-body font-semibold text-ink tabular-nums">
               {selectedIds.length} selected
             </span>
             <div className="flex items-center gap-2">
@@ -1372,7 +1370,7 @@ function KnowledgeBaseManager() {
       {/* Full-width resource table */}
       <Card className="overflow-hidden bg-surface/80 border border-hairline rounded-2xl shadow-sm backdrop-blur-md">
         <CardContent className="p-0 overflow-x-auto">
-          <table className="w-full text-body-sm border-collapse">
+          <table className="w-full text-body border-collapse">
             <thead>
               <tr className="text-left text-caption font-bold uppercase tracking-[0.08em] text-ink-secondary bg-surface-secondary/80 border-b border-hairline">
                 <th className="py-3 pl-5 pr-1 w-8">
@@ -1505,12 +1503,16 @@ function KnowledgeBaseManager() {
                             )}
                           </td>
                           <td className="py-3 px-3 text-ink-secondary tabular-nums hidden md:table-cell">
-                            {deadline ?? <span className="text-ink-tertiary">—</span>}
+                            {deadline ?? (
+                              <span className="text-ink-tertiary" aria-label="No deadline">
+                                None
+                              </span>
+                            )}
                           </td>
                           <td className="py-3 px-3 text-center hidden lg:table-cell">
                             {resource.sourceUrl ? (
                               <a
-                                href={resource.sourceUrl}
+                                href={safeExternalUrl(resource.sourceUrl)}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-hairline text-ink-secondary hover:bg-accent-soft hover:text-accent hover:border-accent/30 transition-all duration-150"
@@ -1519,7 +1521,9 @@ function KnowledgeBaseManager() {
                                 <Link2 size={12} />
                               </a>
                             ) : (
-                              <span className="text-ink-tertiary">—</span>
+                              <span className="text-ink-tertiary" aria-label="No source link">
+                                None
+                              </span>
                             )}
                           </td>
                           <td className="py-3 pr-5 pl-3 text-right whitespace-nowrap">
@@ -1572,7 +1576,7 @@ function KnowledgeBaseManager() {
                                           Source:
                                         </strong>{' '}
                                         <a
-                                          href={resource.sourceUrl}
+                                          href={safeExternalUrl(resource.sourceUrl)}
                                           target="_blank"
                                           rel="noreferrer"
                                           className="text-accent hover:underline inline-flex items-center gap-0.5 font-semibold truncate"
@@ -1648,7 +1652,7 @@ function KnowledgeBaseManager() {
                     <Input
                       id="kb-title"
                       required
-                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body mt-1"
                       value={form.title}
                       onChange={(e) => setForm({ ...form, title: e.target.value })}
                     />
@@ -1663,7 +1667,7 @@ function KnowledgeBaseManager() {
                     <Textarea
                       id="kb-summary"
                       required
-                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1 min-h-24"
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body mt-1 min-h-24"
                       value={form.summary}
                       onChange={(e) => setForm({ ...form, summary: e.target.value })}
                     />
@@ -1678,7 +1682,7 @@ function KnowledgeBaseManager() {
                       </Label>
                       <Select
                         id="kb-category"
-                        className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                        className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body mt-1"
                         value={form.categoryKey}
                         onChange={(e) =>
                           setForm({ ...form, categoryKey: e.target.value as CategoryKey })
@@ -1701,7 +1705,7 @@ function KnowledgeBaseManager() {
                         min={0}
                         step="0.01"
                         placeholder="Free"
-                        className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                        className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body mt-1"
                         value={form.costGbp}
                         onChange={(e) => setForm({ ...form, costGbp: e.target.value })}
                       />
@@ -1718,7 +1722,7 @@ function KnowledgeBaseManager() {
                       id="kb-deadline"
                       type="number"
                       placeholder="Optional"
-                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body mt-1"
                       value={form.deadlineDays}
                       onChange={(e) => setForm({ ...form, deadlineDays: e.target.value })}
                     />
@@ -1731,7 +1735,7 @@ function KnowledgeBaseManager() {
                       id="kb-source"
                       type="url"
                       required
-                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body mt-1"
                       placeholder="https://www.gov.uk/..."
                       value={form.sourceUrl}
                       onChange={(e) => setForm({ ...form, sourceUrl: e.target.value })}
@@ -1746,7 +1750,7 @@ function KnowledgeBaseManager() {
                     disabled={saveResource.isPending}
                     className="sheen flex-1 text-white bg-accent-solid [background-image:var(--accent-gradient)] rounded-xl font-bold h-9 shadow-md cursor-pointer"
                   >
-                    {form.id ? 'Save changes' : 'Add resource'}
+                    {form.id ? 'Save changes' : 'Save resource'}
                   </Button>
                   <Button
                     type="button"
@@ -1865,7 +1869,7 @@ function AdminNotesManager() {
               <Input
                 id="note-title"
                 required
-                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
+                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body"
                 placeholder="e.g. Update visa processing fee"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
@@ -1879,7 +1883,7 @@ function AdminNotesManager() {
                 </Label>
                 <Select
                   id="note-priority"
-                  className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
+                  className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body"
                   value={newPriority}
                   onChange={(e) => setNewPriority(e.target.value as 'high' | 'medium' | 'low')}
                 >
@@ -1895,7 +1899,7 @@ function AdminNotesManager() {
                 </Label>
                 <Select
                   id="note-category"
-                  className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
+                  className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body"
                   value={newCategory}
                   onChange={(e) =>
                     setNewCategory(e.target.value as 'bug' | 'feature' | 'data' | 'general')
@@ -1915,7 +1919,7 @@ function AdminNotesManager() {
               </Label>
               <Input
                 id="note-author"
-                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
+                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body"
                 placeholder="e.g. Admin K"
                 value={newAuthor}
                 onChange={(e) => setNewAuthor(e.target.value)}
@@ -1929,7 +1933,7 @@ function AdminNotesManager() {
               <Textarea
                 id="note-content"
                 required
-                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
+                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body"
                 placeholder="Add context, screenshots links, or task instructions..."
                 rows={4}
                 value={newContent}
@@ -1962,11 +1966,11 @@ function AdminNotesManager() {
 
         {isPending ? (
           <div className="p-8 text-center bg-surface/80 border border-hairline rounded-2xl backdrop-blur-md">
-            <p className="text-body-sm text-ink-secondary font-medium">Loading admin board...</p>
+            <p className="text-body text-ink-secondary font-medium">Loading admin board...</p>
           </div>
         ) : notes.length === 0 ? (
           <div className="p-8 text-center bg-surface/80 border border-hairline rounded-2xl backdrop-blur-md">
-            <p className="text-body-sm font-bold text-ink">The admin board is clear</p>
+            <p className="text-body font-bold text-ink">The admin board is clear</p>
             <p className="text-caption text-ink-tertiary mt-1">No active notes or flags.</p>
           </div>
         ) : (

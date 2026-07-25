@@ -75,7 +75,7 @@ export function UsersPanel() {
             className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary"
           />
           <Input
-            className="pl-9 bg-surface/60 border-hairline backdrop-blur-md rounded-xl text-body-sm focus-visible:ring-accent"
+            className="pl-9 bg-surface/60 border-hairline backdrop-blur-md rounded-xl text-body focus-visible:ring-accent"
             placeholder="Search student or admin name / email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -90,7 +90,7 @@ export function UsersPanel() {
       </div>
 
       <div className="bg-surface/80 border border-hairline rounded-2xl shadow-sm overflow-hidden backdrop-blur-md">
-        <table className="w-full text-body-sm">
+        <table className="w-full text-body">
           <thead>
             <tr className="text-left text-caption font-semibold uppercase tracking-[0.08em] text-ink-secondary bg-surface-secondary/80 border-b border-hairline">
               <th className="py-3.5 px-5 font-bold">Account</th>
@@ -275,7 +275,7 @@ export function ReportsPanel() {
               <MessageSquare size={16} />
             </div>
             <div>
-              <h3 className="text-body-sm font-bold text-ink flex items-center gap-2">
+              <h3 className="text-body font-bold text-ink flex items-center gap-2">
                 Live support feed
                 <span className="w-2 h-2 rounded-full bg-positive animate-pulse" />
               </h3>
@@ -294,7 +294,7 @@ export function ReportsPanel() {
           {filtered.length === 0 ? (
             <div className="py-12 text-center text-ink-tertiary space-y-2">
               <Inbox className="mx-auto text-ink-tertiary" size={32} />
-              <p className="text-body-sm font-semibold text-ink-secondary">
+              <p className="text-body font-semibold text-ink-secondary">
                 No reports in this filter
               </p>
               <p className="text-caption text-ink-tertiary max-w-xs mx-auto">
@@ -312,7 +312,7 @@ export function ReportsPanel() {
                     {/* Reporter avatar */}
                     <div
                       className={cn(
-                        'w-9 h-9 rounded-full flex items-center justify-center font-bold text-body-sm shrink-0 border border-hairline',
+                        'w-9 h-9 rounded-full flex items-center justify-center font-bold text-body shrink-0 border border-hairline',
                         avatarColor,
                       )}
                     >
@@ -323,7 +323,7 @@ export function ReportsPanel() {
                     <div className="relative flex-1 bg-surface/70 border border-hairline rounded-2xl rounded-tl-xs p-4 shadow-xs text-left transition-colors duration-150 group-hover:border-hairline-strong">
                       <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-hairline">
                         <div className="flex items-center gap-2">
-                          <span className="text-body-sm font-bold text-ink">
+                          <span className="text-body font-bold text-ink">
                             {report.userName ?? 'Unknown student'}
                           </span>
                           <span className="text-caption text-ink-tertiary">
@@ -350,7 +350,7 @@ export function ReportsPanel() {
                         </div>
                       </div>
 
-                      <p className="text-body-sm text-ink leading-relaxed whitespace-pre-wrap">
+                      <p className="text-body text-ink leading-relaxed whitespace-pre-wrap">
                         {report.message}
                       </p>
 

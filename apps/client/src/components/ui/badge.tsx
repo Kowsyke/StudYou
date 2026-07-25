@@ -3,11 +3,11 @@ import type { HTMLAttributes } from 'react'
 import { cn } from '../../lib/utils'
 
 const categoryStyles: Record<CategoryKey, string> = {
-  visa: 'bg-accent-soft text-accent',
-  health: 'bg-positive-soft text-positive',
-  finance: 'bg-warning-soft text-warning',
+  visa: 'bg-category-visa-soft text-category-visa',
+  health: 'bg-category-health-soft text-category-health',
+  finance: 'bg-category-finance-soft text-category-finance',
   housing: 'bg-category-housing-soft text-category-housing',
-  documents: 'bg-surface-secondary text-ink-secondary',
+  documents: 'bg-category-documents-soft text-category-documents',
   arrival: 'bg-category-arrival-soft text-category-arrival',
 }
 

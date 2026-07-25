@@ -4,11 +4,15 @@ import { BookmarkX, ExternalLink, GraduationCap, Send, Upload, X } from 'lucide-
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { EmptyState } from '../components/EmptyState'
+import { QueryError } from '../components/QueryError'
 import { Avatar, fileToAvatarDataUrl } from '../components/ui/avatar'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardHeader, CardKicker } from '../components/ui/card'
 import { CountUp } from '../components/ui/count-up'
+import { Reveal, RevealGroup, RevealItem } from '../components/ui/reveal'
+import { CardSkeleton, Skeleton } from '../components/ui/skeleton'
 import { useUniversities } from '../hooks/useUniversities'
+import { safeExternalUrl } from '../lib/format'
 import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
 import { Flip } from '../lib/gsap/Flip.js'
 import { gsap } from '../lib/gsap/index.js'
@@ -96,7 +100,13 @@ export function ProfilePage() {
   const appliedIds = useProfileStore((s) => s.appliedIds)
   const toggleApplied = useProfileStore((s) => s.toggleApplied)
   const removeFromShortlist = useProfileStore((s) => s.removeFromShortlist)
-  const { data: universities } = useUniversities(defaultFilters)
+  const {
+    data: universities,
+    isPending,
+    error,
+    refetch,
+    isRefetching,
+  } = useUniversities(defaultFilters)
   const fileRef = useRef<HTMLInputElement>(null)
   const shortlistRef = useRef<HTMLDivElement>(null)
 
@@ -142,128 +152,183 @@ export function ProfilePage() {
   }
 
   return (
-    <div>
-      <header className="mb-6">
-        <h1 className="text-title3 text-ink font-bold text-gradient">Your profile</h1>
-        <p className="text-xs text-ink-secondary mt-1">
-          Your account, your avatar, and every university you are tracking.
-        </p>
-      </header>
+    <div className="space-y-5">
+      <Reveal>
+        <header>
+          <h1 className="text-title3 text-ink font-bold text-gradient">Your profile</h1>
+          <p className="text-body text-ink-secondary mt-1">
+            Your account, your avatar, and every university you are tracking.
+          </p>
+        </header>
+      </Reveal>
 
-      <Card className="mb-5 card-lift">
-        <CardContent className="flex flex-wrap items-center gap-5 py-5">
-          <div className="relative shrink-0">
-            <AvatarRing />
-            <Avatar
-              fullName={user?.fullName}
-              size={64}
-              className="rounded-lg text-title3 breathe"
-            />
-            <button
-              onClick={() => fileRef.current?.click()}
-              aria-label="Upload a profile photo"
-              className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-accent-solid text-white flex items-center justify-center shadow-md [background-image:var(--accent-gradient)] hover:scale-110 transition-transform duration-[120ms] cursor-pointer"
-            >
-              <Upload size={12} />
-            </button>
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/png,image/jpeg,image/webp"
-              onChange={onPickFile}
-              className="hidden"
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-body-lg font-bold text-ink truncate">{user?.fullName}</p>
-            <p className="text-body text-ink-secondary truncate">{user?.email}</p>
-            <p className="text-caption text-ink-tertiary capitalize mt-0.5">{user?.role} account</p>
-            {avatarImage && (
-              <button
-                onClick={() => {
-                  setAvatarImage(null)
-                  toast.success('Photo removed.')
-                }}
-                className="inline-flex items-center gap-1 mt-1.5 text-caption font-semibold text-ink-tertiary hover:text-danger transition-colors duration-[120ms] cursor-pointer"
-              >
-                <X size={11} />
-                Remove photo
-              </button>
-            )}
-          </div>
-          <div>
-            <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary mb-2">
-              {avatarImage ? 'Fallback colour' : 'Avatar colour'}
-            </p>
-            <fieldset className="flex gap-2 border-0" aria-label="Choose your avatar colour">
-              {AVATAR_HUES.map((hue) => (
-                <button
-                  key={hue}
-                  onClick={() => {
-                    setAvatarHue(hue)
-                    toast.success('Avatar updated.')
-                  }}
-                  aria-pressed={avatarHue === hue}
-                  aria-label={`Avatar colour ${hue}`}
-                  className={cn(
-                    'h-7 w-7 rounded-full transition-transform duration-[120ms] hover:scale-110 cursor-pointer',
-                    avatarHue === hue &&
-                      '[box-shadow:0_0_0_2px_var(--surface),0_0_0_4px_var(--accent)]',
-                  )}
-                  style={{ backgroundImage: avatarGradients[hue] }}
-                />
-              ))}
-            </fieldset>
-          </div>
-        </CardContent>
-      </Card>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-        <StatChip value={shortlisted.length} label="Shortlisted" />
-        <StatChip value={applied.length} label="Applied" />
-        <StatChip value={shortlisted.length - applied.length} label="Still to apply" />
-        <StatChip value={new Set(shortlisted.map((u) => u.region)).size} label="Regions covered" />
-      </div>
-
-      <div ref={shortlistRef}>
-        <Card className="mb-5 card-lift">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardKicker>Shortlisted universities</CardKicker>
-            <Link to="/universities" className="text-xs font-semibold text-accent hover:underline">
-              Find more
-            </Link>
-          </CardHeader>
-          <CardContent>
-            {shortlisted.length === 0 ? (
-              <EmptyState
-                icon={GraduationCap}
-                title="Nothing shortlisted yet"
-                body="Browse or swipe through 200 UK universities and the ones you shortlist will live here."
-                action={
-                  <Link to="/universities">
-                    <Button className="font-semibold [background-image:var(--accent-gradient)]">
-                      Find your university
-                    </Button>
-                  </Link>
-                }
+      <Reveal delay={0.05}>
+        <Card className="card-lift">
+          <CardContent className="flex flex-wrap items-center gap-5 py-5">
+            <div className="relative shrink-0">
+              <AvatarRing />
+              <Avatar
+                fullName={user?.fullName}
+                size={64}
+                className="rounded-lg text-title3 breathe"
               />
-            ) : (
-              <ul className="flex flex-col gap-2.5">
-                {shortlisted.map((u) => (
-                  <ShortlistRow
-                    key={u.id}
-                    university={u}
-                    applied={appliedIds.includes(u.id)}
-                    onToggleApplied={() => toggleApplied(u.id)}
-                    onRemove={() => handleRemoveShortlist(u.id, u.name)}
+              <button
+                onClick={() => fileRef.current?.click()}
+                aria-label="Upload a profile photo"
+                className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-accent-solid text-white flex items-center justify-center shadow-md [background-image:var(--accent-gradient)] hover:scale-110 transition-transform duration-[120ms] cursor-pointer"
+              >
+                <Upload size={12} />
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                onChange={onPickFile}
+                className="hidden"
+              />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-body-lg font-bold text-ink truncate">{user?.fullName}</p>
+              <p className="text-body text-ink-secondary truncate">{user?.email}</p>
+              <p className="text-caption text-ink-tertiary capitalize mt-0.5">
+                {user?.role} account
+              </p>
+              {avatarImage && (
+                <button
+                  onClick={() => {
+                    setAvatarImage(null)
+                    toast.success('Photo removed.')
+                  }}
+                  className="inline-flex items-center gap-1 mt-1.5 text-caption font-semibold text-ink-tertiary hover:text-danger transition-colors duration-[120ms] cursor-pointer"
+                >
+                  <X size={11} />
+                  Remove photo
+                </button>
+              )}
+            </div>
+            <div className="w-full sm:w-auto sm:ml-auto">
+              <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary mb-2">
+                {avatarImage ? 'Fallback colour' : 'Avatar colour'}
+              </p>
+              <fieldset className="flex gap-2 border-0" aria-label="Choose your avatar colour">
+                {AVATAR_HUES.map((hue) => (
+                  <button
+                    key={hue}
+                    onClick={() => {
+                      setAvatarHue(hue)
+                      toast.success('Avatar updated.')
+                    }}
+                    aria-pressed={avatarHue === hue}
+                    aria-label={`Avatar colour ${hue}`}
+                    className={cn(
+                      'h-7 w-7 rounded-full transition-transform duration-[120ms] hover:scale-110 cursor-pointer',
+                      avatarHue === hue &&
+                        '[box-shadow:0_0_0_2px_var(--surface),0_0_0_4px_var(--accent)]',
+                    )}
+                    style={{ backgroundImage: avatarGradients[hue] }}
                   />
                 ))}
-              </ul>
-            )}
+              </fieldset>
+            </div>
           </CardContent>
         </Card>
-      </div>
+      </Reveal>
+
+      {isPending ? (
+        <ProfileDataSkeleton />
+      ) : error ? (
+        <QueryError
+          message="Your shortlisted universities could not be loaded. Check your connection and try again."
+          onRetry={() => refetch()}
+          retrying={isRefetching}
+        />
+      ) : (
+        <>
+          <RevealGroup className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <RevealItem>
+              <StatChip value={shortlisted.length} label="Shortlisted" />
+            </RevealItem>
+            <RevealItem>
+              <StatChip value={applied.length} label="Applied" />
+            </RevealItem>
+            <RevealItem>
+              <StatChip value={shortlisted.length - applied.length} label="Still to apply" />
+            </RevealItem>
+            <RevealItem>
+              <StatChip
+                value={new Set(shortlisted.map((u) => u.region)).size}
+                label="Regions covered"
+              />
+            </RevealItem>
+          </RevealGroup>
+
+          <div ref={shortlistRef}>
+            <Card className="card-lift">
+              <CardHeader className="flex flex-row items-center justify-between gap-3">
+                <CardKicker>Shortlisted universities</CardKicker>
+                <Link
+                  to="/universities"
+                  className="shrink-0 text-caption font-semibold text-accent hover:underline"
+                >
+                  Find more
+                </Link>
+              </CardHeader>
+              <CardContent>
+                {shortlisted.length === 0 ? (
+                  <EmptyState
+                    icon={GraduationCap}
+                    title="Nothing shortlisted yet"
+                    body="Browse or swipe through 200 UK universities and the ones you shortlist will live here."
+                    action={
+                      <Link to="/universities">
+                        <Button className="font-semibold [background-image:var(--accent-gradient)]">
+                          Find your university
+                        </Button>
+                      </Link>
+                    }
+                  />
+                ) : (
+                  <RevealGroup className="flex flex-col gap-2.5">
+                    {shortlisted.map((u) => (
+                      <RevealItem key={u.id}>
+                        <ShortlistRow
+                          university={u}
+                          applied={appliedIds.includes(u.id)}
+                          onToggleApplied={() => toggleApplied(u.id)}
+                          onRemove={() => handleRemoveShortlist(u.id, u.name)}
+                        />
+                      </RevealItem>
+                    ))}
+                  </RevealGroup>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </>
+      )}
     </div>
+  )
+}
+
+/* Placeholder for the parts of the page that wait on the universities query.
+   The identity card above needs no data, so it stays put and only the counts
+   and the shortlist swap in, which keeps the layout from jumping. */
+function ProfileDataSkeleton() {
+  return (
+    <>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {['shortlisted', 'applied', 'remaining', 'regions'].map((key) => (
+          <div
+            key={key}
+            className="bg-surface rounded-md border border-hairline shadow-sm p-4 space-y-2 shimmer-host"
+          >
+            <Skeleton className="h-6 w-12" />
+            <Skeleton className="h-2.5 w-4/5" />
+          </div>
+        ))}
+      </div>
+      <CardSkeleton lines={4} />
+    </>
   )
 }
 
@@ -290,7 +355,7 @@ function ShortlistRow({
   onRemove: () => void
 }) {
   return (
-    <li className="shortlist-item-row flex flex-wrap items-center gap-3 px-3.5 py-3 rounded-md bg-canvas border border-hairline select-none card-lift">
+    <div className="shortlist-item-row flex flex-wrap items-center gap-3 px-3.5 py-3 rounded-md bg-canvas border border-hairline select-none card-lift">
       <span className="text-caption font-bold text-accent bg-accent-soft rounded-xs px-1.5 py-0.5 tabular-nums">
         #{u.rank}
       </span>
@@ -301,7 +366,7 @@ function ShortlistRow({
         </p>
       </div>
       <a
-        href={u.ugAdmissionsUrl}
+        href={safeExternalUrl(u.ugAdmissionsUrl)}
         target="_blank"
         rel="noreferrer"
         className="inline-flex items-center gap-1 text-xs font-semibold text-accent hover:underline rounded-xs"
@@ -329,6 +394,6 @@ function ShortlistRow({
       >
         <BookmarkX size={13} />
       </button>
-    </li>
+    </div>
   )
 }

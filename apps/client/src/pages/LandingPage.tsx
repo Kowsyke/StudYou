@@ -732,7 +732,7 @@ export function LandingPage() {
                 <h3 className="text-xl sm:text-title2 font-bold text-ink">
                   Find all official guides & resources in our Knowledge Tree.
                 </h3>
-                <p className="text-body-sm text-ink-secondary leading-relaxed">
+                <p className="text-body text-ink-secondary leading-relaxed">
                   Direct GOV.UK, NHS, and UCAS guidance - 100% verified and free. No hidden costs or
                   middlemen.
                 </p>
@@ -826,7 +826,7 @@ export function LandingPage() {
                 </div>
 
                 <div>
-                  <p className="text-body-sm font-bold text-ink mb-2">Platform Navigation</p>
+                  <p className="text-body font-bold text-ink mb-2">Platform Navigation</p>
                   <ul className="space-y-1.5 text-caption text-ink-secondary">
                     <li>
                       <Link to="/universities" className="hover:text-accent transition-colors">
@@ -847,7 +847,7 @@ export function LandingPage() {
                 </div>
 
                 <div>
-                  <p className="text-body-sm font-bold text-ink mb-2">Contact & Support</p>
+                  <p className="text-body font-bold text-ink mb-2">Contact & Support</p>
                   <ul className="space-y-1.5 text-caption text-ink-secondary">
                     <li className="flex items-center gap-1.5 text-ink-secondary">
                       <Mail size={13} className="text-accent" />
@@ -1201,10 +1201,7 @@ function InteractiveMapSection() {
                   </span>
                 </div>
 
-                <p
-                  data-flip-id="map-desc"
-                  className="text-body-sm text-ink-secondary leading-relaxed"
-                >
+                <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
                   {details.desc}
                 </p>
 
@@ -1216,15 +1213,13 @@ function InteractiveMapSection() {
                     <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
                       Est. Living Expenses
                     </span>
-                    <span className="text-body-sm font-bold text-ink">{details.avgCost}</span>
+                    <span className="text-body font-bold text-ink">{details.avgCost}</span>
                   </div>
                   <div className="bg-canvas border border-hairline rounded-sm p-3 flex flex-col gap-0.5">
                     <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
                       Avg. International Tuition
                     </span>
-                    <span className="text-body-sm font-bold text-emerald-600 dark:text-emerald-400">
-                      {details.tuition}
-                    </span>
+                    <span className="text-body font-bold text-positive">{details.tuition}</span>
                   </div>
                 </div>
 
@@ -1256,10 +1251,7 @@ function InteractiveMapSection() {
                   </span>
                 </div>
 
-                <p
-                  data-flip-id="map-desc"
-                  className="text-body-sm text-ink-secondary leading-relaxed"
-                >
+                <p data-flip-id="map-desc" className="text-body text-ink-secondary leading-relaxed">
                   Explore local expenses, tuition levels, and universities by hovering over or
                   clicking on any UK region. Select multiple regions on the map to compare and
                   shortlist options for your customized degree roadmap.
@@ -1273,13 +1265,13 @@ function InteractiveMapSection() {
                     <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
                       UK Living Costs Range
                     </span>
-                    <span className="text-body-sm font-bold text-ink">£380 - £950 / month</span>
+                    <span className="text-body font-bold text-ink">£380 - £950 / month</span>
                   </div>
                   <div className="bg-canvas border border-hairline rounded-sm p-3 flex flex-col gap-0.5">
                     <span className="text-[10px] font-semibold text-ink-tertiary uppercase tracking-wider">
                       Average Tuition Range
                     </span>
-                    <span className="text-body-sm font-bold text-emerald-600 dark:text-emerald-400">
+                    <span className="text-body font-bold text-positive">
                       £13,500 - £35,000 / year
                     </span>
                   </div>

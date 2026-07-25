@@ -18,11 +18,12 @@ import { SwipeDeck } from '../components/SwipeDeck'
 import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
 import { Input, Select } from '../components/ui/input'
+import { RevealGroup, RevealItem } from '../components/ui/reveal'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { useJourney } from '../hooks/useJourney'
 import { useRegionCosts } from '../hooks/useMeta'
 import { type UniversityFilters, useUniversities } from '../hooks/useUniversities'
-import { formatGbpWhole } from '../lib/format'
+import { formatGbpWhole, safeExternalUrl } from '../lib/format'
 import { Flip } from '../lib/gsap/Flip.js'
 import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
@@ -73,8 +74,8 @@ export function UniversitiesPage() {
   }, [overview])
 
   const gridClass = compactCards
-    ? 'grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3'
-    : 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4'
+    ? 'grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3 items-stretch'
+    : 'grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 items-stretch'
 
   const regionCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -138,35 +139,8 @@ export function UniversitiesPage() {
     [universities, skipped, shortlistIds],
   )
 
-  // Card scatter entrance animation when list of universities changes
-  useGSAP(() => {
-    if (!isPending && universities && universities.length > 0 && mode === 'browse') {
-      gsap.fromTo(
-        '.university-card',
-        {
-          opacity: 0,
-          x: () => gsap.utils.random(-60, 60),
-          y: () => gsap.utils.random(40, 80),
-          rotation: () => gsap.utils.random(-6, 6),
-          scale: 0.94,
-        },
-        {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          rotation: 0,
-          scale: 1,
-          duration: 0.6,
-          ease: 'power3.out',
-          stagger: {
-            each: 0.04,
-            from: 'random',
-          },
-          overwrite: 'auto',
-        },
-      )
-    }
-  }, [universities, isPending, mode])
+  // The browse grid entrance is handled by the shared Reveal primitives below,
+  // so the cards keep the same calm rise the rest of the app uses.
 
   // Tilt geo-map on cursor move
   const handleMapMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -219,7 +193,7 @@ export function UniversitiesPage() {
         </p>
       </header>
 
-      <div className="flex flex-col lg:flex-row gap-8 mb-7">
+      <div className="flex flex-col lg:flex-row gap-8 mb-8">
         <div className="shrink-0">
           <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary mb-2.5">
             Pick your regions
@@ -235,7 +209,10 @@ export function UniversitiesPage() {
           </div>
           <div
             ref={regionChipsContainerRef}
-            className="mt-2.5 max-w-[340px] flex flex-wrap gap-1.5"
+            className={cn(
+              'max-w-[340px] flex flex-wrap gap-1.5',
+              filters.regions.length > 0 && 'mt-2.5',
+            )}
           >
             {filters.regions.map((region) => (
               <button
@@ -313,7 +290,7 @@ export function UniversitiesPage() {
               onClick={() => setFilters({ ...filters, russellGroup: !filters.russellGroup })}
               aria-pressed={filters.russellGroup}
               className={cn(
-                'text-xs font-medium px-3 py-1.5 rounded-full border transition-colors duration-[120ms] inline-flex items-center gap-1.5 cursor-pointer',
+                'h-8 text-xs font-medium px-3 rounded-full border transition-colors duration-[120ms] inline-flex items-center gap-1.5 cursor-pointer',
                 filters.russellGroup
                   ? 'bg-accent-solid border-transparent text-white shadow-sm [background-image:var(--accent-gradient)]'
                   : 'bg-surface border-hairline-strong text-ink-secondary hover:bg-surface-secondary hover:text-ink',
@@ -334,7 +311,7 @@ export function UniversitiesPage() {
             </Select>
 
             <fieldset
-              className="inline-flex bg-surface-secondary p-[3px] rounded-sm border-0"
+              className="inline-flex h-8 items-center bg-surface-secondary p-[3px] rounded-sm border-0"
               aria-label="View mode"
             >
               <ModeButton
@@ -369,7 +346,7 @@ export function UniversitiesPage() {
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-ink text-xs">{rc.region}</span>
-                      <span className="text-micro text-ink-muted capitalize">
+                      <span className="text-micro text-ink-tertiary capitalize">
                         {rc.costLevel} cost
                       </span>
                     </div>
@@ -402,7 +379,7 @@ export function UniversitiesPage() {
       </div>
 
       {isPending ? (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+        <div className={gridClass}>
           {['a', 'b', 'c', 'd', 'e', 'f'].map((key) => (
             <CardSkeleton key={key} lines={3} />
           ))}
@@ -421,16 +398,19 @@ export function UniversitiesPage() {
           action={<Button onClick={() => setFilters(defaultFilters)}>Clear filters</Button>}
         />
       ) : mode === 'browse' ? (
-        <div className={gridClass}>
+        // Short stagger: this grid can run to 200 results, so anything longer
+        // would leave the tail of the list visibly lagging behind the top.
+        <RevealGroup className={gridClass} stagger={0.025}>
           {(universities ?? []).map((u) => (
-            <UniversityCard
-              key={u.id}
-              university={u}
-              shortlisted={inShortlist(u)}
-              onToggle={() => (inShortlist(u) ? removeFromShortlist(u.id) : addToShortlist(u))}
-            />
+            <RevealItem key={u.id} className="h-full">
+              <UniversityCard
+                university={u}
+                shortlisted={inShortlist(u)}
+                onToggle={() => (inShortlist(u) ? removeFromShortlist(u.id) : addToShortlist(u))}
+              />
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       ) : (
         <SwipeDeck
           deck={deck}
@@ -444,7 +424,7 @@ export function UniversitiesPage() {
       {shortlist.length > 0 && (
         <div
           ref={shortlistBarRef}
-          className="fixed bottom-4 left-[276px] right-4 max-w-4xl mx-auto z-40 bg-surface/95 backdrop-blur-md border border-hairline-strong rounded-lg shadow-overlay p-4 flex flex-wrap items-center gap-3"
+          className="fixed bottom-4 left-4 right-4 lg:left-[276px] max-w-4xl mx-auto z-40 bg-surface/95 backdrop-blur-md border border-hairline-strong rounded-lg shadow-overlay p-4 flex flex-wrap items-center gap-3"
         >
           <div className="flex-1 min-w-48">
             <p className="text-body font-semibold text-ink">{shortlist.length} shortlisted</p>
@@ -456,7 +436,9 @@ export function UniversitiesPage() {
             <Button
               size="sm"
               onClick={() => {
-                const links = shortlist.map((u) => u.ugAdmissionsUrl).filter(Boolean) as string[]
+                const links = shortlist
+                  .map((u) => safeExternalUrl(u.ugAdmissionsUrl))
+                  .filter((url): url is string => Boolean(url))
                 for (const url of links) {
                   window.open(url, '_blank')
                 }
@@ -492,7 +474,7 @@ function ModeButton({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        'flex items-center gap-1.5 px-3.5 py-1.5 rounded-[6px] text-caption font-semibold transition-colors duration-[120ms] cursor-pointer',
+        'flex h-full items-center gap-1.5 px-3.5 rounded-[6px] text-caption font-semibold transition-colors duration-[120ms] cursor-pointer',
         active ? 'bg-surface text-ink shadow-sm' : 'text-ink-secondary hover:text-ink',
       )}
     >
@@ -512,7 +494,7 @@ function UniversityCard({
   onToggle: () => void
 }) {
   return (
-    <article className="university-card bg-surface border border-hairline rounded-lg shadow-md p-4 flex flex-col gap-3 card-lift select-none">
+    <article className="university-card h-full bg-surface border border-hairline rounded-lg shadow-md p-4 flex flex-col gap-3 card-lift select-none">
       <div className="flex items-center justify-between">
         <span className="text-caption font-bold text-accent bg-accent-soft rounded-xs px-1.5 py-0.5 tabular-nums">
           #{u.rank}
@@ -569,7 +551,7 @@ function UniversityCard({
 
       <div className="flex items-center gap-x-3 gap-y-1 flex-wrap border-t border-hairline pt-2.5 text-xs font-medium">
         <a
-          href={u.website}
+          href={safeExternalUrl(u.website)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
@@ -578,7 +560,7 @@ function UniversityCard({
           <ExternalLink size={10} />
         </a>
         <a
-          href={u.internationalUrl}
+          href={safeExternalUrl(u.internationalUrl)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
@@ -588,7 +570,7 @@ function UniversityCard({
         </a>
         {u.scholarshipsUrl && (
           <a
-            href={u.scholarshipsUrl}
+            href={safeExternalUrl(u.scholarshipsUrl)}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
@@ -599,7 +581,7 @@ function UniversityCard({
         )}
         {u.accommodationUrl && (
           <a
-            href={u.accommodationUrl}
+            href={safeExternalUrl(u.accommodationUrl)}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs"
@@ -609,7 +591,7 @@ function UniversityCard({
           </a>
         )}
         <a
-          href={u.ugAdmissionsUrl}
+          href={safeExternalUrl(u.ugAdmissionsUrl)}
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-1 text-accent hover:underline rounded-xs ml-auto"

@@ -15,19 +15,19 @@ import { SwipeDeck } from '../components/SwipeDeck'
 import { UkGeoMap } from '../components/UkGeoMap'
 import { Button } from '../components/ui/button'
 import { Input, Label, Select } from '../components/ui/input'
+import { Reveal } from '../components/ui/reveal'
 import { useCreateJourney } from '../hooks/useJourney'
 import { useCountries } from '../hooks/useMeta'
 import { useUniversities } from '../hooks/useUniversities'
 import { apiErrorMessage } from '../lib/api'
 import { DrawSVGPlugin } from '../lib/gsap/DrawSVGPlugin.js'
-import { Flip } from '../lib/gsap/Flip.js'
 import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
 import { useAuthStore } from '../store/authStore'
 import { useProfileStore } from '../store/profileStore'
 import { toast } from '../store/toastStore'
 
-gsap.registerPlugin(useGSAP, Flip, DrawSVGPlugin)
+gsap.registerPlugin(useGSAP, DrawSVGPlugin)
 
 const courseLevels = [
   {
@@ -102,9 +102,6 @@ export function OnboardingPage() {
   const [error, setError] = useState<string | null>(null)
 
   // Refs for GSAP
-  const stepContainerRef = useRef<HTMLDivElement>(null)
-  // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
-  const flipStateRef = useRef<any>(null)
   const progressLine1Ref = useRef<SVGLineElement>(null)
   const progressLine2Ref = useRef<SVGLineElement>(null)
 
@@ -155,9 +152,7 @@ export function OnboardingPage() {
   }
 
   const changeStep = (newStep: number) => {
-    if (stepContainerRef.current) {
-      flipStateRef.current = Flip.getState(stepContainerRef.current)
-    }
+    setError(null)
     setStep(newStep)
   }
 
@@ -199,26 +194,10 @@ export function OnboardingPage() {
     )
   }
 
-  // GSAP Flip transition + entrance anims
+  // Slow ambient blob drift. This runs once rather than on every step: keying it
+  // to the step created a fresh infinite tween each time the wizard advanced.
+  // The step content itself is revealed by the shared Reveal primitive below.
   useGSAP(() => {
-    if (stepContainerRef.current && flipStateRef.current) {
-      Flip.from(flipStateRef.current, {
-        duration: 0.55,
-        ease: 'power3.out',
-        scale: true,
-        fade: true,
-        absolute: false,
-      })
-      flipStateRef.current = null
-    } else {
-      gsap.fromTo(
-        stepContainerRef.current,
-        { opacity: 0, y: 15 },
-        { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' },
-      )
-    }
-
-    // Slow ambient blob drift
     gsap.to('.ambient-a', {
       x: 60,
       y: 40,
@@ -237,7 +216,7 @@ export function OnboardingPage() {
       repeat: -1,
       yoyo: true,
     })
-  }, [step])
+  }, [])
 
   // DrawSVG course icons on Step 1 mount
   useGSAP(() => {
@@ -284,19 +263,19 @@ export function OnboardingPage() {
         </header>
 
         {/* Step Indicator Header */}
-        <div className="flex items-center justify-center gap-6 mb-8 select-none">
+        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-8 select-none">
           <div className="flex items-center gap-2">
             <span
               className={cn(
                 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 border',
                 step === 1
-                  ? 'bg-accent text-white border-accent shadow-sm'
+                  ? 'bg-accent-solid text-white border-transparent shadow-sm'
                   : step > 1
-                    ? 'bg-positive border-positive text-white'
+                    ? 'bg-positive-soft border-transparent text-positive'
                     : 'bg-surface border-hairline-strong text-ink-secondary',
               )}
             >
-              {step > 1 ? <CheckCircle2 size={13} className="text-white" /> : '1'}
+              {step > 1 ? <CheckCircle2 size={13} /> : '1'}
             </span>
             <span
               className={cn(
@@ -308,7 +287,12 @@ export function OnboardingPage() {
             </span>
           </div>
 
-          <svg width="32" height="2" viewBox="0 0 32 2" className="overflow-visible shrink-0">
+          <svg
+            width="32"
+            height="2"
+            viewBox="0 0 32 2"
+            className="overflow-visible shrink-0 hidden sm:block"
+          >
             <title>Progress connector</title>
             <line x1="0" y1="1" x2="32" y2="1" stroke="var(--border-strong)" strokeWidth="2" />
             <line
@@ -327,13 +311,13 @@ export function OnboardingPage() {
               className={cn(
                 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 border',
                 step === 2
-                  ? 'bg-accent text-white border-accent shadow-sm'
+                  ? 'bg-accent-solid text-white border-transparent shadow-sm'
                   : step > 2
-                    ? 'bg-positive border-positive text-white'
+                    ? 'bg-positive-soft border-transparent text-positive'
                     : 'bg-surface border-hairline-strong text-ink-secondary',
               )}
             >
-              {step > 2 ? <CheckCircle2 size={13} className="text-white" /> : '2'}
+              {step > 2 ? <CheckCircle2 size={13} /> : '2'}
             </span>
             <span
               className={cn(
@@ -345,7 +329,12 @@ export function OnboardingPage() {
             </span>
           </div>
 
-          <svg width="32" height="2" viewBox="0 0 32 2" className="overflow-visible shrink-0">
+          <svg
+            width="32"
+            height="2"
+            viewBox="0 0 32 2"
+            className="overflow-visible shrink-0 hidden sm:block"
+          >
             <title>Progress connector</title>
             <line x1="0" y1="1" x2="32" y2="1" stroke="var(--border-strong)" strokeWidth="2" />
             <line
@@ -364,7 +353,7 @@ export function OnboardingPage() {
               className={cn(
                 'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 border',
                 step === 3
-                  ? 'bg-accent text-white border-accent shadow-sm'
+                  ? 'bg-accent-solid text-white border-transparent shadow-sm'
                   : 'bg-surface border-hairline-strong text-ink-secondary',
               )}
             >
@@ -381,12 +370,12 @@ export function OnboardingPage() {
           </div>
         </div>
 
-        <div ref={stepContainerRef}>
+        <div>
           {step === 1 && (
-            <div className="flex flex-col gap-6">
+            <Reveal key="step-1" className="flex flex-col gap-6">
               {/* Course Level */}
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
-                <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
+                <h2 className="text-body-lg font-semibold text-ink mb-3">
                   What level are you studying?
                 </h2>
                 <div className="grid grid-cols-2 gap-2.5">
@@ -433,7 +422,7 @@ export function OnboardingPage() {
 
               {/* Major or Subject */}
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
-                <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
+                <h2 className="text-body-lg font-semibold text-ink mb-3">
                   What is your major or subject of interest?
                 </h2>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -464,14 +453,14 @@ export function OnboardingPage() {
                     placeholder="e.g. Psychology, Computer Science, Law"
                     value={major}
                     onChange={(e) => setMajor(e.target.value)}
-                    className="max-w-md mt-1 w-full"
+                    className="max-w-md w-full"
                   />
                 </div>
               </section>
 
               {/* Education completed till */}
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
-                <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
+                <h2 className="text-body-lg font-semibold text-ink mb-3">
                   Education completed till
                 </h2>
                 <div className="draw-focus">
@@ -482,7 +471,7 @@ export function OnboardingPage() {
                     id="education-select"
                     value={educationCompleted}
                     onChange={(e) => setEducationCompleted(e.target.value)}
-                    className="max-w-md mt-1 w-full"
+                    className="max-w-md w-full"
                   >
                     {educationCompletedOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -495,7 +484,7 @@ export function OnboardingPage() {
 
               {/* Intake presets */}
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
-                <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
+                <h2 className="text-body-lg font-semibold text-ink mb-3">
                   When do you want to start?
                 </h2>
                 <div className="flex flex-wrap gap-2.5 mb-3">
@@ -534,9 +523,7 @@ export function OnboardingPage() {
 
               {/* Process Budget */}
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 card-lift">
-                <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-3">
-                  Your process budget
-                </h2>
+                <h2 className="text-body-lg font-semibold text-ink mb-3">Your process budget</h2>
                 <div className="flex flex-wrap gap-2.5 mb-3">
                   {budgetPresets.map((amount) => {
                     const active = budgetGbp === String(amount)
@@ -583,7 +570,11 @@ export function OnboardingPage() {
                 </p>
               </section>
 
-              {error && <p className="text-body text-danger text-center font-medium">{error}</p>}
+              {error && (
+                <p role="alert" className="text-body text-danger text-center font-medium">
+                  {error}
+                </p>
+              )}
 
               <Button
                 type="button"
@@ -594,27 +585,27 @@ export function OnboardingPage() {
                 Next: Choose Regions
                 <ArrowRight size={16} />
               </Button>
-            </div>
+            </Reveal>
           )}
 
           {step === 2 && (
-            <div className="flex flex-col gap-6">
+            <Reveal key="step-2" className="flex flex-col gap-6">
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center card-lift">
                 <div className="w-full text-left">
-                  <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-1">
+                  <h2 className="text-body-lg font-semibold text-ink mb-1">
                     Preferred regions in the UK
                   </h2>
-                  <p className="text-xs text-ink-secondary mb-4">
+                  <p className="text-caption text-ink-secondary mb-4 leading-relaxed">
                     Click on the regions where you would like to study. Leave empty to show all
                     regions.
                   </p>
                 </div>
-                <div className="w-full flex justify-center py-2 bg-surface-secondary/50 rounded-md border border-hairline max-w-[380px]">
+                <div className="w-full max-w-[380px] mx-auto flex justify-center py-2 bg-surface-secondary/50 rounded-md border border-hairline">
                   <UkGeoMap selected={selectedRegions} counts={{}} onToggle={toggleRegion} />
                 </div>
                 <div className="w-full text-left mt-3">
                   {selectedRegions.length > 0 ? (
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                       <p className="text-xs font-medium text-accent">
                         {selectedRegions.length} region{selectedRegions.length > 1 ? 's' : ''}{' '}
                         selected: {selectedRegions.join(', ')}
@@ -622,7 +613,7 @@ export function OnboardingPage() {
                       <button
                         type="button"
                         onClick={() => setSelectedRegions([])}
-                        className="text-xs font-medium text-ink-muted hover:text-ink hover:underline"
+                        className="text-xs font-medium text-ink-tertiary hover:text-ink hover:underline rounded-xs cursor-pointer"
                       >
                         Clear all
                       </button>
@@ -636,7 +627,11 @@ export function OnboardingPage() {
                 </div>
               </section>
 
-              {error && <p className="text-body text-danger text-center font-medium">{error}</p>}
+              {error && (
+                <p role="alert" className="text-body text-danger text-center font-medium">
+                  {error}
+                </p>
+              )}
 
               <div className="flex flex-col sm:flex-row justify-center gap-3.5">
                 <Button
@@ -664,18 +659,18 @@ export function OnboardingPage() {
                   <ArrowRight size={16} />
                 </Button>
               </div>
-            </div>
+            </Reveal>
           )}
 
           {step === 3 && (
-            <div className="flex flex-col gap-6">
+            <Reveal key="step-3" className="flex flex-col gap-6">
               <section className="bg-surface border border-hairline rounded-lg shadow-md p-5 flex flex-col items-center card-lift">
                 <div className="w-full text-left mb-4">
-                  <h2 className="text-body font-semibold text-ink-secondary uppercase tracking-[0.05em] mb-1 flex items-center gap-1.5">
-                    <Heart size={16} className="text-danger fill-current animate-pulse" />
+                  <h2 className="text-body-lg font-semibold text-ink mb-1 flex items-center gap-1.5">
+                    <Heart size={16} className="text-danger fill-current" />
                     Swipe and Shortlist
                   </h2>
-                  <p className="text-xs text-ink-secondary">
+                  <p className="text-caption text-ink-secondary leading-relaxed">
                     Swipe right to shortlist desirable universities, or swipe left to skip them.
                   </p>
                 </div>
@@ -691,7 +686,11 @@ export function OnboardingPage() {
                 </div>
               </section>
 
-              {error && <p className="text-body text-danger text-center font-medium">{error}</p>}
+              {error && (
+                <p role="alert" className="text-body text-danger text-center font-medium">
+                  {error}
+                </p>
+              )}
 
               <div className="flex flex-col sm:flex-row justify-center gap-3.5">
                 <Button
@@ -711,7 +710,7 @@ export function OnboardingPage() {
                   {createJourney.isPending ? 'Building roadmap...' : 'Complete: Go to Dashboard'}
                 </Button>
               </div>
-            </div>
+            </Reveal>
           )}
         </div>
       </div>

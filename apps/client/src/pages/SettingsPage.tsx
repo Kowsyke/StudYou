@@ -6,6 +6,7 @@ import { QueryError } from '../components/QueryError'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Input, Label, Select } from '../components/ui/input'
+import { Reveal, RevealGroup, RevealItem } from '../components/ui/reveal'
 import { CardSkeleton } from '../components/ui/skeleton'
 import { Switch } from '../components/ui/switch'
 import { hasNoJourney, useJourney, useUpdateSettings } from '../hooks/useJourney'
@@ -228,8 +229,6 @@ function DrawFocusSelect({
 export function SettingsPage() {
   const user = useAuthStore((s) => s.user)
   const { data: overview, isPending, error, refetch, isRefetching } = useJourney()
-
-  if (user?.role === 'admin') return <Navigate to="/admin/settings" replace />
   const { data: countries } = useCountries()
   const updateSettings = useUpdateSettings()
 
@@ -246,7 +245,6 @@ export function SettingsPage() {
 
   const dangerBtnRef = useRef<HTMLButtonElement>(null)
   const modalRef = useRef<HTMLDivElement>(null)
-  const panelRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -259,7 +257,9 @@ export function SettingsPage() {
     setOriginCountryCode(currentOriginCode)
   }, [currentOriginCode])
 
-  // Flip indicator and panel transition on tab change
+  /* Flip moves the sidebar pill to the newly selected tab. The panel itself is
+     keyed on activeTab and re enters through the shared Reveal primitive, so
+     the two transitions stay on the same timing language. */
   const handleTabChange = (tabId: SettingsTab) => {
     if (tabId === activeTab) return
     const state = Flip.getState(navRef.current?.querySelectorAll('.sidebar-pill'))
@@ -272,14 +272,6 @@ export function SettingsPage() {
         })
       }
     }, 0)
-
-    if (panelRef.current) {
-      gsap.fromTo(
-        panelRef.current,
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
-      )
-    }
   }
 
   const wiggleDanger = () => {
@@ -303,13 +295,21 @@ export function SettingsPage() {
     }
   }, [confirming])
 
+  /* Both redirects sit below every hook call so the hook order stays stable
+     for a given mount, which it did not when the admin check ran first. */
+  if (user?.role === 'admin') return <Navigate to="/admin/settings" replace />
+
   if (error && hasNoJourney(error)) return <Navigate to="/onboarding" replace />
 
   if (isPending) {
     return (
-      <div className="space-y-4 max-w-4xl mx-auto">
-        <CardSkeleton lines={4} />
-        <CardSkeleton lines={2} />
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+        <div className="md:col-span-4 lg:col-span-3">
+          <CardSkeleton lines={5} />
+        </div>
+        <div className="md:col-span-8 lg:col-span-9">
+          <CardSkeleton lines={6} />
+        </div>
       </div>
     )
   }
@@ -368,295 +368,312 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-hairline pb-4">
-        <div>
+      <Reveal>
+        <header className="border-b border-hairline pb-4">
           <h1 className="text-title3 text-ink font-bold text-gradient">Preferences & Settings</h1>
-          <p className="text-body-sm text-ink-secondary mt-1">
+          <p className="text-body text-ink-secondary mt-1">
             Manage your account identity, UK intake roadmap parameters, and visual experience.
           </p>
-        </div>
-      </header>
+        </header>
+      </Reveal>
 
       {/* 2-Column Sidebar Layout */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
         {/* Navigation Sidebar */}
         <nav
           ref={navRef}
-          className="md:col-span-4 lg:col-span-3 bg-surface border border-hairline rounded-xl p-2 space-y-1 shadow-xs sticky top-20"
+          aria-label="Settings sections"
+          className="md:col-span-4 lg:col-span-3 bg-surface border border-hairline rounded-xl p-2 shadow-xs md:sticky md:top-20"
         >
-          {settingsTabs.map((tab) => {
-            const active = activeTab === tab.id
-            return (
-              <button
-                key={tab.id}
-                type="button"
-                onClick={() => handleTabChange(tab.id)}
-                className={cn(
-                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium transition-colors relative cursor-pointer text-left',
-                  active
-                    ? 'text-ink font-bold'
-                    : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/50',
-                )}
-              >
-                {active && (
-                  <div
-                    data-flip-id="sidebar-tab-pill"
-                    className="sidebar-pill absolute inset-0 bg-accent-soft rounded-lg border border-accent/20 -z-10"
-                  />
-                )}
-                <tab.icon
-                  size={16}
-                  className={cn(
-                    'shrink-0 transition-colors',
-                    active ? 'text-accent' : 'text-ink-tertiary',
-                  )}
-                />
-                <div className="min-w-0 flex-1">
-                  <span className="block truncate">{tab.label}</span>
-                </div>
-              </button>
-            )
-          })}
+          <RevealGroup className="space-y-1" stagger={0.04}>
+            {settingsTabs.map((tab) => {
+              const active = activeTab === tab.id
+              return (
+                <RevealItem key={tab.id}>
+                  <button
+                    type="button"
+                    onClick={() => handleTabChange(tab.id)}
+                    aria-current={active ? 'page' : undefined}
+                    className={cn(
+                      'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body font-medium transition-colors duration-[120ms] relative cursor-pointer text-left',
+                      active
+                        ? 'text-ink font-bold'
+                        : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/50',
+                    )}
+                  >
+                    {active && (
+                      <div
+                        data-flip-id="sidebar-tab-pill"
+                        className="sidebar-pill absolute inset-0 bg-accent-soft rounded-lg border border-accent/20 -z-10"
+                      />
+                    )}
+                    <tab.icon
+                      size={16}
+                      className={cn(
+                        'shrink-0 transition-colors duration-[120ms]',
+                        active ? 'text-accent' : 'text-ink-tertiary',
+                      )}
+                    />
+                    <span className="min-w-0 flex-1 block truncate">{tab.label}</span>
+                  </button>
+                </RevealItem>
+              )
+            })}
+          </RevealGroup>
         </nav>
 
         {/* Settings Content Panel */}
-        <main ref={panelRef} className="md:col-span-8 lg:col-span-9 space-y-6">
+        <main className="md:col-span-8 lg:col-span-9 space-y-6">
           {/* TAB 1: ACCOUNT */}
           {activeTab === 'account' && (
-            <Card className="card-lift border-hairline shadow-sm">
-              <CardHeader>
-                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
-                  Identity & Profile
-                </div>
-                <CardTitle>Account Profile</CardTitle>
-                <CardDescription>Your account details registered with StudYou.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-lg bg-surface-secondary/40 border border-hairline">
-                  <div>
-                    <p className="text-caption text-ink-tertiary font-medium">Full Name</p>
-                    <p className="text-body font-bold text-ink mt-0.5">{user?.fullName}</p>
+            <Reveal>
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                    Identity & Profile
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-caption text-ink-tertiary font-medium">Email Address</p>
-                    <p className="text-body font-bold text-ink truncate mt-0.5">{user?.email}</p>
+                  <CardTitle>Account Profile</CardTitle>
+                  <CardDescription>Your account details registered with StudYou.</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-lg bg-surface-secondary/40 border border-hairline">
+                    <div>
+                      <p className="text-caption text-ink-tertiary font-medium">Full Name</p>
+                      <p className="text-body font-bold text-ink mt-0.5">{user?.fullName}</p>
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-caption text-ink-tertiary font-medium">Email Address</p>
+                      <p className="text-body font-bold text-ink truncate mt-0.5">{user?.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-caption text-ink-tertiary font-medium">Account Role</p>
+                      <p className="text-body font-bold text-ink capitalize mt-0.5">{user?.role}</p>
+                    </div>
+                    <div>
+                      <p className="text-caption text-ink-tertiary font-medium">
+                        Authentication Method
+                      </p>
+                      <p className="text-body font-bold text-ink mt-0.5">Secure JWT Session</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-caption text-ink-tertiary font-medium">Account Role</p>
-                    <p className="text-body font-bold text-ink capitalize mt-0.5">{user?.role}</p>
-                  </div>
-                  <div>
-                    <p className="text-caption text-ink-tertiary font-medium">
-                      Authentication Method
-                    </p>
-                    <p className="text-body font-bold text-ink mt-0.5">Secure JWT Session</p>
-                  </div>
-                </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <span className="text-caption text-ink-secondary">
-                    Looking to update your avatar or view saved universities?
-                  </span>
-                  <Link to="/profile">
-                    <Button variant="secondary" size="sm" className="font-semibold">
-                      Edit Profile & Shortlist
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-hairline pt-4">
+                    <span className="text-caption text-ink-secondary">
+                      Looking to update your avatar or view saved universities?
+                    </span>
+                    <Link to="/profile" className="shrink-0">
+                      <Button variant="secondary" size="sm" className="font-semibold">
+                        Edit Profile & Shortlist
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </Reveal>
           )}
 
           {/* TAB 2: INTAKE & JOURNEY */}
           {activeTab === 'journey' && (
-            <Card className="card-lift border-hairline shadow-sm">
-              <CardHeader>
-                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
-                  Roadmap Engine
-                </div>
-                <CardTitle>Journey Settings</CardTitle>
-                <CardDescription>
-                  Changing your target intake date automatically recalculates every milestone in
-                  your roadmap.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={onSubmit} className="space-y-5">
-                  <DrawFocusInput
-                    id="settings-intake"
-                    label="Target intake date"
-                    type="date"
-                    required
-                    value={intakeDate}
-                    onChange={setIntakeDate}
-                  />
-                  {intakeChanged && (
-                    <p className="text-caption text-warning font-medium -mt-2">
-                      ⚠️ Target dates across all 21 roadmap steps will be recalculated from this
-                      date.
-                    </p>
-                  )}
-
-                  <DrawFocusInput
-                    id="settings-budget"
-                    label="Budget for tuition fees and process costs (GBP £)"
-                    type="number"
-                    min={0}
-                    step="100"
-                    required
-                    value={budgetGbp}
-                    onChange={setBudgetGbp}
-                  />
-
-                  <DrawFocusSelect
-                    id="settings-origin"
-                    label="Home country"
-                    value={originCountryCode}
-                    onChange={(e) => setOriginCountryCode(e.target.value)}
-                  >
-                    <option value="">Not set (GBP only)</option>
-                    {originCountries.map((c) => (
-                      <option key={c.id} value={c.code}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </DrawFocusSelect>
-                  <p className="text-caption text-ink-tertiary -mt-2">
-                    Used to calculate approximate costs in your local currency alongside GBP.
-                  </p>
-
-                  {formError && <p className="text-body-sm text-danger font-medium">{formError}</p>}
-
-                  <div className="pt-2">
-                    <Button
-                      type="submit"
-                      disabled={updateSettings.isPending}
-                      className="font-semibold [background-image:var(--accent-gradient)]"
-                    >
-                      {updateSettings.isPending ? 'Saving settings...' : 'Save journey settings'}
-                    </Button>
+            <Reveal>
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                    Roadmap Engine
                   </div>
-                </form>
-              </CardContent>
-            </Card>
+                  <CardTitle>Journey Settings</CardTitle>
+                  <CardDescription>
+                    Changing your target intake date automatically recalculates every milestone in
+                    your roadmap.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={onSubmit} className="space-y-5">
+                    <DrawFocusInput
+                      id="settings-intake"
+                      label="Target intake date"
+                      type="date"
+                      required
+                      value={intakeDate}
+                      onChange={setIntakeDate}
+                    />
+                    {intakeChanged && (
+                      <p className="text-caption text-warning font-medium -mt-2">
+                        Heads up: target dates across all 21 roadmap steps will be recalculated from
+                        this date.
+                      </p>
+                    )}
+
+                    <DrawFocusInput
+                      id="settings-budget"
+                      label="Budget for tuition fees and process costs (GBP £)"
+                      type="number"
+                      min={0}
+                      step="100"
+                      required
+                      value={budgetGbp}
+                      onChange={setBudgetGbp}
+                    />
+
+                    <DrawFocusSelect
+                      id="settings-origin"
+                      label="Home country"
+                      value={originCountryCode}
+                      onChange={(e) => setOriginCountryCode(e.target.value)}
+                    >
+                      <option value="">Not set (GBP only)</option>
+                      {originCountries.map((c) => (
+                        <option key={c.id} value={c.code}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </DrawFocusSelect>
+                    <p className="text-caption text-ink-tertiary -mt-2">
+                      Used to calculate approximate costs in your local currency alongside GBP.
+                    </p>
+
+                    {formError && <p className="text-body text-danger font-medium">{formError}</p>}
+
+                    <div className="pt-2">
+                      <Button
+                        type="submit"
+                        disabled={updateSettings.isPending}
+                        className="font-semibold [background-image:var(--accent-gradient)]"
+                      >
+                        {updateSettings.isPending ? 'Saving settings...' : 'Save journey settings'}
+                      </Button>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
+            </Reveal>
           )}
 
           {/* TAB 3: APPEARANCE & DISPLAY */}
           {activeTab === 'appearance' && (
-            <Card className="card-lift border-hairline shadow-sm">
-              <CardHeader>
-                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
-                  Interface & Theme
-                </div>
-                <CardTitle>Appearance Settings</CardTitle>
-                <CardDescription>
-                  Choose how StudYou looks and moves on this device.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-2">
-                  <Label className="text-body-sm font-semibold text-ink">Theme Mode</Label>
-                  <ThemeToggle />
-                </div>
+            <Reveal>
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                    Interface & Theme
+                  </div>
+                  <CardTitle>Appearance Settings</CardTitle>
+                  <CardDescription>
+                    Choose how StudYou looks and moves on this device.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-2">
+                    <Label className="text-body font-semibold text-ink">Theme Mode</Label>
+                    <ThemeToggle />
+                  </div>
 
-                <div className="border-t border-hairline pt-4 space-y-4">
-                  <MotionAndDensity />
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="border-t border-hairline pt-4 space-y-4">
+                    <MotionAndDensity />
+                  </div>
+                </CardContent>
+              </Card>
+            </Reveal>
           )}
 
           {/* TAB 4: DEADLINES & CURRENCY */}
           {activeTab === 'deadlines' && (
-            <Card className="card-lift border-hairline shadow-sm">
-              <CardHeader>
-                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
-                  Notifications & Formatting
-                </div>
-                <CardTitle>Planning & Currency</CardTitle>
-                <CardDescription>
-                  Configure how upcoming deadlines are flagged and displayed on your dashboard.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <DueSoonPicker />
+            <Reveal>
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                    Notifications & Formatting
+                  </div>
+                  <CardTitle>Planning & Currency</CardTitle>
+                  <CardDescription>
+                    Configure how upcoming deadlines are flagged and displayed on your dashboard.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <DueSoonPicker />
 
-                <div className="border-t border-hairline pt-4">
-                  <HomeCurrencyToggle />
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="border-t border-hairline pt-4">
+                    <HomeCurrencyToggle />
+                  </div>
+                </CardContent>
+              </Card>
+            </Reveal>
           )}
 
           {/* TAB 5: DATA & PRIVACY */}
           {activeTab === 'data' && (
-            <Card className="card-lift border-hairline shadow-sm">
-              <CardHeader>
-                <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
-                  Local Storage & Export
-                </div>
-                <CardTitle>Your Data & Privacy</CardTitle>
-                <CardDescription>
-                  Export your roadmap metrics or clear local storage data on this device.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="p-4 rounded-lg bg-surface-secondary/40 border border-hairline space-y-2">
-                  <p className="text-body-sm font-semibold text-ink">Data Export</p>
-                  <p className="text-caption text-ink-secondary">
-                    Download a full JSON copy of your journey progress, budget stats, and local
-                    preferences.
-                  </p>
-                </div>
+            <Reveal>
+              <Card className="card-lift border-hairline shadow-sm">
+                <CardHeader>
+                  <div className="text-caption font-semibold uppercase tracking-wider text-accent mb-1">
+                    Local Storage & Export
+                  </div>
+                  <CardTitle>Your Data & Privacy</CardTitle>
+                  <CardDescription>
+                    Export your roadmap metrics or clear local storage data on this device.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="p-4 rounded-lg bg-surface-secondary/40 border border-hairline space-y-2">
+                    <p className="text-body font-semibold text-ink">Data Export</p>
+                    <p className="text-caption text-ink-secondary">
+                      Download a full JSON copy of your journey progress, budget stats, and local
+                      preferences.
+                    </p>
+                  </div>
 
-                <div className="flex flex-wrap gap-3 pt-2">
-                  <Button
-                    variant="secondary"
-                    onClick={() => {
-                      const payload = {
-                        exportedAt: new Date().toISOString(),
-                        account: { name: user?.fullName, email: user?.email, role: user?.role },
-                        journey: overview.journey,
-                        progress: {
-                          percentComplete: overview.percentComplete,
-                          budget: overview.budget,
-                          upcomingDeadlines: overview.upcomingDeadlines,
-                        },
-                        localPreferences: JSON.parse(localStorage.getItem('studyou_prefs') ?? '{}'),
-                        profileChoices: JSON.parse(localStorage.getItem('studyou_profile') ?? '{}'),
-                      }
-                      const blob = new Blob([JSON.stringify(payload, null, 2)], {
-                        type: 'application/json',
-                      })
-                      const url = URL.createObjectURL(blob)
-                      const a = document.createElement('a')
-                      a.href = url
-                      a.download = 'studyou-export.json'
-                      a.click()
-                      URL.revokeObjectURL(url)
-                      toast.success('Export downloaded.')
-                    }}
-                  >
-                    <Download size={14} className="mr-1.5" />
-                    Export my data (JSON)
-                  </Button>
+                  <div className="flex flex-wrap gap-3 pt-2">
+                    <Button
+                      variant="secondary"
+                      onClick={() => {
+                        const payload = {
+                          exportedAt: new Date().toISOString(),
+                          account: { name: user?.fullName, email: user?.email, role: user?.role },
+                          journey: overview.journey,
+                          progress: {
+                            percentComplete: overview.percentComplete,
+                            budget: overview.budget,
+                            upcomingDeadlines: overview.upcomingDeadlines,
+                          },
+                          localPreferences: JSON.parse(
+                            localStorage.getItem('studyou_prefs') ?? '{}',
+                          ),
+                          profileChoices: JSON.parse(
+                            localStorage.getItem('studyou_profile') ?? '{}',
+                          ),
+                        }
+                        const blob = new Blob([JSON.stringify(payload, null, 2)], {
+                          type: 'application/json',
+                        })
+                        const url = URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url
+                        a.download = 'studyou-export.json'
+                        a.click()
+                        URL.revokeObjectURL(url)
+                        toast.success('Export downloaded.')
+                      }}
+                    >
+                      <Download size={14} className="mr-1.5" />
+                      Export my data (JSON)
+                    </Button>
 
-                  <Button
-                    ref={dangerBtnRef}
-                    variant="danger"
-                    onMouseEnter={wiggleDanger}
-                    onClick={() => {
-                      clearLocalData()
-                      toast.success('Local data cleared.')
-                      setTimeout(() => window.location.reload(), 600)
-                    }}
-                  >
-                    <Trash2 size={14} className="mr-1.5" />
-                    Clear local data
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                    <Button
+                      ref={dangerBtnRef}
+                      variant="danger"
+                      onMouseEnter={wiggleDanger}
+                      onClick={() => {
+                        clearLocalData()
+                        toast.success('Local data cleared.')
+                        setTimeout(() => window.location.reload(), 600)
+                      }}
+                    >
+                      <Trash2 size={14} className="mr-1.5" />
+                      Clear local data
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </Reveal>
           )}
         </main>
       </div>
@@ -679,7 +696,7 @@ export function SettingsPage() {
             <h2 id="confirm-title" className="text-body-lg font-bold text-ink">
               Recalculate your roadmap?
             </h2>
-            <p className="text-body text-ink-secondary leading-relaxed text-xs">
+            <p className="text-body text-ink-secondary leading-relaxed">
               Changing your intake date will automatically recalculate every target date in your
               roadmap.
             </p>

@@ -43,6 +43,17 @@
   --danger-soft: rgba(201, 59, 43, 0.08);
   --warning: #a85800;
   --warning-soft: rgba(168, 88, 0, 0.08);
+  /* Six domain categories. Deliberately independent of --accent so the
+     knowledge tree stays a readable data palette even when an admin
+     retheme changes the brand accent. All AA against --surface. */
+  --category-visa: #2b5fd9;
+  --category-visa-soft: rgba(43, 95, 217, 0.08);
+  --category-health: #1f7d36;
+  --category-health-soft: rgba(31, 125, 54, 0.08);
+  --category-finance: #a85800;
+  --category-finance-soft: rgba(168, 88, 0, 0.08);
+  --category-documents: #4a5563;
+  --category-documents-soft: rgba(74, 85, 99, 0.08);
   --category-housing: #5b51c9;
   --category-housing-soft: rgba(91, 81, 201, 0.08);
   --category-arrival: #0b7285;
@@ -80,6 +91,14 @@
   --danger-soft: rgba(255, 69, 58, 0.12);
   --warning: #ff9f0a;
   --warning-soft: rgba(255, 159, 10, 0.12);
+  --category-visa: #6ea8ff;
+  --category-visa-soft: rgba(110, 168, 255, 0.12);
+  --category-health: #30d158;
+  --category-health-soft: rgba(48, 209, 88, 0.12);
+  --category-finance: #ff9f0a;
+  --category-finance-soft: rgba(255, 159, 10, 0.12);
+  --category-documents: #aab4c2;
+  --category-documents-soft: rgba(170, 180, 194, 0.12);
   --category-housing: #9d93f2;
   --category-housing-soft: rgba(157, 147, 242, 0.12);
   --category-arrival: #4cc4d9;
@@ -138,6 +157,14 @@
   --color-danger-soft: var(--danger-soft);
   --color-warning: var(--warning);
   --color-warning-soft: var(--warning-soft);
+  --color-category-visa: var(--category-visa);
+  --color-category-visa-soft: var(--category-visa-soft);
+  --color-category-health: var(--category-health);
+  --color-category-health-soft: var(--category-health-soft);
+  --color-category-finance: var(--category-finance);
+  --color-category-finance-soft: var(--category-finance-soft);
+  --color-category-documents: var(--category-documents);
+  --color-category-documents-soft: var(--category-documents-soft);
   --color-category-housing: var(--category-housing);
   --color-category-housing-soft: var(--category-housing-soft);
   --color-category-arrival: var(--category-arrival);
