@@ -185,6 +185,16 @@ export interface AdminAnalytics {
   newThisWeek: number
   suspendedUsers: number
   activeToday: number
+  // Real 14-day trend from journey_tasks.completed_at and users.created_at.
+  dailyActivityTrend: { date: string; tasksCompleted: number; newSignups: number }[]
+  // Real per-category completion from task templates joined to journey tasks.
+  categoryBreakdown: {
+    categoryKey: CategoryKey
+    categoryName: string
+    totalTasks: number
+    completedTasks: number
+    completionRate: number
+  }[]
 }
 
 export interface AdminNote {

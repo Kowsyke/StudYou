@@ -55,8 +55,6 @@ function toResource(row: typeof resources.$inferSelect & { categoryKey: string }
 
 export const resourceRoutes = new Hono<AppEnv>()
 
-resourceRoutes.use('*', authMiddleware)
-
 resourceRoutes.get('/', validate('query', listQuerySchema), async (c) => {
   const query = c.req.valid('query')
 
@@ -97,40 +95,45 @@ resourceRoutes.get('/', validate('query', listQuerySchema), async (c) => {
   return c.json(response)
 })
 
-resourceRoutes.post('/', requireRole('admin'), validate('json', resourceBodySchema), async (c) => {
-  const body = c.req.valid('json')
-  const refs = await lookupRefs(body.country, body.categoryKey)
-  if (!refs) return c.json({ success: false, error: 'Unknown country or category' }, 400)
+resourceRoutes.post(
+  '/',
+  authMiddleware,
+  requireRole('admin'),
+  validate('json', resourceBodySchema),
+  async (c) => {
+    const body = c.req.valid('json')
+    const refs = await lookupRefs(body.country, body.categoryKey)
+    if (!refs) return c.json({ success: false, error: 'Unknown country or category' }, 400)
 
-  const [created] = await db
-    .insert(resources)
-    .values({
-      countryId: refs.countryId,
-      categoryId: refs.categoryId,
-      title: body.title,
-      summary: body.summary,
-      costPence: body.costPence,
-      deadlineDaysBeforeIntake: body.deadlineDaysBeforeIntake,
-      sourceUrl: body.sourceUrl,
-      lastUpdated: new Date(),
-    })
-    .returning()
+    const [created] = await db
+      .insert(resources)
+      .values({
+        countryId: refs.countryId,
+        categoryId: refs.categoryId,
+        title: body.title,
+        summary: body.summary,
+        costPence: body.costPence,
+        deadlineDaysBeforeIntake: body.deadlineDaysBeforeIntake,
+        sourceUrl: body.sourceUrl,
+        lastUpdated: new Date(),
+      })
+      .returning()
 
-  const response: ApiResponse<Resource> = {
-    success: true,
-    data: toResource({ ...created, categoryKey: body.categoryKey }),
-  }
-  return c.json(response, 201)
-})
+    const resource = toResource({ ...created, categoryKey: body.categoryKey })
+    const response: ApiResponse<Resource> = { success: true, data: resource }
+    return c.json(response, 201)
+  },
+)
 
 resourceRoutes.put(
   '/:id',
+  authMiddleware,
   requireRole('admin'),
   validate('param', idParamSchema),
   validate('json', resourceBodySchema),
   async (c) => {
-    const body = c.req.valid('json')
     const { id } = c.req.valid('param')
+    const body = c.req.valid('json')
     const refs = await lookupRefs(body.country, body.categoryKey)
     if (!refs) return c.json({ success: false, error: 'Unknown country or category' }, 400)
 
@@ -150,22 +153,28 @@ resourceRoutes.put(
       .returning()
 
     if (!updated) return c.json({ success: false, error: 'Resource not found' }, 404)
-    const response: ApiResponse<Resource> = {
-      success: true,
-      data: toResource({ ...updated, categoryKey: body.categoryKey }),
-    }
+
+    const resource = toResource({ ...updated, categoryKey: body.categoryKey })
+    const response: ApiResponse<Resource> = { success: true, data: resource }
     return c.json(response)
   },
 )
 
-resourceRoutes.delete('/:id', requireRole('admin'), validate('param', idParamSchema), async (c) => {
-  const [deleted] = await db
-    .delete(resources)
-    .where(eq(resources.id, c.req.valid('param').id))
-    .returning({ id: resources.id })
-  if (!deleted) return c.json({ success: false, error: 'Resource not found' }, 404)
-  return c.json({ success: true, message: 'Resource deleted' })
-})
+resourceRoutes.delete(
+  '/:id',
+  authMiddleware,
+  requireRole('admin'),
+  validate('param', idParamSchema),
+  async (c) => {
+    const { id } = c.req.valid('param')
+    const [deleted] = await db
+      .delete(resources)
+      .where(eq(resources.id, id))
+      .returning({ id: resources.id })
+    if (!deleted) return c.json({ success: false, error: 'Resource not found' }, 404)
+    return c.json({ success: true, data: { id: deleted.id } })
+  },
+)
 
 async function lookupRefs(countryCode: string, categoryKey: string) {
   const [country] = await db

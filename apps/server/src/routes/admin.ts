@@ -1,6 +1,7 @@
 import {
   adminNotes,
   bugReports,
+  categories,
   journeyTasks,
   journeys,
   stages,
@@ -13,6 +14,7 @@ import type {
   AdminUser,
   ApiResponse,
   BugReport,
+  CategoryKey,
   ReportCategory,
   ReportStatus,
   Role,
@@ -78,8 +80,70 @@ adminRoutes.get('/analytics', async (c) => {
   const totalTasks = breakdown.reduce((sum, s) => sum + s.totalTasks, 0)
   const completedTasks = breakdown.reduce((sum, s) => sum + s.completedTasks, 0)
 
+  // Real 14-day trend, built from actual timestamps: tasks marked done per
+  // day (journey_tasks.completed_at, which journey.ts sets to now() on
+  // completion) and new student sign-ups per day (users.created_at). Days
+  // with no activity report 0, which is honest rather than a synthetic curve.
+  const now = new Date()
+  const tasksByDayRows = await db
+    .select({
+      day: sql<string>`to_char(${journeyTasks.completedAt}, 'YYYY-MM-DD')`,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(journeyTasks)
+    .where(sql`${journeyTasks.completedAt} > now() - interval '13 days'`)
+    .groupBy(sql`to_char(${journeyTasks.completedAt}, 'YYYY-MM-DD')`)
+
+  const signupsByDayRows = await db
+    .select({
+      day: sql<string>`to_char(${users.createdAt}, 'YYYY-MM-DD')`,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(users)
+    .where(sql`${users.role} = 'student' and ${users.createdAt} > now() - interval '13 days'`)
+    .groupBy(sql`to_char(${users.createdAt}, 'YYYY-MM-DD')`)
+
+  const tasksByDay = new Map(tasksByDayRows.map((r) => [r.day, r.count]))
+  const signupsByDay = new Map(signupsByDayRows.map((r) => [r.day, r.count]))
+  const dailyActivityTrend = Array.from({ length: 14 }).map((_, idx) => {
+    const day = new Date(now)
+    day.setDate(now.getDate() - (13 - idx))
+    const key = day.toISOString().slice(0, 10)
+    return {
+      date: day.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+      tasksCompleted: tasksByDay.get(key) ?? 0,
+      newSignups: signupsByDay.get(key) ?? 0,
+    }
+  })
+
+  // Real category breakdown: every task template carries a category, so
+  // joining templates to the tasks students actually have gives a true
+  // per-category completion rate. No hardcoded names, no fabricated rates.
+  const categoryRows = await db
+    .select({
+      key: categories.key,
+      label: categories.label,
+      totalTasks: sql<number>`count(${journeyTasks.id})::int`,
+      completedTasks: sql<number>`count(${journeyTasks.id}) filter (where ${journeyTasks.status} = 'done')::int`,
+    })
+    .from(categories)
+    .leftJoin(taskTemplates, eq(taskTemplates.categoryId, categories.id))
+    .leftJoin(journeyTasks, eq(journeyTasks.templateId, taskTemplates.id))
+    .groupBy(categories.id, categories.key, categories.label)
+
+  const categoryBreakdown = categoryRows.map((cat) => ({
+    categoryKey: cat.key as CategoryKey,
+    categoryName: cat.label,
+    totalTasks: cat.totalTasks,
+    completedTasks: cat.completedTasks,
+    completionRate:
+      cat.totalTasks === 0 ? 0 : Math.round((cat.completedTasks / cat.totalTasks) * 100),
+  }))
+
+  const studentCountVal = studentCount?.value ?? 0
+
   const analytics: AdminAnalytics = {
-    totalStudents: studentCount?.value ?? 0,
+    totalStudents: studentCountVal,
     totalJourneys: journeyCount?.value ?? 0,
     averageCompletion: totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100),
     stageBreakdown: breakdown.map((s) => ({
@@ -99,6 +163,8 @@ adminRoutes.get('/analytics', async (c) => {
     newThisWeek: userTotals?.newThisWeek ?? 0,
     suspendedUsers: userTotals?.suspended ?? 0,
     activeToday: userTotals?.activeToday ?? 0,
+    dailyActivityTrend,
+    categoryBreakdown,
   }
   const response: ApiResponse<AdminAnalytics> = { success: true, data: analytics }
   return c.json(response)

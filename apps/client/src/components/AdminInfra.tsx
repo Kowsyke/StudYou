@@ -62,12 +62,12 @@ export function InfrastructurePanel() {
     dataUpdatedAt > 0 ? new Date(dataUpdatedAt).toLocaleTimeString([], { hour12: false }) : null
 
   return (
-    <div className="aurora-card rounded-lg shadow-md mb-8 print:hidden">
-      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="bg-surface/80 border border-hairline rounded-2xl shadow-sm backdrop-blur-md p-6 mb-8 print:hidden">
+      <CardHeader className="p-0 mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <CardKicker>Infrastructure</CardKicker>
-          <CardTitle className="text-body font-semibold">Deployment and health</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-body font-bold text-ink">Deployment and health</CardTitle>
+          <CardDescription className="text-caption text-ink-secondary mt-1">
             Live status measured from the API health endpoint every 15 seconds. Detailed compute and
             network metrics live in the Azure portal.
           </CardDescription>
@@ -77,7 +77,7 @@ export function InfrastructurePanel() {
             href={LIVE_URL}
             target="_blank"
             rel="noreferrer"
-            className="h-8 px-3 text-caption font-semibold bg-surface hover:bg-surface-secondary text-ink border border-hairline-strong rounded-sm inline-flex items-center gap-1.5 shadow-sm transition-colors duration-100"
+            className="h-8 px-3 text-caption font-semibold bg-surface hover:bg-surface-secondary text-ink border border-hairline rounded-lg inline-flex items-center gap-1.5 shadow-xs transition-colors duration-150"
           >
             <ExternalLink size={12} />
             View live app
@@ -86,14 +86,14 @@ export function InfrastructurePanel() {
             href="https://portal.azure.com"
             target="_blank"
             rel="noreferrer"
-            className="sheen h-8 px-3 text-caption font-semibold bg-accent-solid text-white rounded-sm inline-flex items-center gap-1.5 shadow-md [background-image:var(--accent-gradient)] active:scale-[0.98] transition-all duration-100"
+            className="sheen h-8 px-3 text-caption font-semibold bg-accent-solid text-white rounded-lg inline-flex items-center gap-1.5 shadow-md [background-image:var(--accent-gradient)] active:scale-[0.98] transition-all duration-150"
           >
             <Server size={12} />
             Azure portal
           </a>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         {/* Metric tiles reflow 2 up on phones, 4 up on wide screens, so
             nothing overflows or crowds as the window resizes. */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -126,7 +126,7 @@ export function InfrastructurePanel() {
 
         {/* Honest, static facts about where and how this runs. Reflows from a
             single column up to three as space allows. */}
-        <dl className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 border-t border-hairline pt-4">
+        <dl className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 border-t border-hairline pt-4">
           <Fact icon={<Server size={13} />} label="Web app" value={AZURE_APP} />
           <Fact
             icon={<Database size={13} />}

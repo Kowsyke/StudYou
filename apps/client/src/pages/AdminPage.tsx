@@ -2,7 +2,10 @@ import { useGSAP } from '@gsap/react'
 import type { CategoryKey, Resource } from '@studyou/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
+  Activity,
   ArrowUpDown,
+  BadgePoundSterling,
+  CalendarClock,
   Check,
   ChevronDown,
   ChevronRight,
@@ -10,19 +13,36 @@ import {
   Download,
   ExternalLink,
   Filter,
+  Layers,
+  Link2,
   Monitor,
   Moon,
   Palette,
   Pencil,
   Plus,
   Printer,
+  RefreshCw,
   Search,
+  Sparkles,
   Sun,
   Trash2,
+  TrendingUp,
+  Users,
+  X,
 } from 'lucide-react'
 import React, { type FormEvent, useMemo, useState, useEffect, useRef } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts'
 import { ReportsPanel, UsersPanel } from '../components/AdminControl'
 import { InfrastructurePanel } from '../components/AdminInfra'
 import { QueryError } from '../components/QueryError'
@@ -224,8 +244,8 @@ export function AdminPage() {
     <div>
       <header className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-title3 text-ink">
-            {activeTab === 'insights' && 'Admin Insights'}
+          <h1 className="text-title3 text-ink font-bold flex items-center gap-2">
+            {activeTab === 'insights' && 'Admin Insights & Realtime Analytics'}
             {activeTab === 'kb' && 'Knowledge Base Manager'}
             {activeTab === 'users' && 'User Administration'}
             {activeTab === 'reports' && 'Bug Triage Console'}
@@ -233,7 +253,8 @@ export function AdminPage() {
             {activeTab === 'settings' && 'Visual Settings & Exports'}
           </h1>
           <p className="text-xs text-ink-secondary mt-1">
-            {activeTab === 'insights' && 'Platform analytics, server load, and live user metrics.'}
+            {activeTab === 'insights' &&
+              'Realtime platform activity, student conversion velocity, and server infrastructure.'}
             {activeTab === 'kb' &&
               'Add, edit, or delete official guidelines, fees, and checklist milestones.'}
             {activeTab === 'users' &&
@@ -246,6 +267,30 @@ export function AdminPage() {
               'Configure interface theme settings and download platform reports.'}
           </p>
         </div>
+
+        {activeTab === 'insights' && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              className="gap-1.5 backdrop-blur-md bg-surface/60 border-hairline hover:bg-surface"
+            >
+              <RefreshCw size={13} className={cn(isRefetching && 'animate-spin')} />
+              Refresh Data
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={handleDownloadAnalyticsCSV}
+              className="gap-1.5 sheen text-white bg-accent-solid [background-image:var(--accent-gradient)]"
+            >
+              <Download size={13} />
+              Export CSV
+            </Button>
+          </div>
+        )}
       </header>
 
       <div ref={panelRef} className="admin-panel-contents">
@@ -271,54 +316,171 @@ export function AdminPage() {
             />
           ) : (
             <>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
-                <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
-                  <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
-                    Active now
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="relative flex h-2.5 w-2.5">
-                      {analytics.activeUsers > 0 && (
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
-                      )}
-                      <span
-                        className={cn(
-                          'relative inline-flex rounded-full h-2.5 w-2.5 glow-pulse',
-                          analytics.activeUsers > 0 ? 'bg-positive' : 'bg-ink-muted',
-                        )}
-                      />
-                    </span>
-                    <p className="text-title3 font-bold text-ink tabular-nums">
-                      <CountUp value={analytics.activeUsers} />
+              {/* Headline metric tiles, all query-backed */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="relative overflow-hidden bg-surface border border-accent/30 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <p className="text-caption font-semibold uppercase tracking-[0.08em] text-accent">
+                      Active Roadmaps
+                    </p>
+                    <div className="p-2 rounded-xl bg-accent-soft text-accent">
+                      <Layers size={16} />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-title2 font-black text-ink tabular-nums tracking-tight">
+                      <CountUp value={analytics.totalJourneys} />
+                    </p>
+                    <p className="text-micro text-ink-tertiary mt-1">
+                      {analytics.newThisWeek} new this week
                     </p>
                   </div>
-                  <p className="text-micro text-ink-tertiary mt-1">Seen in the last 5 minutes</p>
                 </div>
-                <div className="relative overflow-hidden bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs min-h-[82px]">
-                  <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
-                    Active today
-                  </p>
-                  <p className="text-title3 font-bold text-ink mt-1 tabular-nums">
-                    <CountUp value={analytics.activeToday} />
-                  </p>
-                  <p className="text-micro text-ink-tertiary mt-1">Seen in the last 24 hours</p>
+
+                <div className="relative overflow-hidden bg-surface border border-hairline rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-secondary">
+                      Active Now
+                    </p>
+                    <div className="p-2 rounded-xl bg-positive/10 text-positive">
+                      <Activity size={16} />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-3 w-3">
+                        {analytics.activeUsers > 0 && (
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-positive opacity-75" />
+                        )}
+                        <span
+                          className={cn(
+                            'relative inline-flex rounded-full h-3 w-3',
+                            analytics.activeUsers > 0 ? 'bg-positive' : 'bg-ink-muted',
+                          )}
+                        />
+                      </span>
+                      <p className="text-title2 font-bold text-ink tabular-nums">
+                        <CountUp value={analytics.activeUsers} />
+                      </p>
+                    </div>
+                    <p className="text-micro text-ink-tertiary mt-1">Live in last 5 minutes</p>
+                  </div>
                 </div>
-                <StatTile label="Total users" value={analytics.totalUsers} />
-                <StatTile label="New this week" value={analytics.newThisWeek} />
-                <StatTile label="Suspended" value={analytics.suspendedUsers} />
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
-                <StatTile label="Students" value={analytics.totalStudents} />
-                <StatTile label="Active journeys" value={analytics.totalJourneys} />
-                <StatTile
-                  label="Average completion"
-                  value={analytics.averageCompletion}
-                  format={(n) => `${Math.round(n)}%`}
-                />
+
+                <div className="relative overflow-hidden bg-surface border border-hairline rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-secondary">
+                      Total Students
+                    </p>
+                    <div className="p-2 rounded-xl bg-surface-secondary text-ink-secondary">
+                      <Users size={16} />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-title2 font-bold text-ink tabular-nums">
+                      <CountUp value={analytics.totalStudents} />
+                    </p>
+                    <p className="text-micro text-ink-tertiary mt-1">
+                      {analytics.activeToday} active today
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative overflow-hidden bg-surface border border-hairline rounded-2xl p-4 flex flex-col justify-between shadow-xs">
+                  <div className="flex items-center justify-between">
+                    <p className="text-caption font-semibold uppercase tracking-[0.08em] text-ink-secondary">
+                      Avg Completion Rate
+                    </p>
+                    <div className="p-2 rounded-xl bg-accent-soft text-accent">
+                      <TrendingUp size={16} />
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <p className="text-title2 font-bold text-ink tabular-nums">
+                      {Math.round(analytics.averageCompletion)}%
+                    </p>
+                    <p className="text-micro text-ink-tertiary mt-1">Across all active roadmaps</p>
+                  </div>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
-                <Card className="print:break-inside-avoid">
+              {/* 14-Day Activity & Conversion Trend Area Chart */}
+              {analytics.dailyActivityTrend && analytics.dailyActivityTrend.length > 0 && (
+                <Card className="mb-6 border-hairline shadow-sm overflow-hidden">
+                  <CardHeader className="flex flex-row items-center justify-between pb-2">
+                    <div>
+                      <CardKicker>Platform velocity</CardKicker>
+                      <CardTitle className="text-body font-bold text-ink">
+                        New sign-ups and tasks completed
+                      </CardTitle>
+                      <CardDescription>
+                        Real daily counts from account creation and task completion timestamps
+                      </CardDescription>
+                    </div>
+                    <Badge className="gap-1 border border-accent/30 text-accent bg-accent-soft/30">
+                      Last 14 days
+                    </Badge>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <ResponsiveContainer width="100%" height={240}>
+                      <AreaChart
+                        data={analytics.dailyActivityTrend}
+                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                      >
+                        <defs>
+                          <linearGradient id="newSignupsGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={chart.accent} stopOpacity={0.4} />
+                            <stop offset="95%" stopColor={chart.accent} stopOpacity={0.0} />
+                          </linearGradient>
+                          <linearGradient id="tasksCompletedGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor={chart.positive} stopOpacity={0.4} />
+                            <stop offset="95%" stopColor={chart.positive} stopOpacity={0.0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid stroke={chart.grid} strokeDasharray="3 3" vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fill: chart.ink, fontSize: 11 }}
+                          axisLine={{ stroke: chart.grid }}
+                          tickLine={false}
+                        />
+                        <YAxis
+                          allowDecimals={false}
+                          tick={{ fill: chart.ink, fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <Tooltip
+                          contentStyle={tooltipStyle}
+                          cursor={{ stroke: chart.accent, strokeWidth: 1 }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="newSignups"
+                          name="New sign-ups"
+                          stroke={chart.accent}
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#newSignupsGrad)"
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="tasksCompleted"
+                          name="Tasks completed"
+                          stroke={chart.positive}
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#tasksCompletedGrad)"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Stage Breakdown & Drop-off Bar Charts */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <Card className="print:break-inside-avoid border-hairline shadow-xs">
                   <CardHeader>
                     <CardKicker>Completion rate by stage</CardKicker>
                     <CardDescription>Share of tasks completed in each stage</CardDescription>
@@ -355,7 +517,7 @@ export function AdminPage() {
                         <Bar
                           dataKey="completionRate"
                           fill={chart.accent}
-                          radius={[4, 4, 0, 0]}
+                          radius={[6, 6, 0, 0]}
                           barSize={28}
                         />
                       </BarChart>
@@ -363,7 +525,7 @@ export function AdminPage() {
                   </CardContent>
                 </Card>
 
-                <Card className="print:break-inside-avoid">
+                <Card className="print:break-inside-avoid border-hairline shadow-xs">
                   <CardHeader>
                     <CardKicker>Drop off by stage</CardKicker>
                     <CardDescription>
@@ -401,7 +563,7 @@ export function AdminPage() {
                         <Bar
                           dataKey="studentsReached"
                           fill={chart.positive}
-                          radius={[4, 4, 0, 0]}
+                          radius={[6, 6, 0, 0]}
                           barSize={28}
                         />
                       </BarChart>
@@ -409,6 +571,42 @@ export function AdminPage() {
                   </CardContent>
                 </Card>
               </div>
+
+              {/* Resource Category Engagement Grid */}
+              {analytics.categoryBreakdown && analytics.categoryBreakdown.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-body font-bold text-ink mb-3 flex items-center gap-2">
+                    <Layers size={16} className="text-accent" />
+                    Completion by category
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {analytics.categoryBreakdown.map((cat) => (
+                      <div
+                        key={cat.categoryKey}
+                        className="bg-surface border border-hairline rounded-2xl p-4 space-y-3 shadow-xs hover:border-accent/30 transition-colors"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h4 className="text-body-sm font-semibold text-ink">
+                            {cat.categoryName}
+                          </h4>
+                          <span className="text-caption font-bold text-accent bg-accent-soft px-2 py-0.5 rounded-full">
+                            {cat.completionRate}% Done
+                          </span>
+                        </div>
+                        <div className="w-full bg-surface-secondary rounded-full h-2 overflow-hidden">
+                          <div
+                            className="bg-accent-solid h-full rounded-full transition-all duration-500 [background-image:var(--accent-gradient)]"
+                            style={{ width: `${cat.completionRate}%` }}
+                          />
+                        </div>
+                        <p className="text-micro text-ink-tertiary tabular-nums">
+                          {cat.completedTasks} of {cat.totalTasks} tasks completed
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <Card className="mb-6 bg-accent-soft/20 border-accent/20">
                 <CardContent className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -441,17 +639,18 @@ export function AdminPage() {
         {activeTab === 'settings' && (
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start print:hidden">
             {/* Admin Settings Sidebar Sub-Navigation */}
-            <div className="md:col-span-4 lg:col-span-3 bg-surface border border-hairline rounded-xl p-2 space-y-1 shadow-xs sticky top-20">
-              <div className="px-3 py-2 text-caption font-semibold uppercase tracking-wider text-accent">
+            <div className="md:col-span-4 lg:col-span-3 bg-surface/80 border border-hairline rounded-2xl p-2.5 space-y-1 shadow-sm backdrop-blur-md sticky top-20">
+              <div className="px-3 py-2 text-micro font-bold uppercase tracking-wider text-accent flex items-center gap-1.5">
+                <Sparkles size={12} />
                 Admin Settings
               </div>
               <button
                 type="button"
                 onClick={() => setSettingsSubTab('visuals')}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 cursor-pointer text-left',
+                  'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body-sm font-semibold transition-all duration-150 cursor-pointer text-left',
                   settingsSubTab === 'visuals'
-                    ? 'bg-accent-soft border border-accent/20 text-accent font-bold shadow-xs'
+                    ? 'bg-accent-soft border border-accent/30 text-accent shadow-xs'
                     : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/60 border border-transparent',
                 )}
               >
@@ -466,9 +665,9 @@ export function AdminPage() {
                 type="button"
                 onClick={() => setSettingsSubTab('exports')}
                 className={cn(
-                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 cursor-pointer text-left',
+                  'w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-body-sm font-semibold transition-all duration-150 cursor-pointer text-left',
                   settingsSubTab === 'exports'
-                    ? 'bg-accent-soft border border-accent/20 text-accent font-bold shadow-xs'
+                    ? 'bg-accent-soft border border-accent/30 text-accent shadow-xs'
                     : 'text-ink-secondary hover:text-ink hover:bg-surface-secondary/60 border border-transparent',
                 )}
               >
@@ -483,22 +682,22 @@ export function AdminPage() {
             {/* Admin Settings Content Panels */}
             <div className="md:col-span-8 lg:col-span-9 space-y-6">
               {(settingsSubTab === 'visuals' || settingsSubTab === 'exports') && (
-                <Card className="card-lift border-hairline shadow-sm">
-                  <CardHeader>
+                <Card className="bg-surface/80 border border-hairline rounded-2xl shadow-sm backdrop-blur-md p-5">
+                  <CardHeader className="p-0 mb-4">
                     <CardKicker>Visual Settings</CardKicker>
-                    <CardTitle className="text-body font-semibold">Theme & Colors</CardTitle>
-                    <CardDescription>
+                    <CardTitle className="text-body font-bold text-ink">Theme & Colors</CardTitle>
+                    <CardDescription className="text-caption text-ink-secondary mt-1">
                       Customize the application aesthetics and brand accents
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-5">
+                  <CardContent className="p-0 space-y-5">
                     <div className="space-y-2">
                       <Label className="text-xs font-semibold text-ink-secondary">Theme Mode</Label>
                       <div className="flex gap-2">
                         <Button
                           variant={themePreference === 'light' ? 'primary' : 'secondary'}
                           size="sm"
-                          className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                          className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold rounded-xl"
                           onClick={() => setTheme('light')}
                         >
                           <Sun size={14} />
@@ -507,7 +706,7 @@ export function AdminPage() {
                         <Button
                           variant={themePreference === 'dark' ? 'primary' : 'secondary'}
                           size="sm"
-                          className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                          className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold rounded-xl"
                           onClick={() => setTheme('dark')}
                         >
                           <Moon size={14} />
@@ -516,7 +715,7 @@ export function AdminPage() {
                         <Button
                           variant={themePreference === 'system' ? 'primary' : 'secondary'}
                           size="sm"
-                          className="flex-1 flex items-center justify-center gap-1.5 h-8 text-xs font-medium"
+                          className="flex-1 flex items-center justify-center gap-1.5 h-9 text-xs font-bold rounded-xl"
                           onClick={() => setTheme('system')}
                         >
                           <Monitor size={14} />
@@ -529,7 +728,7 @@ export function AdminPage() {
                       <Label className="text-xs font-semibold text-ink-secondary">
                         Brand Accent Color Presets
                       </Label>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                         {Object.values(ACCENT_PRESETS).map((preset) => {
                           const isActive = accentPreset === preset.key
                           return (
@@ -538,20 +737,20 @@ export function AdminPage() {
                               type="button"
                               onClick={() => setAccentPreset(preset.key)}
                               className={cn(
-                                'relative flex items-center justify-between px-3 py-2 rounded-md border text-left text-xs transition-all duration-150 cursor-pointer hover:bg-surface-secondary',
+                                'relative flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-left text-xs font-medium transition-all duration-150 cursor-pointer hover:bg-surface-secondary/70',
                                 isActive
-                                  ? 'border-accent bg-accent-soft font-semibold text-accent shadow-xs'
-                                  : 'border-hairline bg-surface text-ink-secondary',
+                                  ? 'border-accent bg-accent-soft font-bold text-accent shadow-xs'
+                                  : 'border-hairline bg-surface/60 text-ink-secondary',
                               )}
                             >
                               <span className="flex items-center gap-2">
                                 <span
-                                  className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10"
+                                  className="w-3.5 h-3.5 rounded-full shrink-0 border border-black/10 shadow-xs"
                                   style={{ background: preset.accent }}
                                 />
                                 {preset.label}
                               </span>
-                              {isActive && <Check size={12} className="text-accent" />}
+                              {isActive && <Check size={13} className="text-accent" />}
                             </button>
                           )
                         })}
@@ -562,29 +761,29 @@ export function AdminPage() {
               )}
 
               {(settingsSubTab === 'exports' || settingsSubTab === 'visuals') && (
-                <Card className="card-lift border-hairline shadow-sm">
-                  <CardHeader>
+                <Card className="bg-surface/80 border border-hairline rounded-2xl shadow-sm backdrop-blur-md p-5">
+                  <CardHeader className="p-0 mb-4">
                     <CardKicker>Data & Reports</CardKicker>
-                    <CardTitle className="text-body font-semibold">
+                    <CardTitle className="text-body font-bold text-ink">
                       Reports & Data Downloads
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-caption text-ink-secondary mt-1">
                       Export platform metrics, databases, and executive summaries
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-3">
+                  <CardContent className="p-0 space-y-3">
                     {/* Analytics Summary Export Placeholder */}
                     <button
                       type="button"
                       onClick={handleDownloadAnalyticsCSV}
-                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="w-full text-left group p-3.5 bg-surface/60 hover:bg-surface-secondary/70 rounded-xl border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
                             Analytics Summary Report
                           </h4>
-                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary rounded-md">
                             CSV
                           </Badge>
                         </div>
@@ -592,7 +791,7 @@ export function AdminPage() {
                           Student completions, stage statistics, and drop-off rate counts.
                         </p>
                       </div>
-                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-lg bg-accent text-white text-xs font-bold shadow-xs group-hover:scale-105 transition-transform [background-image:var(--accent-gradient)]">
                         <Download size={13} />
                         Export CSV
                       </span>
@@ -602,14 +801,14 @@ export function AdminPage() {
                     <button
                       type="button"
                       onClick={handleDownloadResourcesCSV}
-                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="w-full text-left group p-3.5 bg-surface/60 hover:bg-surface-secondary/70 rounded-xl border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
                             Knowledge Base Resources
                           </h4>
-                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary rounded-md">
                             CSV
                           </Badge>
                         </div>
@@ -617,7 +816,7 @@ export function AdminPage() {
                           Full list of all immigration fees, housing guidelines, and documents.
                         </p>
                       </div>
-                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-lg bg-accent text-white text-xs font-bold shadow-xs group-hover:scale-105 transition-transform [background-image:var(--accent-gradient)]">
                         <Download size={13} />
                         Export CSV
                       </span>
@@ -627,14 +826,14 @@ export function AdminPage() {
                     <button
                       type="button"
                       onClick={handleDownloadUsersCSV}
-                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="w-full text-left group p-3.5 bg-surface/60 hover:bg-surface-secondary/70 rounded-xl border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
                             Registered Users Roster
                           </h4>
-                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary rounded-md">
                             CSV
                           </Badge>
                         </div>
@@ -642,7 +841,7 @@ export function AdminPage() {
                           Student accounts, user roles, origin countries, and account statuses.
                         </p>
                       </div>
-                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-lg bg-accent text-white text-xs font-bold shadow-xs group-hover:scale-105 transition-transform [background-image:var(--accent-gradient)]">
                         <Download size={13} />
                         Export CSV
                       </span>
@@ -652,14 +851,14 @@ export function AdminPage() {
                     <button
                       type="button"
                       onClick={handleDownloadReportsCSV}
-                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="w-full text-left group p-3.5 bg-surface/60 hover:bg-surface-secondary/70 rounded-xl border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
                             Bug & Feedback Reports
                           </h4>
-                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary rounded-md">
                             CSV
                           </Badge>
                         </div>
@@ -667,7 +866,7 @@ export function AdminPage() {
                           User feedback messages, status tags, admin notes, and submission URLs.
                         </p>
                       </div>
-                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-lg bg-accent text-white text-xs font-bold shadow-xs group-hover:scale-105 transition-transform [background-image:var(--accent-gradient)]">
                         <Download size={13} />
                         Export CSV
                       </span>
@@ -677,14 +876,14 @@ export function AdminPage() {
                     <button
                       type="button"
                       onClick={handleDownloadUniversitiesCSV}
-                      className="w-full text-left group p-3.5 bg-surface hover:bg-surface-secondary/50 rounded-lg border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="w-full text-left group p-3.5 bg-surface/60 hover:bg-surface-secondary/70 rounded-xl border border-hairline hover:border-accent/40 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-ink group-hover:text-accent transition-colors">
                             Universities Directory
                           </h4>
-                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary">
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono border border-hairline bg-surface-secondary text-ink-secondary rounded-md">
                             CSV
                           </Badge>
                         </div>
@@ -692,7 +891,7 @@ export function AdminPage() {
                           UK university ranks, regions, tuition fee ranges, and portal URLs.
                         </p>
                       </div>
-                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs group-hover:scale-105 transition-transform">
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-lg bg-accent text-white text-xs font-bold shadow-xs group-hover:scale-105 transition-transform [background-image:var(--accent-gradient)]">
                         <Download size={13} />
                         Export CSV
                       </span>
@@ -702,14 +901,14 @@ export function AdminPage() {
                     <button
                       type="button"
                       onClick={handleDownloadFullBackupJSON}
-                      className="w-full text-left group p-3.5 bg-accent-soft/30 hover:bg-accent-soft/50 rounded-lg border border-accent/30 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
+                      className="w-full text-left group p-3.5 bg-accent-soft/30 hover:bg-accent-soft/50 rounded-xl border border-accent/30 shadow-xs hover:shadow-md transition-all duration-200 flex items-center justify-between cursor-pointer"
                     >
                       <div className="min-w-0 pr-3">
                         <div className="flex items-center gap-2">
                           <h4 className="text-xs font-bold text-accent group-hover:text-accent-hover transition-colors">
                             Full Database JSON Backup
                           </h4>
-                          <Badge className="text-[10px] py-0 px-1.5 font-mono bg-accent text-white">
+                          <Badge className="text-[10px] py-0 px-1.5 font-mono bg-accent text-white rounded-md">
                             JSON
                           </Badge>
                         </div>
@@ -717,7 +916,7 @@ export function AdminPage() {
                           Comprehensive system snapshot archive containing all platform datasets.
                         </p>
                       </div>
-                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-md bg-accent text-white text-xs font-medium shadow-xs sheen [background-image:var(--accent-gradient)] group-hover:scale-105 transition-transform">
+                      <span className="inline-flex items-center justify-center gap-1 shrink-0 h-8 px-3 rounded-lg bg-accent text-white text-xs font-bold shadow-xs sheen [background-image:var(--accent-gradient)] group-hover:scale-105 transition-transform">
                         <Download size={13} />
                         Backup JSON
                       </span>
@@ -726,7 +925,7 @@ export function AdminPage() {
                     <div className="pt-2">
                       <Button
                         variant="secondary"
-                        className="w-full flex items-center justify-center gap-2 h-9 text-xs font-semibold hover:bg-surface-secondary cursor-pointer"
+                        className="w-full flex items-center justify-center gap-2 h-9 text-xs font-bold rounded-xl hover:bg-surface-secondary cursor-pointer"
                         onClick={() => window.print()}
                       >
                         <Printer size={14} />
@@ -741,23 +940,6 @@ export function AdminPage() {
         )}
       </div>
     </div>
-  )
-}
-
-function StatTile({
-  label,
-  value,
-  format,
-}: { label: string; value: number; format?: (n: number) => string }) {
-  return (
-    <Card className="p-4 flex flex-col gap-1">
-      <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary">
-        {label}
-      </p>
-      <p className="text-[22px] leading-tight font-bold text-ink tabular-nums">
-        <CountUp value={value} format={format} />
-      </p>
-    </Card>
   )
 }
 
@@ -812,12 +994,24 @@ function KnowledgeBaseManager() {
     }
   }, [editId, resources, form.id])
 
-  // Interactive Table State
+  // Interactive table + filter state
   const [tableSearch, setTableSearch] = useState('')
   const [tableCategory, setTableCategory] = useState('')
-  const [sortField, setSortField] = useState<'title' | 'categoryKey' | 'costPence'>('title')
+  const [costFilter, setCostFilter] = useState<'all' | 'free' | 'paid'>('all')
+  const [deadlineFilter, setDeadlineFilter] = useState<'all' | 'timed' | 'untimed'>('all')
+  const [sortField, setSortField] = useState<
+    'title' | 'categoryKey' | 'costPence' | 'deadlineDaysBeforeIntake'
+  >('title')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc')
   const [expandedIds, setExpandedIds] = useState<string[]>([])
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
+  const openAdd = () => {
+    setForm(emptyForm)
+    setError(null)
+    setDrawerOpen(true)
+  }
 
   const startEdit = (resource: Resource) => {
     setForm({
@@ -830,7 +1024,14 @@ function KnowledgeBaseManager() {
         resource.deadlineDaysBeforeIntake === null ? '' : String(resource.deadlineDaysBeforeIntake),
       sourceUrl: resource.sourceUrl,
     })
-    document.getElementById('kb-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setError(null)
+    setDrawerOpen(true)
+  }
+
+  const closeDrawer = () => {
+    setDrawerOpen(false)
+    setForm(emptyForm)
+    setError(null)
   }
 
   const onSubmit = (event: FormEvent) => {
@@ -849,6 +1050,7 @@ function KnowledgeBaseManager() {
       {
         onSuccess: () => {
           setForm(emptyForm)
+          setDrawerOpen(false)
           toast.success('Resource saved.')
         },
         onError: (err) => {
@@ -864,34 +1066,39 @@ function KnowledgeBaseManager() {
       onSuccess: () => toast.success('Resource removed.'),
       onError: () => toast.error('Something went wrong. Try again.'),
     })
+    setSelectedIds((prev) => prev.filter((x) => x !== id))
   }
 
-  // Interactive Filter and Sort Logic
+  // Filter + sort across search, category, cost and deadline facets.
   const filteredAndSortedResources = useMemo(() => {
     if (!resources) return []
-    let list = resources.filter((r) => {
-      const titleMatch = r.title.toLowerCase().includes(tableSearch.toLowerCase())
-      const summaryMatch = r.summary.toLowerCase().includes(tableSearch.toLowerCase())
-      const searchMatch = titleMatch || summaryMatch
+    const q = tableSearch.toLowerCase()
+    const list = resources.filter((r) => {
+      const searchMatch = r.title.toLowerCase().includes(q) || r.summary.toLowerCase().includes(q)
       const categoryMatch = !tableCategory || r.categoryKey === tableCategory
-      return searchMatch && categoryMatch
+      const isFree = r.costPence === null || r.costPence === 0
+      const costMatch = costFilter === 'all' || (costFilter === 'free' ? isFree : !isFree)
+      const isTimed = r.deadlineDaysBeforeIntake !== null
+      const deadlineMatch =
+        deadlineFilter === 'all' || (deadlineFilter === 'timed' ? isTimed : !isTimed)
+      return searchMatch && categoryMatch && costMatch && deadlineMatch
     })
 
-    list = [...list].sort((a, b) => {
-      const valA: string | number =
-        sortField === 'costPence' ? (a.costPence ?? -1) : String(a[sortField] ?? '').toLowerCase()
-      const valB: string | number =
-        sortField === 'costPence' ? (b.costPence ?? -1) : String(b[sortField] ?? '').toLowerCase()
-
+    const numeric = sortField === 'costPence' || sortField === 'deadlineDaysBeforeIntake'
+    return [...list].sort((a, b) => {
+      const valA: string | number = numeric
+        ? ((a[sortField] as number | null) ?? -1)
+        : String(a[sortField] ?? '').toLowerCase()
+      const valB: string | number = numeric
+        ? ((b[sortField] as number | null) ?? -1)
+        : String(b[sortField] ?? '').toLowerCase()
       if (valA < valB) return sortOrder === 'asc' ? -1 : 1
       if (valA > valB) return sortOrder === 'asc' ? 1 : -1
       return 0
     })
+  }, [resources, tableSearch, tableCategory, costFilter, deadlineFilter, sortField, sortOrder])
 
-    return list
-  }, [resources, tableSearch, tableCategory, sortField, sortOrder])
-
-  const handleSort = (field: 'title' | 'categoryKey' | 'costPence') => {
+  const handleSort = (field: typeof sortField) => {
     if (sortField === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
     } else {
@@ -906,58 +1113,166 @@ function KnowledgeBaseManager() {
     )
   }
 
+  const activeFilterCount =
+    (tableCategory ? 1 : 0) + (costFilter !== 'all' ? 1 : 0) + (deadlineFilter !== 'all' ? 1 : 0)
+
   const clearFilters = () => {
     setTableSearch('')
     setTableCategory('')
+    setCostFilter('all')
+    setDeadlineFilter('all')
   }
+
+  // Bulk selection over the currently visible (filtered) rows.
+  const visibleIds = filteredAndSortedResources.map((r) => r.id)
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selectedIds.includes(id))
+  const toggleSelectAll = () => setSelectedIds(allVisibleSelected ? [] : visibleIds)
+  const toggleSelect = (id: string) =>
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+  const bulkDelete = () => {
+    const ids = [...selectedIds]
+    for (const id of ids) deleteResource.mutate(id)
+    setSelectedIds([])
+    toast.success(`${ids.length} ${ids.length === 1 ? 'resource' : 'resources'} removed.`)
+  }
+
+  const categoryLabel = (key: string) => (categories ?? []).find((c) => c.key === key)?.label ?? key
+
+  const renderSortIcon = (field: typeof sortField) =>
+    sortField === field ? (
+      sortOrder === 'asc' ? (
+        <ChevronUp size={12} className="text-accent" />
+      ) : (
+        <ChevronDown size={12} className="text-accent" />
+      )
+    ) : (
+      <ArrowUpDown size={11} className="text-ink-tertiary opacity-40" />
+    )
+
+  const fmtDeadline = (d: number | null) =>
+    d === null ? null : `${Math.abs(d)}d ${d >= 0 ? 'before' : 'after'}`
+
+  const costOptions = [
+    { value: 'all', label: 'Any cost' },
+    { value: 'free', label: 'Free' },
+    { value: 'paid', label: 'Paid' },
+  ] as const
+  const deadlineOptions = [
+    { value: 'all', label: 'Any timing' },
+    { value: 'timed', label: 'Has deadline' },
+    { value: 'untimed', label: 'No deadline' },
+  ] as const
+
+  const filterActive = tableSearch !== '' || activeFilterCount > 0
 
   return (
     <section>
-      <div className="mb-4">
-        <h2 className="text-body-lg font-semibold tracking-tight">Knowledge base</h2>
-        <p className="text-caption text-ink-tertiary mt-0.5">
-          Showing {filteredAndSortedResources.length} of {(resources ?? []).length} entries. Add,
-          edit and organize the resources students see.
-        </p>
+      {/* Header: title, live count, add action */}
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-body-lg font-bold tracking-tight text-ink">Knowledge base</h2>
+          <p className="text-caption text-ink-tertiary mt-0.5">
+            Showing{' '}
+            <span className="font-semibold text-ink-secondary tabular-nums">
+              {filteredAndSortedResources.length}
+            </span>{' '}
+            of{' '}
+            <span className="font-semibold text-ink-secondary tabular-nums">
+              {(resources ?? []).length}
+            </span>{' '}
+            official resources students see
+          </p>
+        </div>
+        <Button
+          onClick={openAdd}
+          className="sheen gap-1.5 text-white bg-accent-solid [background-image:var(--accent-gradient)] rounded-xl font-bold cursor-pointer"
+        >
+          <Plus size={15} />
+          Add resource
+        </Button>
       </div>
 
-      {/* Dedicated, organized toolbar above the table and the add resource form:
-          search on the left, category filter on the right. */}
-      <div className="mb-4 rounded-lg border border-hairline bg-surface-secondary/40 p-3 flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
-        <div className="relative w-full lg:w-72">
-          <Search
-            size={13}
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-tertiary"
-          />
-          <Input
-            className="pl-8 text-xs h-8"
-            placeholder="Search entries..."
-            value={tableSearch}
-            onChange={(e) => setTableSearch(e.target.value)}
-          />
-          {tableSearch && (
-            <button
-              onClick={() => setTableSearch('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-caption text-ink-tertiary hover:text-ink"
-            >
-              Clear
-            </button>
-          )}
+      {/* Toolbar: search plus category, cost and deadline facets */}
+      <div className="mb-4 rounded-2xl border border-hairline bg-surface/80 p-3.5 backdrop-blur-md shadow-xs space-y-3">
+        <div className="flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
+          <div className="relative w-full lg:max-w-xs">
+            <Search
+              size={14}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-tertiary"
+            />
+            <Input
+              className="pl-9 pr-14 text-body-sm h-9 bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent"
+              placeholder="Search title or keyword..."
+              value={tableSearch}
+              onChange={(e) => setTableSearch(e.target.value)}
+            />
+            {tableSearch && (
+              <button
+                type="button"
+                onClick={() => setTableSearch('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-caption font-semibold text-accent hover:underline cursor-pointer"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex items-center gap-1 bg-surface-secondary/60 p-1 rounded-xl border border-hairline">
+              <BadgePoundSterling size={13} className="text-ink-tertiary ml-1.5 shrink-0" />
+              {costOptions.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setCostFilter(o.value)}
+                  className={cn(
+                    'text-micro font-bold px-2.5 py-1 rounded-lg transition-colors duration-150 cursor-pointer',
+                    costFilter === o.value
+                      ? 'bg-surface text-ink shadow-xs'
+                      : 'text-ink-secondary hover:text-ink',
+                  )}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+            <div className="flex items-center gap-1 bg-surface-secondary/60 p-1 rounded-xl border border-hairline">
+              <CalendarClock size={13} className="text-ink-tertiary ml-1.5 shrink-0" />
+              {deadlineOptions.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => setDeadlineFilter(o.value)}
+                  className={cn(
+                    'text-micro font-bold px-2.5 py-1 rounded-lg transition-colors duration-150 cursor-pointer',
+                    deadlineFilter === o.value
+                      ? 'bg-surface text-ink shadow-xs'
+                      : 'text-ink-secondary hover:text-ink',
+                  )}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <div className="flex items-center gap-1.5 overflow-x-auto">
-          <span className="text-caption text-ink-secondary flex items-center gap-1 shrink-0">
-            <Filter size={11} />
-            Filter:
+        {/* Category chips */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
+          <span className="text-caption font-semibold text-ink-secondary flex items-center gap-1 shrink-0">
+            <Filter size={12} className="text-accent" />
+            Category:
           </span>
-          <div className="flex gap-0.5 bg-surface p-0.5 rounded-sm border border-hairline shrink-0">
+          <div className="flex gap-1 shrink-0">
             <button
+              type="button"
               onClick={() => setTableCategory('')}
               className={cn(
-                'text-micro font-semibold px-2 py-0.5 rounded-xs transition-colors duration-[120ms]',
+                'text-micro font-bold px-3 py-1 rounded-lg border transition-all duration-150 cursor-pointer',
                 !tableCategory
-                  ? 'bg-surface-secondary text-ink shadow-xs'
-                  : 'text-ink-secondary hover:text-ink',
+                  ? 'bg-accent-soft text-accent border-accent/30'
+                  : 'text-ink-secondary border-hairline hover:text-ink hover:border-hairline-strong',
               )}
             >
               All
@@ -965,12 +1280,13 @@ function KnowledgeBaseManager() {
             {(categories ?? []).map((cat) => (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setTableCategory(cat.key)}
                 className={cn(
-                  'text-micro font-semibold px-2 py-0.5 rounded-xs transition-colors duration-[120ms]',
+                  'text-micro font-bold px-3 py-1 rounded-lg border transition-all duration-150 cursor-pointer whitespace-nowrap',
                   tableCategory === cat.key
-                    ? 'bg-surface-secondary text-ink shadow-xs'
-                    : 'text-ink-secondary hover:text-ink',
+                    ? 'bg-accent-soft text-accent border-accent/30'
+                    : 'text-ink-secondary border-hairline hover:text-ink hover:border-hairline-strong',
                 )}
               >
                 {cat.label}
@@ -978,296 +1294,492 @@ function KnowledgeBaseManager() {
             ))}
           </div>
         </div>
+
+        {/* Active filters summary */}
+        {filterActive && (
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-hairline">
+            <span className="text-micro uppercase tracking-wider font-bold text-ink-tertiary">
+              Active:
+            </span>
+            {tableCategory && (
+              <FilterChip
+                label={categoryLabel(tableCategory)}
+                onClear={() => setTableCategory('')}
+              />
+            )}
+            {costFilter !== 'all' && (
+              <FilterChip
+                label={costOptions.find((o) => o.value === costFilter)?.label ?? ''}
+                onClear={() => setCostFilter('all')}
+              />
+            )}
+            {deadlineFilter !== 'all' && (
+              <FilterChip
+                label={deadlineOptions.find((o) => o.value === deadlineFilter)?.label ?? ''}
+                onClear={() => setDeadlineFilter('all')}
+              />
+            )}
+            {tableSearch && (
+              <FilterChip label={`"${tableSearch}"`} onClear={() => setTableSearch('')} />
+            )}
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-caption font-semibold text-accent hover:underline cursor-pointer ml-auto"
+            >
+              Clear all
+            </button>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
-        <Card className="lg:col-span-3 overflow-hidden flex flex-col">
-          <CardContent className="p-0 flex-1 overflow-x-auto">
-            <table className="w-full text-body border-collapse">
-              <thead>
-                <tr className="text-left text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary bg-surface-secondary border-b border-hairline">
-                  <th className="py-2.5 pl-5 pr-1 w-6" />
-                  <th className="py-2.5 px-3 font-semibold text-left select-none">
-                    <button
-                      type="button"
-                      className="flex items-center gap-1 hover:text-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-xs"
-                      onClick={() => handleSort('title')}
-                    >
-                      Title
-                      {sortField === 'title' ? (
-                        sortOrder === 'asc' ? (
-                          <ChevronUp size={12} />
-                        ) : (
-                          <ChevronDown size={12} />
-                        )
-                      ) : (
-                        <ArrowUpDown size={11} className="text-ink-tertiary opacity-40" />
-                      )}
-                    </button>
-                  </th>
-                  <th className="py-2.5 px-3 font-semibold text-left select-none">
-                    <button
-                      type="button"
-                      className="flex items-center gap-1 hover:text-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-xs"
-                      onClick={() => handleSort('categoryKey')}
-                    >
-                      Category
-                      {sortField === 'categoryKey' ? (
-                        sortOrder === 'asc' ? (
-                          <ChevronUp size={12} />
-                        ) : (
-                          <ChevronDown size={12} />
-                        )
-                      ) : (
-                        <ArrowUpDown size={11} className="text-ink-tertiary opacity-40" />
-                      )}
-                    </button>
-                  </th>
-                  <th className="py-2.5 px-3 font-semibold text-right select-none">
-                    <button
-                      type="button"
-                      className="flex items-center justify-end gap-1 ml-auto hover:text-ink focus:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-xs"
-                      onClick={() => handleSort('costPence')}
-                    >
-                      Cost
-                      {sortField === 'costPence' ? (
-                        sortOrder === 'asc' ? (
-                          <ChevronUp size={12} />
-                        ) : (
-                          <ChevronDown size={12} />
-                        )
-                      ) : (
-                        <ArrowUpDown size={11} className="text-ink-tertiary opacity-40" />
-                      )}
-                    </button>
-                  </th>
-                  <th className="py-2.5 pr-5 pl-3" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-(--border)">
-                <AnimatePresence initial={false}>
-                  {filteredAndSortedResources.length === 0 ? (
-                    <tr>
-                      <td colSpan={5} className="py-8 text-center text-caption text-ink-tertiary">
-                        No resources match your search or filter.
-                        {(tableSearch || tableCategory) && (
-                          <button
-                            onClick={clearFilters}
-                            className="block mx-auto mt-2 text-xs font-semibold text-accent hover:underline"
-                          >
-                            Clear search & filters
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredAndSortedResources.map((resource) => {
-                      const isExpanded = expandedIds.includes(resource.id)
-                      return (
-                        <React.Fragment key={resource.id}>
-                          <motion.tr
-                            layout
-                            className={cn(
-                              'hover:bg-canvas transition-colors duration-[120ms]',
-                              isExpanded && 'bg-canvas/40',
-                            )}
-                          >
-                            <td className="py-2.5 pl-5 pr-1 text-left w-6">
-                              <button
-                                onClick={() => toggleRowExpanded(resource.id)}
-                                className="h-5 w-5 flex items-center justify-center rounded-xs text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors duration-[120ms]"
-                                aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
-                              >
-                                <ChevronRight
-                                  size={13}
-                                  className={cn(
-                                    'transition-transform duration-200',
-                                    isExpanded && 'rotate-90',
-                                  )}
-                                />
-                              </button>
-                            </td>
-                            <td className="py-2.5 px-3 font-semibold text-ink max-w-[200px] truncate">
-                              {resource.title}
-                            </td>
-                            <td className="py-2.5 px-3">
-                              <Badge category={resource.categoryKey} />
-                            </td>
-                            <td className="py-2.5 px-3 text-right tabular-nums text-ink-secondary">
-                              {resource.costPence === null ? 'None' : formatGbp(resource.costPence)}
-                            </td>
-                            <td className="py-2.5 pr-5 pl-3 text-right whitespace-nowrap">
-                              <span className="inline-flex gap-1.5">
-                                <button
-                                  onClick={() => startEdit(resource)}
-                                  className="h-6 w-6 flex items-center justify-center rounded-xs border border-hairline text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors duration-[120ms]"
-                                  aria-label={`Edit ${resource.title}`}
-                                >
-                                  <Pencil size={12} />
-                                </button>
-                                <button
-                                  onClick={() => onDelete(resource.id)}
-                                  disabled={deleteResource.isPending}
-                                  className="h-6 w-6 flex items-center justify-center rounded-xs border border-hairline text-ink-secondary hover:bg-danger-soft hover:text-danger hover:border-danger transition-colors duration-[120ms] disabled:opacity-50"
-                                  aria-label={`Delete ${resource.title}`}
-                                >
-                                  <Trash2 size={12} />
-                                </button>
-                              </span>
-                            </td>
-                          </motion.tr>
-                          {isExpanded && (
-                            <tr className="bg-canvas/30 border-0">
-                              <td colSpan={5} className="py-2.5 px-5 pl-12 border-0">
-                                <motion.div
-                                  initial={{ opacity: 0, height: 0 }}
-                                  animate={{ opacity: 1, height: 'auto' }}
-                                  exit={{ opacity: 0, height: 0 }}
-                                  transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
-                                  className="overflow-hidden"
-                                >
-                                  <div className="p-3 bg-surface border border-hairline rounded-md shadow-sm space-y-2 mb-2 text-xs">
-                                    <div className="flex flex-col gap-1">
-                                      <p className="font-semibold text-ink">Summary:</p>
-                                      <p className="text-ink-secondary leading-normal">
-                                        {resource.summary}
-                                      </p>
-                                    </div>
-                                    <div className="flex flex-wrap gap-x-4 gap-y-1.5 pt-2 border-t border-hairline text-micro text-ink-tertiary">
-                                      <span>
-                                        <strong>Deadline:</strong>{' '}
-                                        {resource.deadlineDaysBeforeIntake !== null
-                                          ? `${Math.abs(resource.deadlineDaysBeforeIntake)} days ${
-                                              resource.deadlineDaysBeforeIntake >= 0
-                                                ? 'before'
-                                                : 'after'
-                                            } intake`
-                                          : 'None'}
-                                      </span>
-                                      {resource.sourceUrl && (
-                                        <span className="flex items-center gap-1">
-                                          <strong>Source URL:</strong>{' '}
-                                          <a
-                                            href={resource.sourceUrl}
-                                            target="_blank"
-                                            rel="noreferrer"
-                                            className="text-accent hover:underline inline-flex items-center gap-0.5 font-medium"
-                                          >
-                                            {resource.sourceUrl}
-                                            <ExternalLink size={9} />
-                                          </a>
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-                                </motion.div>
-                              </td>
-                            </tr>
-                          )}
-                        </React.Fragment>
-                      )
-                    })
-                  )}
-                </AnimatePresence>
-              </tbody>
-            </table>
-          </CardContent>
-        </Card>
+      {/* Bulk selection bar */}
+      <AnimatePresence>
+        {selectedIds.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+            className="mb-3 flex items-center justify-between gap-3 rounded-xl border border-accent/30 bg-accent-soft px-4 py-2.5"
+          >
+            <span className="text-body-sm font-semibold text-ink tabular-nums">
+              {selectedIds.length} selected
+            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedIds([])}
+                className="text-caption font-semibold text-ink-secondary hover:text-ink cursor-pointer"
+              >
+                Deselect
+              </button>
+              <Button
+                variant="danger"
+                size="sm"
+                onClick={bulkDelete}
+                disabled={deleteResource.isPending}
+                className="gap-1.5 rounded-lg"
+              >
+                <Trash2 size={13} />
+                Delete selected
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        <Card className="lg:col-span-2" id="kb-form">
-          <CardHeader>
-            <CardTitle>{form.id ? 'Edit resource' : 'Add resource'}</CardTitle>
-            <CardDescription>
-              Every entry needs an official source URL and stays timestamped.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={onSubmit} className="space-y-3">
-              <div>
-                <Label htmlFor="kb-title">Title</Label>
-                <Input
-                  id="kb-title"
-                  required
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label htmlFor="kb-summary">Summary</Label>
-                <Textarea
-                  id="kb-summary"
-                  required
-                  value={form.summary}
-                  onChange={(e) => setForm({ ...form, summary: e.target.value })}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="kb-category">Category</Label>
-                  <Select
-                    id="kb-category"
-                    value={form.categoryKey}
-                    onChange={(e) =>
-                      setForm({ ...form, categoryKey: e.target.value as CategoryKey })
-                    }
-                  >
-                    {(categories ?? []).map((c) => (
-                      <option key={c.id} value={c.key}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="kb-cost">Cost (GBP, optional)</Label>
-                  <Input
-                    id="kb-cost"
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={form.costGbp}
-                    onChange={(e) => setForm({ ...form, costGbp: e.target.value })}
+      {/* Full-width resource table */}
+      <Card className="overflow-hidden bg-surface/80 border border-hairline rounded-2xl shadow-sm backdrop-blur-md">
+        <CardContent className="p-0 overflow-x-auto">
+          <table className="w-full text-body-sm border-collapse">
+            <thead>
+              <tr className="text-left text-caption font-bold uppercase tracking-[0.08em] text-ink-secondary bg-surface-secondary/80 border-b border-hairline">
+                <th className="py-3 pl-5 pr-1 w-8">
+                  <input
+                    type="checkbox"
+                    checked={allVisibleSelected}
+                    onChange={toggleSelectAll}
+                    aria-label="Select all visible"
+                    className="h-3.5 w-3.5 rounded accent-[color:var(--accent)] cursor-pointer align-middle"
                   />
+                </th>
+                <th className="py-3 pr-1 w-6" />
+                <th className="py-3 px-3 font-bold select-none">
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 hover:text-ink cursor-pointer"
+                    onClick={() => handleSort('title')}
+                  >
+                    Title
+                    {renderSortIcon('title')}
+                  </button>
+                </th>
+                <th className="py-3 px-3 font-bold select-none">
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 hover:text-ink cursor-pointer"
+                    onClick={() => handleSort('categoryKey')}
+                  >
+                    Category
+                    {renderSortIcon('categoryKey')}
+                  </button>
+                </th>
+                <th className="py-3 px-3 font-bold text-right select-none">
+                  <button
+                    type="button"
+                    className="flex items-center justify-end gap-1 ml-auto hover:text-ink cursor-pointer"
+                    onClick={() => handleSort('costPence')}
+                  >
+                    Cost
+                    {renderSortIcon('costPence')}
+                  </button>
+                </th>
+                <th className="py-3 px-3 font-bold select-none hidden md:table-cell">
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 hover:text-ink cursor-pointer"
+                    onClick={() => handleSort('deadlineDaysBeforeIntake')}
+                  >
+                    Deadline
+                    {renderSortIcon('deadlineDaysBeforeIntake')}
+                  </button>
+                </th>
+                <th className="py-3 px-3 font-bold text-center hidden lg:table-cell">Source</th>
+                <th className="py-3 pr-5 pl-3 text-right font-bold">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-hairline">
+              <AnimatePresence initial={false}>
+                {filteredAndSortedResources.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="py-14 text-center text-caption text-ink-tertiary">
+                      No resources match your search or filters.
+                      {filterActive && (
+                        <button
+                          type="button"
+                          onClick={clearFilters}
+                          className="block mx-auto mt-2 text-xs font-semibold text-accent hover:underline cursor-pointer"
+                        >
+                          Clear search and filters
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ) : (
+                  filteredAndSortedResources.map((resource) => {
+                    const isExpanded = expandedIds.includes(resource.id)
+                    const isSelected = selectedIds.includes(resource.id)
+                    const deadline = fmtDeadline(resource.deadlineDaysBeforeIntake)
+                    return (
+                      <React.Fragment key={resource.id}>
+                        <motion.tr
+                          layout
+                          className={cn(
+                            'transition-colors duration-150',
+                            isSelected
+                              ? 'bg-accent-soft/40'
+                              : isExpanded
+                                ? 'bg-surface-secondary/30'
+                                : 'hover:bg-surface-secondary/50',
+                          )}
+                        >
+                          <td className="py-3 pl-5 pr-1 w-8">
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => toggleSelect(resource.id)}
+                              aria-label={`Select ${resource.title}`}
+                              className="h-3.5 w-3.5 rounded accent-[color:var(--accent)] cursor-pointer align-middle"
+                            />
+                          </td>
+                          <td className="py-3 pr-1 w-6">
+                            <button
+                              type="button"
+                              onClick={() => toggleRowExpanded(resource.id)}
+                              className="h-6 w-6 flex items-center justify-center rounded-lg text-ink-secondary hover:bg-surface-secondary hover:text-accent transition-colors duration-150 cursor-pointer"
+                              aria-label={isExpanded ? 'Collapse details' : 'Expand details'}
+                            >
+                              <ChevronRight
+                                size={13}
+                                className={cn(
+                                  'transition-transform duration-200',
+                                  isExpanded && 'rotate-90 text-accent',
+                                )}
+                              />
+                            </button>
+                          </td>
+                          <td className="py-3 px-3 font-bold text-ink max-w-[240px] truncate">
+                            {resource.title}
+                          </td>
+                          <td className="py-3 px-3">
+                            <Badge category={resource.categoryKey} />
+                          </td>
+                          <td className="py-3 px-3 text-right tabular-nums font-medium">
+                            {resource.costPence === null ? (
+                              <span className="text-positive">Free</span>
+                            ) : (
+                              <span className="text-ink-secondary">
+                                {formatGbp(resource.costPence)}
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 px-3 text-ink-secondary tabular-nums hidden md:table-cell">
+                            {deadline ?? <span className="text-ink-tertiary">—</span>}
+                          </td>
+                          <td className="py-3 px-3 text-center hidden lg:table-cell">
+                            {resource.sourceUrl ? (
+                              <a
+                                href={resource.sourceUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-hairline text-ink-secondary hover:bg-accent-soft hover:text-accent hover:border-accent/30 transition-all duration-150"
+                                aria-label={`Open source for ${resource.title}`}
+                              >
+                                <Link2 size={12} />
+                              </a>
+                            ) : (
+                              <span className="text-ink-tertiary">—</span>
+                            )}
+                          </td>
+                          <td className="py-3 pr-5 pl-3 text-right whitespace-nowrap">
+                            <span className="inline-flex gap-1.5">
+                              <button
+                                type="button"
+                                onClick={() => startEdit(resource)}
+                                className="h-7 w-7 flex items-center justify-center rounded-lg border border-hairline text-ink-secondary hover:bg-accent-soft hover:text-accent hover:border-accent/30 transition-all duration-150 cursor-pointer"
+                                aria-label={`Edit ${resource.title}`}
+                              >
+                                <Pencil size={12} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => onDelete(resource.id)}
+                                disabled={deleteResource.isPending}
+                                className="h-7 w-7 flex items-center justify-center rounded-lg border border-hairline text-ink-secondary hover:bg-danger/10 hover:text-danger hover:border-danger/30 transition-all duration-150 cursor-pointer disabled:opacity-50"
+                                aria-label={`Delete ${resource.title}`}
+                              >
+                                <Trash2 size={12} />
+                              </button>
+                            </span>
+                          </td>
+                        </motion.tr>
+                        {isExpanded && (
+                          <tr className="bg-surface-secondary/20 border-0">
+                            <td colSpan={8} className="py-3 px-5 pl-14 border-0">
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                                className="overflow-hidden"
+                              >
+                                <div className="p-4 bg-surface border border-hairline rounded-xl shadow-xs space-y-3 mb-2 text-xs">
+                                  <div className="flex flex-col gap-1">
+                                    <p className="font-bold text-ink">Summary</p>
+                                    <p className="text-ink-secondary leading-relaxed">
+                                      {resource.summary}
+                                    </p>
+                                  </div>
+                                  <div className="flex flex-wrap gap-x-5 gap-y-1.5 pt-2.5 border-t border-hairline text-micro text-ink-tertiary">
+                                    <span>
+                                      <strong className="text-ink-secondary">Deadline:</strong>{' '}
+                                      {deadline ? `${deadline} intake` : 'None'}
+                                    </span>
+                                    {resource.sourceUrl && (
+                                      <span className="flex items-center gap-1 min-w-0">
+                                        <strong className="text-ink-secondary shrink-0">
+                                          Source:
+                                        </strong>{' '}
+                                        <a
+                                          href={resource.sourceUrl}
+                                          target="_blank"
+                                          rel="noreferrer"
+                                          className="text-accent hover:underline inline-flex items-center gap-0.5 font-semibold truncate"
+                                        >
+                                          <span className="truncate">{resource.sourceUrl}</span>
+                                          <ExternalLink size={10} className="shrink-0" />
+                                        </a>
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    )
+                  })
+                )}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </CardContent>
+      </Card>
+
+      {/* Slide-over drawer for add / edit */}
+      <AnimatePresence>
+        {drawerOpen && (
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close editor"
+              onClick={closeDrawer}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-40 bg-[color:var(--canvas)]/70 backdrop-blur-sm cursor-default"
+            />
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 32, stiffness: 320 }}
+              className="fixed right-0 top-0 z-50 flex h-full w-[min(30rem,100vw)] flex-col border-l border-hairline bg-surface shadow-2xl"
+              aria-label={form.id ? 'Edit resource' : 'Add resource'}
+            >
+              <div className="flex items-start justify-between px-5 py-4 border-b border-hairline shrink-0">
+                <div>
+                  <h3 className="text-body-lg font-bold text-ink">
+                    {form.id ? 'Edit resource' : 'Add resource'}
+                  </h3>
+                  <p className="text-caption text-ink-tertiary mt-0.5">
+                    Every entry needs an official source URL and stays timestamped.
+                  </p>
                 </div>
+                <button
+                  type="button"
+                  onClick={closeDrawer}
+                  className="h-8 w-8 flex items-center justify-center rounded-lg text-ink-secondary hover:bg-surface-secondary hover:text-ink transition-colors cursor-pointer shrink-0"
+                  aria-label="Close"
+                >
+                  <X size={18} />
+                </button>
               </div>
-              <div>
-                <Label htmlFor="kb-deadline">
-                  Days before intake (optional, negative is after)
-                </Label>
-                <Input
-                  id="kb-deadline"
-                  type="number"
-                  value={form.deadlineDays}
-                  onChange={(e) => setForm({ ...form, deadlineDays: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label htmlFor="kb-source">Official source URL</Label>
-                <Input
-                  id="kb-source"
-                  type="url"
-                  required
-                  placeholder="https://www.gov.uk/..."
-                  value={form.sourceUrl}
-                  onChange={(e) => setForm({ ...form, sourceUrl: e.target.value })}
-                />
-              </div>
-              {error && <p className="text-sm text-danger">{error}</p>}
-              <div className="flex gap-2">
-                <Button type="submit" disabled={saveResource.isPending}>
-                  {form.id ? 'Save changes' : 'Add resource'}
-                </Button>
-                {form.id && (
-                  <Button variant="ghost" onClick={() => setForm(emptyForm)}>
+
+              <form onSubmit={onSubmit} className="flex flex-col flex-1 min-h-0">
+                <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4">
+                  <div>
+                    <Label htmlFor="kb-title" className="text-xs font-semibold text-ink-secondary">
+                      Title
+                    </Label>
+                    <Input
+                      id="kb-title"
+                      required
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                      value={form.title}
+                      onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label
+                      htmlFor="kb-summary"
+                      className="text-xs font-semibold text-ink-secondary"
+                    >
+                      Summary
+                    </Label>
+                    <Textarea
+                      id="kb-summary"
+                      required
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1 min-h-24"
+                      value={form.summary}
+                      onChange={(e) => setForm({ ...form, summary: e.target.value })}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label
+                        htmlFor="kb-category"
+                        className="text-xs font-semibold text-ink-secondary"
+                      >
+                        Category
+                      </Label>
+                      <Select
+                        id="kb-category"
+                        className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                        value={form.categoryKey}
+                        onChange={(e) =>
+                          setForm({ ...form, categoryKey: e.target.value as CategoryKey })
+                        }
+                      >
+                        {(categories ?? []).map((c) => (
+                          <option key={c.id} value={c.key}>
+                            {c.label}
+                          </option>
+                        ))}
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="kb-cost" className="text-xs font-semibold text-ink-secondary">
+                        Cost (GBP)
+                      </Label>
+                      <Input
+                        id="kb-cost"
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        placeholder="Free"
+                        className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                        value={form.costGbp}
+                        onChange={(e) => setForm({ ...form, costGbp: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <Label
+                      htmlFor="kb-deadline"
+                      className="text-xs font-semibold text-ink-secondary"
+                    >
+                      Days before intake (negative is after)
+                    </Label>
+                    <Input
+                      id="kb-deadline"
+                      type="number"
+                      placeholder="Optional"
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                      value={form.deadlineDays}
+                      onChange={(e) => setForm({ ...form, deadlineDays: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="kb-source" className="text-xs font-semibold text-ink-secondary">
+                      Official source URL
+                    </Label>
+                    <Input
+                      id="kb-source"
+                      type="url"
+                      required
+                      className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm mt-1"
+                      placeholder="https://www.gov.uk/..."
+                      value={form.sourceUrl}
+                      onChange={(e) => setForm({ ...form, sourceUrl: e.target.value })}
+                    />
+                  </div>
+                  {error && <p className="text-xs font-semibold text-danger">{error}</p>}
+                </div>
+
+                <div className="flex gap-2 px-5 py-4 border-t border-hairline shrink-0">
+                  <Button
+                    type="submit"
+                    disabled={saveResource.isPending}
+                    className="sheen flex-1 text-white bg-accent-solid [background-image:var(--accent-gradient)] rounded-xl font-bold h-9 shadow-md cursor-pointer"
+                  >
+                    {form.id ? 'Save changes' : 'Add resource'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={closeDrawer}
+                    className="rounded-xl h-9"
+                  >
                     Cancel
                   </Button>
-                )}
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
+                </div>
+              </form>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
     </section>
+  )
+}
+
+// Small removable chip used to display active filters above the KB table.
+function FilterChip({ label, onClear }: { label: string; onClear: () => void }) {
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full border border-accent/25 bg-accent-soft px-2.5 py-0.5 text-micro font-semibold text-accent">
+      {label}
+      <button
+        type="button"
+        onClick={onClear}
+        aria-label={`Remove ${label} filter`}
+        className="hover:text-ink cursor-pointer"
+      >
+        <X size={11} />
+      </button>
+    </span>
   )
 }
 
@@ -1337,20 +1849,23 @@ function AdminNotesManager() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left side: Add Note Form */}
-      <Card className="lg:col-span-1 h-fit">
-        <CardHeader>
-          <CardTitle>Create Admin Note</CardTitle>
-          <CardDescription>
+      <Card className="lg:col-span-1 h-fit bg-surface/80 border border-hairline rounded-2xl shadow-sm backdrop-blur-md p-5">
+        <CardHeader className="p-0 mb-4">
+          <CardTitle className="text-body font-bold text-ink">Create Admin Note</CardTitle>
+          <CardDescription className="text-caption text-ink-secondary mt-1">
             Flag bugs, data discrepancies, or leave instructions for other staff.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <form onSubmit={handleAddNote} className="space-y-4">
             <div className="space-y-1">
-              <Label htmlFor="note-title">Note Title</Label>
+              <Label htmlFor="note-title" className="text-xs font-semibold text-ink-secondary">
+                Note Title
+              </Label>
               <Input
                 id="note-title"
                 required
+                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
                 placeholder="e.g. Update visa processing fee"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
@@ -1359,9 +1874,12 @@ function AdminNotesManager() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label htmlFor="note-priority">Priority</Label>
+                <Label htmlFor="note-priority" className="text-xs font-semibold text-ink-secondary">
+                  Priority
+                </Label>
                 <Select
                   id="note-priority"
+                  className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
                   value={newPriority}
                   onChange={(e) => setNewPriority(e.target.value as 'high' | 'medium' | 'low')}
                 >
@@ -1372,9 +1890,12 @@ function AdminNotesManager() {
               </div>
 
               <div className="space-y-1">
-                <Label htmlFor="note-category">Category</Label>
+                <Label htmlFor="note-category" className="text-xs font-semibold text-ink-secondary">
+                  Category
+                </Label>
                 <Select
                   id="note-category"
+                  className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
                   value={newCategory}
                   onChange={(e) =>
                     setNewCategory(e.target.value as 'bug' | 'feature' | 'data' | 'general')
@@ -1389,9 +1910,12 @@ function AdminNotesManager() {
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="note-author">Author / Flagged By</Label>
+              <Label htmlFor="note-author" className="text-xs font-semibold text-ink-secondary">
+                Author / Flagged By
+              </Label>
               <Input
                 id="note-author"
+                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
                 placeholder="e.g. Admin K"
                 value={newAuthor}
                 onChange={(e) => setNewAuthor(e.target.value)}
@@ -1399,10 +1923,13 @@ function AdminNotesManager() {
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="note-content">Note Details</Label>
+              <Label htmlFor="note-content" className="text-xs font-semibold text-ink-secondary">
+                Note Details
+              </Label>
               <Textarea
                 id="note-content"
                 required
+                className="bg-surface/60 border-hairline rounded-xl focus-visible:ring-accent text-body-sm"
                 placeholder="Add context, screenshots links, or task instructions..."
                 rows={4}
                 value={newContent}
@@ -1412,7 +1939,7 @@ function AdminNotesManager() {
 
             <Button
               type="submit"
-              className="w-full flex items-center justify-center gap-1.5 h-9 mt-2"
+              className="sheen w-full flex items-center justify-center gap-1.5 h-9 mt-2 text-white bg-accent-solid [background-image:var(--accent-gradient)] rounded-xl font-bold shadow-md cursor-pointer"
             >
               <Plus size={14} />
               Add Note to Board
@@ -1423,20 +1950,23 @@ function AdminNotesManager() {
 
       {/* Right side: Notes Board */}
       <div ref={boardRef} className="lg:col-span-2 space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-body-lg font-semibold tracking-tight">Interactive Board</h2>
-          <span className="text-caption text-ink-tertiary">
+        <div className="flex justify-between items-center bg-surface/50 border border-hairline px-4 py-2.5 rounded-xl backdrop-blur-md">
+          <h2 className="text-body font-bold text-ink tracking-tight flex items-center gap-2">
+            <Sparkles size={16} className="text-accent" />
+            Interactive Board
+          </h2>
+          <span className="text-caption font-semibold text-accent bg-accent-soft px-2.5 py-0.5 rounded-full">
             {notes.length} {notes.length === 1 ? 'note' : 'notes'} active
           </span>
         </div>
 
         {isPending ? (
-          <div className="p-8 text-center bg-surface border border-hairline rounded-md">
-            <p className="text-body text-ink-secondary">Loading admin board...</p>
+          <div className="p-8 text-center bg-surface/80 border border-hairline rounded-2xl backdrop-blur-md">
+            <p className="text-body-sm text-ink-secondary font-medium">Loading admin board...</p>
           </div>
         ) : notes.length === 0 ? (
-          <div className="p-8 text-center bg-surface border border-hairline rounded-md">
-            <p className="text-body text-ink-secondary">The admin board is clear.</p>
+          <div className="p-8 text-center bg-surface/80 border border-hairline rounded-2xl backdrop-blur-md">
+            <p className="text-body-sm font-bold text-ink">The admin board is clear</p>
             <p className="text-caption text-ink-tertiary mt-1">No active notes or flags.</p>
           </div>
         ) : (
@@ -1445,21 +1975,23 @@ function AdminNotesManager() {
               <div
                 key={note.id}
                 id={`note-${note.id}`}
-                className="draggable-note-card bg-surface border border-hairline rounded-md p-4 flex flex-col justify-between shadow-xs transition-shadow duration-[120ms] hover:shadow-sm cursor-grab active:cursor-grabbing relative z-10"
+                className="draggable-note-card bg-surface/80 border border-hairline rounded-2xl p-4.5 flex flex-col justify-between shadow-xs hover:border-accent/40 backdrop-blur-md transition-all duration-200 cursor-grab active:cursor-grabbing relative z-10"
               >
                 <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="flex items-start justify-between gap-2 mb-3">
                     <span
                       className={cn(
-                        'text-micro font-bold px-2 py-0.5 rounded-full uppercase',
-                        note.priority === 'high' && 'bg-danger-soft text-danger',
-                        note.priority === 'medium' && 'bg-accent-soft text-accent',
-                        note.priority === 'low' && 'bg-surface-secondary text-ink-secondary',
+                        'text-micro font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider border',
+                        note.priority === 'high' && 'bg-danger/10 text-danger border-danger/20',
+                        note.priority === 'medium' &&
+                          'bg-warning/10 text-warning border-warning/20',
+                        note.priority === 'low' &&
+                          'bg-surface-secondary text-ink-secondary border-hairline',
                       )}
                     >
                       {note.priority}
                     </span>
-                    <span className="text-micro font-medium text-ink-tertiary capitalize">
+                    <span className="text-micro font-mono text-ink-tertiary uppercase tracking-wider bg-surface-secondary px-2 py-0.5 rounded-md">
                       {note.category}
                     </span>
                   </div>
@@ -1473,11 +2005,11 @@ function AdminNotesManager() {
                 <div className="border-t border-hairline pt-3 mt-auto flex items-center justify-between text-micro text-ink-tertiary">
                   <div className="min-w-0">
                     <p className="font-semibold text-ink-secondary truncate">By: {note.author}</p>
-                    <p>{new Date(note.createdAt).toLocaleDateString()}</p>
+                    <p className="font-mono">{new Date(note.createdAt).toLocaleDateString()}</p>
                   </div>
                   <button
                     onClick={() => handleDeleteNote(note.id)}
-                    className="h-6 px-2.5 rounded-sm border border-hairline hover:bg-danger-soft hover:text-danger hover:border-danger transition-colors duration-[120ms]"
+                    className="h-7 px-3 rounded-lg border border-hairline text-ink-secondary hover:bg-danger/10 hover:text-danger hover:border-danger/30 transition-all duration-150 font-semibold cursor-pointer"
                   >
                     Resolve
                   </button>
