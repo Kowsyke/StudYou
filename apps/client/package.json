@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -14,6 +17,7 @@
     "@splinetool/react-spline": "^4.1.0",
     "@studyou/types": "workspace:*",
     "@tanstack/react-query": "^5.80.5",
+    "@tauri-apps/api": "2.11.1",
     "axios": "^1.19.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -32,6 +36,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.8",
+    "@tauri-apps/cli": "2.11.4",
     "@types/node": "^24.12.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",

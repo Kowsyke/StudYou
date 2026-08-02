@@ -2,8 +2,16 @@ import axios from 'axios'
 
 const TOKEN_KEY = 'studyou_token'
 
+// On the web the client is served from the same origin as the API, so a
+// relative base path works and is proxied in dev. A packaged desktop build
+// (Tauri) loads from a tauri:// origin, where a relative path would resolve
+// against the app itself, so it needs an absolute API URL baked in at build
+// time via VITE_API_URL. Defaulting to the relative path keeps every web
+// build behaving exactly as before.
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api/v1'
+
 export const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
