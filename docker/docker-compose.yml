@@ -29,5 +29,23 @@ services:
     depends_on:
       - postgres
 
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    container_name: studyou_app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/studyou
+      JWT_SECRET: production_secret_key_for_local_compose
+      CLIENT_URL: http://localhost:8080
+      NODE_ENV: production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   pgdata:
+

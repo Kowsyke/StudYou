@@ -1,0 +1,17 @@
+node_modules
+**/node_modules
+apps/client/dist
+apps/server/dist
+deploy
+.git
+.github
+.agents
+target
+apps/client/src-tauri/target
+logs
+test-results
+pnpm-debug.log
+.env
+.env.azure.bak
+.env.example
+PKG
