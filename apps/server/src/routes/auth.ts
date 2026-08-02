@@ -2,7 +2,7 @@ import { countries, users } from '@studyou/db'
 import type { ApiResponse, AuthPayload, User } from '@studyou/types'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
-import { Hono } from 'hono'
+import { type Context, Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'
 import { signToken } from '../lib/jwt'
@@ -11,6 +11,8 @@ import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
 import { rateLimit } from '../middleware/rateLimit'
 import type { AppEnv } from '../types'
+
+import { env } from '../lib/env'
 
 const registerSchema = z.object({
   email: z.string().email('Enter a valid email address'),
@@ -24,10 +26,20 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Enter your password'),
 })
 
-// Fixed windows sized to stay invisible to a real person and the e2e
-// suite while making credential stuffing impractical.
 const loginLimiter = rateLimit({ windowMs: 60_000, max: 20 })
 const registerLimiter = rateLimit({ windowMs: 300_000, max: 10 })
+
+function setAuthCookie(c: Context<AppEnv>, token: string) {
+  const flags = ['Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=604800']
+  if (env.isProduction) flags.push('Secure')
+  c.header('Set-Cookie', `studyou_token=${encodeURIComponent(token)}; ${flags.join('; ')}`)
+}
+
+function clearAuthCookie(c: Context<AppEnv>) {
+  const flags = ['Path=/', 'HttpOnly', 'SameSite=Lax', 'Max-Age=0']
+  if (env.isProduction) flags.push('Secure')
+  c.header('Set-Cookie', `studyou_token=; ${flags.join('; ')}`)
+}
 
 function toUser(row: typeof users.$inferSelect): User {
   return {
@@ -48,6 +60,15 @@ authRoutes.post('/register', registerLimiter, validate('json', registerSchema), 
 
   const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.email, email))
   if (existing) {
+    if (env.preventEmailEnumeration) {
+      return c.json(
+        {
+          success: false,
+          error: 'An account with this email already exists',
+        },
+        409,
+      )
+    }
     return c.json({ success: false, error: 'An account with this email already exists' }, 409)
   }
 
@@ -73,6 +94,7 @@ authRoutes.post('/register', registerLimiter, validate('json', registerSchema), 
 
   const user = toUser(created)
   const token = signToken({ sub: user.id, email: user.email, role: user.role })
+  setAuthCookie(c, token)
   const response: ApiResponse<AuthPayload> = { success: true, data: { user, token } }
   return c.json(response, 201)
 })
@@ -97,8 +119,14 @@ authRoutes.post('/login', loginLimiter, validate('json', loginSchema), async (c)
 
   const user = toUser(row)
   const token = signToken({ sub: user.id, email: user.email, role: user.role })
+  setAuthCookie(c, token)
   const response: ApiResponse<AuthPayload> = { success: true, data: { user, token } }
   return c.json(response)
+})
+
+authRoutes.post('/logout', (c) => {
+  clearAuthCookie(c)
+  return c.json({ success: true, data: { message: 'Logged out successfully' } })
 })
 
 authRoutes.get('/me', authMiddleware, async (c) => {

@@ -7,17 +7,42 @@ export interface ResourceFilters {
   category: string
   sort: 'cost' | 'deadline' | 'updated' | 'title'
   order: 'asc' | 'desc'
+  page?: number
+  limit?: number
+}
+
+export interface ResourcePagination {
+  page: number
+  pageSize: number
+  total: number
+  totalPages: number
+}
+
+export type ResourceListWithPagination = Resource[] & {
+  pagination?: ResourcePagination
 }
 
 export function useResources(filters: ResourceFilters) {
   return useQuery({
     queryKey: ['resources', filters],
     queryFn: async () => {
-      const params: Record<string, string> = { sort: filters.sort, order: filters.order }
+      const params: Record<string, string | number> = {
+        sort: filters.sort,
+        order: filters.order,
+        page: filters.page ?? 1,
+        limit: filters.limit ?? 50,
+      }
       if (filters.search) params.search = filters.search
       if (filters.category) params.category = filters.category
-      const { data } = await api.get<ApiResponse<Resource[]>>('/resources', { params })
-      return data.data ?? []
+      const { data } = await api.get<ApiResponse<Resource[]> & { pagination?: ResourcePagination }>(
+        '/resources',
+        { params },
+      )
+      const items = (data.data ?? []) as ResourceListWithPagination
+      if (data.pagination) {
+        items.pagination = data.pagination
+      }
+      return items
     },
     placeholderData: (previous) => previous,
   })

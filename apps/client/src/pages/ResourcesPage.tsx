@@ -303,15 +303,41 @@ export function ResourcesPage() {
                 }
               />
             ) : (
-              // Short stagger: the library runs to dozens of cards, so anything
-              // longer would leave the tail of the grid visibly lagging.
-              <RevealGroup className={gridClass} stagger={0.025}>
-                {(resources ?? []).map((r) => (
-                  <RevealItem key={r.id} className="h-full">
-                    <ResourceCard resource={r} />
-                  </RevealItem>
-                ))}
-              </RevealGroup>
+              <>
+                <RevealGroup className={gridClass} stagger={0.025}>
+                  {(resources ?? []).map((r) => (
+                    <RevealItem key={r.id} className="h-full">
+                      <ResourceCard resource={r} />
+                    </RevealItem>
+                  ))}
+                </RevealGroup>
+                {resources?.pagination && resources.pagination.totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-hairline text-sm">
+                    <span className="text-xs text-ink-tertiary">
+                      Page {resources.pagination.page} of {resources.pagination.totalPages} (
+                      {resources.pagination.total} total items)
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={resources.pagination.page <= 1}
+                        onClick={() => setFilters((f) => ({ ...f, page: (f.page ?? 1) - 1 }))}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md border border-hairline bg-surface hover:bg-surface-secondary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        Previous
+                      </button>
+                      <button
+                        type="button"
+                        disabled={resources.pagination.page >= resources.pagination.totalPages}
+                        onClick={() => setFilters((f) => ({ ...f, page: (f.page ?? 1) + 1 }))}
+                        className="px-3 py-1.5 text-xs font-medium rounded-md border border-hairline bg-surface hover:bg-surface-secondary disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         ) : (

@@ -77,4 +77,17 @@ describe('rateLimit', () => {
     const afterReset = await fire(middleware, '6.6.6.6', '/login')
     expect(afterReset.passed).toBe(true)
   })
+
+  test('supports custom pluggable store implementation', async () => {
+    const customStore = {
+      increment: async (_key: string, windowMs: number) => ({
+        count: 5,
+        resetAt: Date.now() + windowMs,
+      }),
+    }
+    const middleware = rateLimit({ windowMs: 60_000, max: 2, store: customStore })
+    const { passed, result } = await fire(middleware, '7.7.7.7', '/login')
+    expect(passed).toBe(false)
+    expect(result.status).toBe(429)
+  })
 })

@@ -35,7 +35,8 @@ const listQuerySchema = z.object({
   sort: z.enum(['cost', 'deadline', 'updated', 'title']).default('title'),
   order: z.enum(['asc', 'desc']).default('asc'),
   country: z.string().length(2).default('GB'),
-  limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(MAX_PAGE_SIZE),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(50),
 })
 
 const resourceBodySchema = z.object({
@@ -87,6 +88,17 @@ resourceRoutes.get('/', validate('query', listQuerySchema), async (c) => {
     if (searchCondition) conditions.push(searchCondition)
   }
 
+  const [{ count: rawTotal }] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(resources)
+    .innerJoin(categories, eq(resources.categoryId, categories.id))
+    .innerJoin(countries, eq(resources.countryId, countries.id))
+    .where(and(...conditions))
+
+  const total = Number(rawTotal) || 0
+  const totalPages = Math.max(1, Math.ceil(total / query.limit))
+  const offset = (query.page - 1) * query.limit
+
   const sortColumn = sortColumns[query.sort]
   const rows = await db
     .select({
@@ -112,9 +124,18 @@ resourceRoutes.get('/', validate('query', listQuerySchema), async (c) => {
         : sql`${sortColumn} desc nulls last`,
     )
     .limit(query.limit)
+    .offset(offset)
 
-  const response: ApiResponse<Resource[]> = { success: true, data: rows.map(toResource) }
-  return c.json(response)
+  return c.json({
+    success: true,
+    data: rows.map(toResource),
+    pagination: {
+      page: query.page,
+      pageSize: query.limit,
+      total,
+      totalPages,
+    },
+  })
 })
 
 resourceRoutes.post(

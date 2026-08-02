@@ -11,6 +11,7 @@ config({ path: fileURLToPath(new URL('../../../../.env', import.meta.url)) })
 // esbuild) statically inline the dot form at build time, which would freeze
 // this to the builder's value and silently disable the production gate in the
 // deployed bundle. Bracket access is left as a real runtime read.
+// biome-ignore lint/complexity/useLiteralKeys: bracket access prevents bundler inlining
 const nodeEnv = process.env['NODE_ENV'] ?? 'development'
 const isProduction = nodeEnv === 'production'
 
@@ -38,4 +39,9 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
   port: Number(process.env.PORT || process.env.WEBSITES_PORT) || 3000,
   clientUrl: fromEnv('CLIENT_URL', 'http://localhost:5173'),
+  // biome-ignore lint/complexity/useLiteralKeys: bracket access prevents bundler inlining
+  preventEmailEnumeration: process.env['SECURITY_PREVENT_ENUMERATION'] === 'true' || isProduction,
+  // biome-ignore lint/complexity/useLiteralKeys: bracket access prevents bundler inlining
+  redisUrl: process.env['REDIS_URL'] || undefined,
+  isProduction,
 }

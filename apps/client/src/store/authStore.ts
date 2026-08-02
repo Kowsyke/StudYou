@@ -1,5 +1,6 @@
 import type { User } from '@studyou/types'
 import { create } from 'zustand'
+import { api } from '../lib/api'
 
 const TOKEN_KEY = 'studyou_token'
 const USER_KEY = 'studyou_user'
@@ -29,6 +30,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user, token })
   },
   clearAuth: () => {
+    api.post('/auth/logout').catch(() => {})
     localStorage.removeItem(TOKEN_KEY)
     localStorage.removeItem(USER_KEY)
     set({ user: null, token: null })
