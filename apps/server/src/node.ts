@@ -12,8 +12,14 @@ import { app } from './index'
 */
 const clientDir = join(process.cwd(), 'client-dist')
 
-app.use('/assets/*', serveStatic({ root: './client-dist' }))
-app.use('/favicon.svg', serveStatic({ root: './client-dist' }))
+// Serve any real file in the built client from its root: the hashed assets
+// under /assets, but also the files Vite copies from public to the root,
+// namely sw.js, manifest.json, the PWA icons and favicon. serveStatic passes
+// through to the next handler when the requested file does not exist, so SPA
+// routes fall through to the index.html handler below. Without this, requests
+// like /sw.js or /manifest.json would hit the SPA fallback and receive HTML,
+// silently breaking the service worker and the install manifest in production.
+app.use('*', serveStatic({ root: './client-dist' }))
 
 let indexHtml = ''
 try {

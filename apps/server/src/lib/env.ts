@@ -6,7 +6,12 @@ config({ path: fileURLToPath(new URL('../../../../.env', import.meta.url)) })
 // Anything that is not an explicit development or test run is treated as
 // production, where secrets must be provided and there is no safe default.
 // The deploy MUST set NODE_ENV=production for this gate to apply.
-const nodeEnv = process.env.NODE_ENV ?? 'development'
+//
+// Read via bracket access, not process.env.NODE_ENV: bundlers (bun build,
+// esbuild) statically inline the dot form at build time, which would freeze
+// this to the builder's value and silently disable the production gate in the
+// deployed bundle. Bracket access is left as a real runtime read.
+const nodeEnv = process.env['NODE_ENV'] ?? 'development'
 const isProduction = nodeEnv === 'production'
 
 /**
