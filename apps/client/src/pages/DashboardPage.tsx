@@ -72,7 +72,9 @@ export function DashboardPage() {
   }, [firstName, isPending, reduceMotion])
 
   const resourceFilters = useMemo(
-    () => ({ search: '', category: '', sort: 'title' as const, order: 'asc' as const }),
+    // Bookmarks are resolved client-side against this list, so fetch the full
+    // set rather than the paged default of 50.
+    () => ({ search: '', category: '', sort: 'title' as const, order: 'asc' as const, limit: 500 }),
     [],
   )
   const { data: resources } = useResources(resourceFilters)

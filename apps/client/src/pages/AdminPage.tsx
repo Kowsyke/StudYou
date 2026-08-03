@@ -112,6 +112,8 @@ export function AdminPage() {
     category: '',
     sort: 'title',
     order: 'asc',
+    // Admin management view: fetch the full set, not the paged default of 50.
+    limit: 500,
   })
   const { data: usersList } = useAdminUsers(activeTab === 'settings')
   const { data: reportsList } = useAdminReports(activeTab === 'settings')
@@ -957,6 +959,8 @@ function KnowledgeBaseManager() {
     category: '',
     sort: 'updated',
     order: 'desc',
+    // Admin management view: fetch the full set, not the paged default of 50.
+    limit: 500,
   })
   const { data: categories } = useCategories()
   const saveResource = useSaveResource()

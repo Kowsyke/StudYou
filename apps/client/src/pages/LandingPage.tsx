@@ -88,7 +88,7 @@ function useIsCoarsePointer(): boolean {
 }
 
 export function LandingPage() {
-  const token = useAuthStore((s) => s.token)
+  const user = useAuthStore((s) => s.user)
   const haloRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const isCoarsePointer = useIsCoarsePointer()
@@ -495,7 +495,7 @@ export function LandingPage() {
     }
   })
 
-  if (token) return <Navigate to="/" replace />
+  if (user) return <Navigate to="/" replace />
 
   return (
     <>

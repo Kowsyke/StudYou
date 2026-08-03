@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const TOKEN_KEY = 'studyou_token'
+const USER_KEY = 'studyou_user'
 
 // On the web the client is served from the same origin as the API, so a
 // relative base path works and is proxied in dev. A packaged desktop build
@@ -9,6 +9,17 @@ const TOKEN_KEY = 'studyou_token'
 // time via VITE_API_URL. Defaulting to the relative path keeps every web
 // build behaving exactly as before.
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? '/api/v1'
+
+// The auth token is held in memory only, never written to localStorage, so an
+// XSS bug cannot read a long lived token out of storage. Web auth rides the
+// httpOnly cookie the server sets on login; this in-memory bearer covers the
+// current session and the future desktop build (which cannot send the
+// cross-site cookie). On reload the token is gone but the cookie keeps the
+// session alive, and the stored user object (non-sensitive) drives the UI.
+let authToken: string | null = null
+export function setAuthToken(token: string | null) {
+  authToken = token
+}
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -19,9 +30,8 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY)
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (authToken) {
+    config.headers.Authorization = `Bearer ${authToken}`
   }
   return config
 })
@@ -34,8 +44,8 @@ api.interceptors.response.use(
   (error) => {
     const onAuthPage = ['/login', '/register'].includes(window.location.pathname)
     if (error.response?.status === 401 && !onAuthPage) {
-      localStorage.removeItem(TOKEN_KEY)
-      localStorage.removeItem('studyou_user')
+      authToken = null
+      localStorage.removeItem(USER_KEY)
       window.location.href = '/login?expired=1'
     }
     return Promise.reject(error)

@@ -31,8 +31,11 @@ const queryClient = new QueryClient({
 })
 
 function RequireAuth({ children }: { children: ReactNode }) {
-  const token = useAuthStore((s) => s.token)
-  if (!token) return <Navigate to="/welcome" replace />
+  // Gate on the persisted user, not the token: the token lives in memory only
+  // and is gone after a reload, but a valid httpOnly cookie still carries the
+  // session, so a stored user is the right signal for "logged in".
+  const user = useAuthStore((s) => s.user)
+  if (!user) return <Navigate to="/welcome" replace />
   return children
 }
 

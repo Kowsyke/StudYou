@@ -340,10 +340,10 @@ export function SettingsPage() {
         onSuccess: () => {
           if (originCountryCode !== currentOriginCode) {
             const state = useAuthStore.getState()
-            if (state.user && state.token) {
+            if (state.user) {
               const newCountryId =
                 (countries ?? []).find((c) => c.code === originCountryCode)?.id ?? null
-              state.setAuth({ ...state.user, originCountryId: newCountryId }, state.token)
+              state.updateUser({ ...state.user, originCountryId: newCountryId })
             }
           }
           toast.success('Settings saved.')

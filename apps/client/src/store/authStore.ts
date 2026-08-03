@@ -1,8 +1,7 @@
 import type { User } from '@studyou/types'
 import { create } from 'zustand'
-import { api } from '../lib/api'
+import { api, setAuthToken } from '../lib/api'
 
-const TOKEN_KEY = 'studyou_token'
 const USER_KEY = 'studyou_user'
 
 function loadUser(): User | null {
@@ -16,22 +15,30 @@ function loadUser(): User | null {
 
 interface AuthState {
   user: User | null
+  // In-memory only, never persisted. See lib/api.ts for the rationale.
   token: string | null
   setAuth: (user: User, token: string) => void
+  updateUser: (user: User) => void
   clearAuth: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
+  // The user is restored from localStorage on load; the token is not, because
+  // the httpOnly cookie carries the session across reloads.
   user: loadUser(),
-  token: localStorage.getItem(TOKEN_KEY),
+  token: null,
   setAuth: (user, token) => {
-    localStorage.setItem(TOKEN_KEY, token)
     localStorage.setItem(USER_KEY, JSON.stringify(user))
+    setAuthToken(token)
     set({ user, token })
+  },
+  updateUser: (user) => {
+    localStorage.setItem(USER_KEY, JSON.stringify(user))
+    set({ user })
   },
   clearAuth: () => {
     api.post('/auth/logout').catch(() => {})
-    localStorage.removeItem(TOKEN_KEY)
+    setAuthToken(null)
     localStorage.removeItem(USER_KEY)
     set({ user: null, token: null })
   },

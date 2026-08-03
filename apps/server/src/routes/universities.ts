@@ -1,6 +1,6 @@
 import { countries, universities } from '@studyou/db'
-import { type ApiResponse, UK_REGIONS, type University } from '@studyou/types'
-import { type SQL, and, asc, eq, ilike, inArray, or } from 'drizzle-orm'
+import { UK_REGIONS, type University } from '@studyou/types'
+import { type SQL, and, asc, eq, ilike, inArray, or, sql } from 'drizzle-orm'
 import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'
@@ -26,6 +26,10 @@ const listQuerySchema = z.object({
   russellGroup: z.enum(['true', 'false']).optional(),
   sort: z.enum(['rank', 'name']).default('rank'),
   country: z.string().length(2).default('GB'),
+  page: z.coerce.number().int().min(1).default(1),
+  // Universities are a bounded browse-all set (the UK top 200), so the default
+  // returns the full set while page and limit are still honoured for any
+  // paginated consumer, keeping the endpoint at parity with /resources.
   limit: z.coerce.number().int().min(1).max(MAX_PAGE_SIZE).default(MAX_PAGE_SIZE),
 })
 
@@ -94,6 +98,16 @@ universityRoutes.get('/', validate('query', listQuerySchema), async (c) => {
     if (searchCondition) conditions.push(searchCondition)
   }
 
+  const [{ count: rawTotal }] = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(universities)
+    .innerJoin(countries, eq(universities.countryId, countries.id))
+    .where(and(...conditions))
+
+  const total = Number(rawTotal) || 0
+  const totalPages = Math.max(1, Math.ceil(total / query.limit))
+  const offset = (query.page - 1) * query.limit
+
   const rows = await db
     .select({
       id: universities.id,
@@ -119,7 +133,16 @@ universityRoutes.get('/', validate('query', listQuerySchema), async (c) => {
     .where(and(...conditions))
     .orderBy(query.sort === 'rank' ? asc(universities.rank) : asc(universities.name))
     .limit(query.limit)
+    .offset(offset)
 
-  const response: ApiResponse<University[]> = { success: true, data: rows.map(toUniversity) }
-  return c.json(response)
+  return c.json({
+    success: true,
+    data: rows.map(toUniversity),
+    pagination: {
+      page: query.page,
+      pageSize: query.limit,
+      total,
+      totalPages,
+    },
+  })
 })

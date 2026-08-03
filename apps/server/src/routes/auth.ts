@@ -59,15 +59,16 @@ authRoutes.post('/register', registerLimiter, validate('json', registerSchema), 
   const email = body.email.toLowerCase()
 
   const [existing] = await db.select({ id: users.id }).from(users).where(eq(users.email, email))
+
+  // Enumeration-resistant mode (default in production): a request for an email
+  // that already exists must be indistinguishable from a fresh sign-up. We
+  // therefore never return a distinct 409 here, run a throwaway hash so the
+  // response time does not leak existence, and return the exact same generic
+  // acknowledgement the new-account path returns below (no token, no session).
   if (existing) {
     if (env.preventEmailEnumeration) {
-      return c.json(
-        {
-          success: false,
-          error: 'An account with this email already exists',
-        },
-        409,
-      )
+      bcrypt.hashSync(body.password, 10)
+      return c.json({ success: true, data: { pendingLogin: true } }, 200)
     }
     return c.json({ success: false, error: 'An account with this email already exists' }, 409)
   }
@@ -93,6 +94,14 @@ authRoutes.post('/register', registerLimiter, validate('json', registerSchema), 
     .returning()
 
   const user = toUser(created)
+
+  // Same generic response as the existing-email path above, so the two are
+  // indistinguishable. The new account exists but is not logged in; the user
+  // signs in next. This branch only runs when enumeration protection is on.
+  if (env.preventEmailEnumeration) {
+    return c.json({ success: true, data: { pendingLogin: true } }, 200)
+  }
+
   const token = signToken({ sub: user.id, email: user.email, role: user.role })
   setAuthCookie(c, token)
   const response: ApiResponse<AuthPayload> = { success: true, data: { user, token } }

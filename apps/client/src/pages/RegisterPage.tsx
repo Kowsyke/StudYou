@@ -181,7 +181,13 @@ export function RegisterPage() {
     register.mutate(
       { fullName, email, password, originCountryCode: originCountryCode || undefined },
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
+          // Enumeration-resistant mode: the account was created but not logged
+          // in, so send the user to sign in rather than straight to onboarding.
+          if ('pendingLogin' in result) {
+            navigate('/login?registered=1')
+            return
+          }
           launchConfetti()
           setTimeout(() => {
             navigate('/onboarding')

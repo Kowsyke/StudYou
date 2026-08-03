@@ -43,6 +43,7 @@ export function LoginPage() {
   const login = useLogin()
   const [searchParams] = useSearchParams()
   const sessionExpired = searchParams.get('expired') === '1'
+  const justRegistered = searchParams.get('registered') === '1'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -169,6 +170,13 @@ export function LoginPage() {
                 <span>
                   Your session has expired. For security, please sign in again to resume progress.
                 </span>
+              </div>
+            )}
+
+            {justRegistered && !error && (
+              <div className="flex items-start gap-2.5 bg-positive-soft border border-positive text-positive rounded-md p-3 text-caption font-medium leading-relaxed">
+                <ShieldCheck size={16} className="shrink-0 mt-0.5" />
+                <span>Your account is ready. Please sign in to continue.</span>
               </div>
             )}
 
