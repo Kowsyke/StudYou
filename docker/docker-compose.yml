@@ -29,6 +29,20 @@ services:
     depends_on:
       - postgres
 
+  migrate:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      target: builder
+    container_name: studyou_migrate
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/studyou
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "pnpm --filter @studyou/db exec drizzle-kit migrate && pnpm --filter @studyou/db exec bun run src/seed.ts"
+    restart: "no"
+
   app:
     build:
       context: ..
@@ -45,6 +59,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
   pgdata:
