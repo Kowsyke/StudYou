@@ -68,6 +68,26 @@ A Tauri v2 desktop shell is a planned future addition. The frontend is a plain V
 
 ## Getting started
 
+There are two ways to run StudYou. Option A is one command and needs only Docker, which is the fastest way to see the whole application working. Option B is the full development setup with hot reload.
+
+### Option A: run the whole stack in Docker (recommended for a first look)
+
+Prerequisites: [Docker](https://www.docker.com) with the Compose plugin. Nothing else, no Node, no Bun, no pnpm.
+
+```sh
+git clone https://github.com/Kowsyke/StudYou.git
+cd StudYou
+docker compose -f docker/docker-compose.yml up -d --build
+```
+
+That single command builds the client and server, starts PostgreSQL, applies every database migration, seeds the full UK roadmap and the 200 university dataset, then starts the application. Open http://localhost:8080 and sign in with a demo account below. The first build takes a few minutes; subsequent starts are quick.
+
+To watch the logs, run `docker compose -f docker/docker-compose.yml logs -f app`. To stop everything, run `docker compose -f docker/docker-compose.yml down`. Adding `-v` to that command also deletes the database volume, so the next start re-seeds from scratch.
+
+No `.env` file is needed for this path: the compose file supplies the database URL, a local-only JWT secret, and the client URL for the app container.
+
+### Option B: local development with hot reload
+
 Prerequisites: [Bun](https://bun.sh), [pnpm](https://pnpm.io) and [Docker](https://www.docker.com).
 
 1. Copy the environment template and set a strong secret:
@@ -90,7 +110,7 @@ Prerequisites: [Bun](https://bun.sh), [pnpm](https://pnpm.io) and [Docker](https
 
    The API runs on http://localhost:3005 and the client on http://localhost:5173.
 
-Seeded demo accounts (development only):
+Seeded demo accounts (both paths, development only):
 
 - Student: student@studyou.app / StudentPass123
 - Admin: admin@studyou.app / AdminPass123
