@@ -70,12 +70,21 @@ A Tauri v2 desktop shell is a planned future addition. The frontend is a plain V
 
 There are two ways to run StudYou. Option A is one command and needs only Docker, which is the fastest way to see the whole application working. Option B is the full development setup with hot reload.
 
+### Version 1 Release
+
+Download the packaged Version 1 release source code directly from the [GitHub Releases page](https://github.com/Kowsyke/StudYou/releases/tag/v1.0.0).
+
 ### Option A: run the whole stack in Docker (recommended for a first look)
 
 Prerequisites: [Docker](https://www.docker.com) with the Compose plugin. Nothing else, no Node, no Bun, no pnpm.
 
 ```sh
+# Option A1: Clone from GitHub
 git clone https://github.com/Kowsyke/StudYou.git
+cd StudYou
+docker compose -f docker/docker-compose.yml up -d --build
+
+# Option A2: Download the v1.0.0 release zip from GitHub Releases, extract it, and run:
 cd StudYou
 docker compose -f docker/docker-compose.yml up -d --build
 ```
