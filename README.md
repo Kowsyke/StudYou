@@ -20,12 +20,13 @@ Built for CMS22204 Full Stack Application Development (Level 5), Ravensbourne Un
 2. [What it does](#what-it-does)
 3. [Tech stack](#tech-stack)
 4. [Getting started](#getting-started)
-5. [Project structure](#project-structure)
-6. [Data model](#data-model)
-7. [API reference](#api-reference)
-8. [The two engines](#the-two-engines)
-9. [Testing](#testing)
-10. [Roadmap](#roadmap)
+5. [Deployment](#deployment)
+6. [Project structure](#project-structure)
+7. [Data model](#data-model)
+8. [API reference](#api-reference)
+9. [The two engines](#the-two-engines)
+10. [Testing](#testing)
+11. [Roadmap](#roadmap)
 
 ## Why StudYou exists
 
@@ -139,6 +140,52 @@ Other commands:
 - `pnpm lint` runs Biome across the workspace
 - `pnpm db:studio` opens Drizzle Studio
 - `pnpm build` builds every package
+
+## Deployment
+
+StudYou supports two production deployment architectures: cloud deployment via Azure App Service with automated GitHub Actions CI/CD, and containerized deployment via Docker Compose.
+
+### 1. Cloud Deployment (Azure App Service)
+
+- **Live URL:** [https://studyou-app-7097.azurewebsites.net](https://studyou-app-7097.azurewebsites.net)
+- **CI/CD Workflow:** `.github/workflows/deploy-azure.yml`
+
+The cloud pipeline automates production delivery on every push to the `main` branch:
+
+1. **Environment Setup:** GitHub Actions runner provisions Node 22, Bun runtime, and pnpm package manager.
+2. **Client Build:** Compiles the React 19 single page application (`apps/client/dist`).
+3. **Server Bundle:** Bundles the Hono API server for Node 22 execution using `bun build src/node.ts --target node --outdir ../../deploy`.
+4. **Package Assembly:** Copies the client static bundle into `deploy/client-dist` and generates production `package.json`.
+5. **Kudu Deployment:** Zips `deploy/` and posts the archive to Azure App Service Kudu zipdeploy endpoint using HTTPS credentials.
+6. **App Execution:** Azure App Service executes `node node.js`. Database credentials (`DATABASE_URL`), `JWT_SECRET`, and `CLIENT_URL` are managed via Azure App Settings.
+
+### 2. Containerized Deployment (Docker Compose)
+
+- **Stack File:** `docker/docker-compose.yml`
+- **Dockerfile:** `Dockerfile` (Multi stage build: Bun builder -> Node 22 Alpine)
+
+The container stack defines four isolated services:
+
+1. `postgres` : PostgreSQL 17 Alpine database image with healthcheck (`pg_isready`) running every 5 seconds.
+2. `pgadmin` : Web database administration interface listening on port 5050.
+3. `migrate` : One-off initialization container built from the Dockerfile builder stage. Executes Drizzle schema migrations (`pnpm db:migrate`) and populates the database (`pnpm db:seed`) before exiting cleanly.
+4. `app` : Node 22 Alpine production runtime container listening on port 8080. Gated on `postgres: service_healthy` and `migrate: service_completed_successfully`.
+
+To launch or manage the containerized stack:
+
+```sh
+# Start full container stack
+pnpm docker:up        # or: docker compose -f docker/docker-compose.yml up -d --build
+
+# Stream container logs
+pnpm docker:logs      # or: docker compose -f docker/docker-compose.yml logs -f app
+
+# Stop container stack
+pnpm docker:down      # or: docker compose -f docker/docker-compose.yml down
+
+# Clean slate reset (deletes database volume for fresh re-seed)
+docker compose -f docker/docker-compose.yml down -v
+```
 
 ## Project structure
 
