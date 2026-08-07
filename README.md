@@ -1,5 +1,13 @@
 # StudYou
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/Runtime-Bun-black?logo=bun)](https://bun.sh)
+[![React 19](https://img.shields.io/badge/Frontend-React_19-61DAFB?logo=react)](https://react.dev)
+[![Hono](https://img.shields.io/badge/Backend-Hono-E36002?logo=hono)](https://hono.dev)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL_16-4169E1?logo=postgresql)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Container-Docker-2496ED?logo=docker)](https://www.docker.com/)
+
 A personalised, trackable roadmap for international students applying to study in the UK. StudYou walks a student through every official step, from English testing to the visa to arrival and settling in, with transparent costs and deadlines, replacing unreliable and sometimes fraudulent agencies with self service.
 
 Built for CMS22204 Full Stack Application Development (Level 5), Ravensbourne University London.
