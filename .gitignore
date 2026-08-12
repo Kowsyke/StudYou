@@ -18,39 +18,28 @@ coverage/
 *token*
 *credential*
 
-# Local assistant tooling and personal working notes. Kept as patterns rather
-# than paths because these directories get recreated by the tools themselves.
-CLAUDE.md
-JOURNAL.md
-MASTERGUIDE.md
-CHANGELOG.md
-*claude*
-*Claude*
+# Local tooling directories that sit in the working copy but are not part of
+# the project. Kept because they are still present on disk.
 .claude/
-.agents/
 agy_research/
 
-# Personal local guides, not needed to run the app
+# Personal local guides. These hold live Azure settings, so they must never
+# be pushed even though the rest of docs/ is tracked.
 docs/deployment/START_APP.txt
 docs/deployment/AZURE_DEPLOY.txt
 logs/
 
-# Local scratch scripts for generating report figures and screenshots
-/scratch/
+# Local helper that drives the app to capture report figures. Not a product
+# test, so the e2e suite skips it and it stays out of the repo.
 e2e/capture-screenshots.spec.ts
 
-# Personal exam prep, report drafts and submission material
-*EXAM_PREP*
-/submission/
-/from-project/
-
-# Design reference prototype. Not imported by any runtime code, the app builds
-# and runs without it, so it stays local rather than shipping in the repo.
+# Design reference prototype and UI research material. Nothing imports these,
+# the app builds and runs without them.
 /Hi-fi-prototype/
 /UI-Ref/
 
 # Database volume and Playwright's own scratch output. The committed test
-# evidence lives in test-results/ and is deliberately not ignored.
+# evidence in test-results/ is deliberately not ignored.
 pgdata/
 docker/postgres/
 .playwright-artifacts/

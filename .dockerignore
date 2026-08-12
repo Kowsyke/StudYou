@@ -21,15 +21,9 @@ apps/client/src-tauri/target
 .git
 .github
 
-# Local assistant tooling and personal working material
+# Local tooling directories still present in the working copy
 .claude
-.agents
-CLAUDE.md
-JOURNAL.md
-MASTERGUIDE.md
-from-project
-submission
-scratch
+agy_research
 
 # Local reference material and test evidence, not part of the running app
 Hi-fi-prototype
