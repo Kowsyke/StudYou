@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "pnpm --parallel -r --filter @studyou/server --filter @studyou/client dev",
     "build": "pnpm -r build",
+    "preview": "pnpm --filter @studyou/client build && pnpm --parallel -r --filter @studyou/server --filter @studyou/client preview",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "test": "pnpm --filter @studyou/engine test && pnpm --filter @studyou/server test",
