@@ -29,6 +29,7 @@ import { gsap } from '../lib/gsap/index.js'
 import { cn } from '../lib/utils'
 import { usePreferencesStore } from '../store/preferencesStore'
 import { useProfileStore } from '../store/profileStore'
+import { useRegionStore } from '../store/regionStore'
 import { toast } from '../store/toastStore'
 
 gsap.registerPlugin(useGSAP, Flip)
@@ -56,22 +57,33 @@ export function UniversitiesPage() {
   const { data: regionCosts } = useRegionCosts()
   const { data: overview } = useJourney()
 
-  const mapWrapperRef = useRef<HTMLDivElement>(null)
   const regionChipsContainerRef = useRef<HTMLDivElement>(null)
   const shortlistBarRef = useRef<HTMLDivElement>(null)
   const searchBarUnderlineRef = useRef<SVGPathElement>(null)
 
   const isInitializedRef = useRef(false)
 
+  // Regions chosen before the student had an account, on the public landing map
+  // or during onboarding, are held here and outrank the server copy. Without
+  // this the selection silently reset every time this page mounted.
+  const storedRegions = useRegionStore((s) => s.regions)
+  const setStoredRegions = useRegionStore((s) => s.setRegions)
+
   useEffect(() => {
-    if (overview?.journey?.regions && !isInitializedRef.current) {
-      setFilters((f) => ({
-        ...f,
-        regions: overview.journey.regions ?? [],
-      }))
+    if (isInitializedRef.current) return
+
+    // The persisted choice wins. Fall back to whatever the journey recorded, and
+    // seed the store from it so the two agree from here on.
+    const journeyRegions = overview?.journey?.regions ?? []
+    if (storedRegions.length > 0) {
+      setFilters((f) => ({ ...f, regions: storedRegions }))
+      isInitializedRef.current = true
+    } else if (journeyRegions.length > 0) {
+      setFilters((f) => ({ ...f, regions: journeyRegions }))
+      setStoredRegions(journeyRegions)
       isInitializedRef.current = true
     }
-  }, [overview])
+  }, [overview, storedRegions, setStoredRegions])
 
   const gridClass = compactCards
     ? 'grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-3 items-stretch'
@@ -97,6 +109,11 @@ export function UniversitiesPage() {
       const nextRegions = f.regions.includes(region)
         ? f.regions.filter((r) => r !== region)
         : [...f.regions, region]
+
+      // Mirror into the persisted store so the choice outlives this route.
+      // Deferred out of the updater because setFilters can run twice under
+      // StrictMode, and writing to another store during render is a side effect.
+      setTimeout(() => setStoredRegions(nextRegions), 0)
 
       // Execute Flip transition
       setTimeout(() => {
@@ -143,35 +160,6 @@ export function UniversitiesPage() {
   // so the cards keep the same calm rise the rest of the app uses.
 
   // Tilt geo-map on cursor move
-  const handleMapMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!mapWrapperRef.current) return
-    const rect = mapWrapperRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left - rect.width / 2
-    const y = e.clientY - rect.top - rect.height / 2
-    const tiltX = (y / (rect.height / 2)) * -10
-    const tiltY = (x / (rect.width / 2)) * 10
-
-    gsap.to(mapWrapperRef.current, {
-      rotateX: tiltX,
-      rotateY: tiltY,
-      transformPerspective: 500,
-      duration: 0.35,
-      ease: 'power2.out',
-      overwrite: 'auto',
-    })
-  }
-
-  const handleMapMouseLeave = () => {
-    if (!mapWrapperRef.current) return
-    gsap.to(mapWrapperRef.current, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.5,
-      ease: 'power2.out',
-      overwrite: 'auto',
-    })
-  }
-
   // Shortlist bottom bar entrance
   useEffect(() => {
     if (shortlist.length > 0 && shortlistBarRef.current) {
@@ -198,13 +186,14 @@ export function UniversitiesPage() {
           <p className="text-caption font-semibold uppercase tracking-[0.05em] text-ink-secondary mb-2.5">
             Pick your regions
           </p>
-          <div
-            ref={mapWrapperRef}
-            onMouseMove={handleMapMouseMove}
-            onMouseLeave={handleMapMouseLeave}
-            className="inline-block transition-transform duration-[120ms] ease-out select-none"
-            style={{ transformStyle: 'preserve-3d' }}
-          >
+          {/* The mouse driven 3D tilt that used to live here has been removed.
+              It applied a matrix3d transform with transformStyle: preserve-3d,
+              which promotes the subtree to a rasterised compositing layer. An
+              SVG rendered that way is resampled from a bitmap instead of drawn
+              from vectors, so the whole map went soft the moment the cursor
+              entered it. Region hover already provides the depth cue, and the
+              map now stays crisp at every zoom level. */}
+          <div className="inline-block select-none">
             <UkGeoMap selected={filters.regions} counts={regionCounts} onToggle={toggleRegion} />
           </div>
           <div
@@ -226,7 +215,10 @@ export function UniversitiesPage() {
           </div>
           {filters.regions.length > 0 ? (
             <button
-              onClick={() => setFilters({ ...filters, regions: [] })}
+              onClick={() => {
+                setFilters({ ...filters, regions: [] })
+                setStoredRegions([])
+              }}
               className="mt-2 text-xs font-semibold text-accent hover:underline rounded-xs cursor-pointer block"
             >
               Clear all selected
@@ -395,7 +387,16 @@ export function UniversitiesPage() {
           icon={SearchX}
           title="No universities found"
           body="Try clearing your search, regions or the Russell Group filter to see more results."
-          action={<Button onClick={() => setFilters(defaultFilters)}>Clear filters</Button>}
+          action={
+            <Button
+              onClick={() => {
+                setFilters(defaultFilters)
+                setStoredRegions([])
+              }}
+            >
+              Clear filters
+            </Button>
+          }
         />
       ) : mode === 'browse' ? (
         // Short stagger: this grid can run to 200 results, so anything longer

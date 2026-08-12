@@ -46,6 +46,7 @@ import { ScrollTrigger } from '../lib/gsap/ScrollTrigger.js'
 import { SplitText } from '../lib/gsap/SplitText.js'
 import { TextPlugin } from '../lib/gsap/TextPlugin.js'
 import { gsap } from '../lib/gsap/index.js'
+import { useRegionStore } from '../store/regionStore'
 
 gsap.registerPlugin(
   useGSAP,
@@ -1049,7 +1050,11 @@ const REGION_INFOCUS: Record<
 
 function InteractiveMapSection() {
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null)
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([])
+  // Persisted rather than local: a region picked here has to survive the walk
+  // into onboarding and the authenticated Universities screen, and stay picked
+  // until the student changes it themselves.
+  const selectedRegions = useRegionStore((s) => s.regions)
+  const toggleStoredRegion = useRegionStore((s) => s.toggleRegion)
   const detailPanelRef = useRef<HTMLDivElement>(null)
   // biome-ignore lint/suspicious/noExplicitAny: GSAP FlipState is untyped
   const flipStateRef = useRef<any>(null)
@@ -1079,12 +1084,7 @@ function InteractiveMapSection() {
       const targets = detailPanelRef.current.querySelectorAll('[data-flip-id]')
       flipStateRef.current = Flip.getState(targets)
     }
-    setSelectedRegions((prev) => {
-      if (prev.includes(r)) {
-        return prev.filter((item) => item !== r)
-      }
-      return [...prev, r]
-    })
+    toggleStoredRegion(r)
   }
 
   const handleHover = (r: string | null) => {

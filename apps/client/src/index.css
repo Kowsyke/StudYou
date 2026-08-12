@@ -458,16 +458,26 @@ textarea {
   transition: fill 150ms var(--ease-swift);
 }
 
-.geo-region:hover {
-  transform: translateY(-3px);
+/* The lift uses `translate`, NOT `transform`. Framer Motion writes an inline
+   transform onto every .geo-region for the selected-state pulse, and an inline
+   style always beats a class rule, so a `transform: translateY(-3px)` declared
+   here silently never applied. `translate` is an independent property that
+   composes with `transform` instead of replacing it, so both can coexist.
+   .geo-lift is set by UkGeoMap on the matching label group, which lives in a
+   separate paint layer and so cannot be reached by a descendant selector. */
+.geo-region:hover,
+.geo-region:focus-visible,
+.geo-lift {
+  translate: 0 -3px;
+}
+
+.geo-region,
+.geo-label-layer > g {
+  transition: translate 150ms var(--ease-swift), filter 150ms var(--ease-swift);
 }
 
 .geo-region:hover path {
   fill: color-mix(in srgb, var(--accent) 22%, var(--surface-secondary));
-}
-
-.geo-region:focus-visible {
-  transform: translateY(-3px);
 }
 
 .geo-region:focus-visible path {
@@ -510,28 +520,28 @@ textarea {
   transition: opacity 150ms var(--ease-swift);
 }
 
-.geo-region:hover .geo-label,
-.geo-region:focus-visible .geo-label {
+/* Labels are painted in their own layer above every region path, so they can
+   no longer be targeted as descendants of .geo-region. UkGeoMap sets these
+   state classes instead, driven by the map's own hover and selection state. */
+.geo-label-on {
   opacity: 1;
   fill: var(--ink);
   font-weight: 700;
 }
 
-.geo-region:hover .geo-count,
-.geo-region:focus-visible .geo-count {
+.geo-count-on {
   opacity: 1;
 }
 
-.geo-region-active .geo-label {
+.geo-label.geo-label-on {
+  fill: var(--ink);
+}
+
+.geo-label-layer .geo-label-selected,
+.geo-label-layer .geo-count-selected {
   fill: white;
   stroke: none;
   opacity: 1;
-}
-
-.geo-region-active .geo-count {
-  fill: white;
-  stroke: none;
-  opacity: 0.9;
 }
 
 /* The command palette carries .glass-reflect, whose position: relative would

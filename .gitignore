@@ -44,6 +44,9 @@ STUDYOU_EXAM_PREP.pdf
 *EXAM_PREP*
 /submission/
 
+# Local staging area for AI tooling files pulled out of the repo root, never pushed
+/from-project/
+
 
 pgdata/
 docker/postgres/
