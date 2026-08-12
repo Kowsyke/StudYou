@@ -18,47 +18,44 @@ coverage/
 *token*
 *credential*
 
+# Local assistant tooling and personal working notes. Kept as patterns rather
+# than paths because these directories get recreated by the tools themselves.
 CLAUDE.md
 JOURNAL.md
 MASTERGUIDE.md
+CHANGELOG.md
 *claude*
 *Claude*
 .claude/
 .agents/
-.agents
 agy_research/
 
-# Personal local guides and changelog, kept off GitHub
+# Personal local guides, not needed to run the app
 docs/deployment/START_APP.txt
 docs/deployment/AZURE_DEPLOY.txt
-docs/plans/UI_OVERHAUL_PLAN.md
-CHANGELOG.md
 logs/
 
-# Local scratch scripts for generating report screenshots and diagrams
+# Local scratch scripts for generating report figures and screenshots
 /scratch/
 e2e/capture-screenshots.spec.ts
 
-# Personal exam prep, report drafts and submission material, never pushed
-STUDYOU_EXAM_PREP.pdf
+# Personal exam prep, report drafts and submission material
 *EXAM_PREP*
 /submission/
-
-# Local staging area for AI tooling files pulled out of the repo root, never pushed
 /from-project/
 
 # Design reference prototype. Not imported by any runtime code, the app builds
 # and runs without it, so it stays local rather than shipping in the repo.
-/Framework-prototype/
+/Hi-fi-prototype/
+/UI-Ref/
 
-
+# Database volume and Playwright's own scratch output. The committed test
+# evidence lives in test-results/ and is deliberately not ignored.
 pgdata/
 docker/postgres/
-
-test-results/
+.playwright-artifacts/
 playwright-report/
 blob-report/
-.playwright/
 
 *.log
 .DS_Store
@@ -70,5 +67,3 @@ Thumbs.db
 deploy/
 studyou-deploy.zip
 app.zip
-/UI-Ref/
-UI-Ref/

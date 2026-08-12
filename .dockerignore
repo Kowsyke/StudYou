@@ -1,17 +1,42 @@
+# Keep the build context small and free of anything secret. Everything the
+# image needs is built inside the container, so local build output is excluded
+# rather than copied in and overwritten.
+
 node_modules
 **/node_modules
+
+# Build output, all regenerated during the image build
 apps/client/dist
 apps/server/dist
 deploy
-.git
-.github
-.agents
 target
 apps/client/src-tauri/target
-logs
-test-results
-pnpm-debug.log
+
+# Secrets and environment files, never copied into an image
 .env
-.env.azure.bak
+.env.*
 .env.example
-PKG
+
+# Version control and CI metadata, not needed at runtime
+.git
+.github
+
+# Local assistant tooling and personal working material
+.claude
+.agents
+CLAUDE.md
+JOURNAL.md
+MASTERGUIDE.md
+from-project
+submission
+scratch
+
+# Local reference material and test evidence, not part of the running app
+Hi-fi-prototype
+UI-Ref
+test-results
+.playwright-artifacts
+playwright-report
+
+logs
+*.log
