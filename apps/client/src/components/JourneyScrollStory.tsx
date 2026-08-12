@@ -137,6 +137,13 @@ function useMinWidth(px: number): boolean {
   useEffect(() => {
     const mql = window.matchMedia(`(min-width: ${px}px)`)
     const onChange = () => setMatches(mql.matches)
+    // Re-read on subscribe. The 'change' event only fires on later crossings, so
+    // any crossing between the lazy initializer and this listener attaching would
+    // otherwise be lost for good, leaving `matches` stale forever. StrictMode makes
+    // that gap real in development: it mounts, tears the listener down, then
+    // remounts, and a crossing inside that window is simply never delivered. When
+    // it landed on false the desktop cinematic never mounted at all.
+    onChange()
     mql.addEventListener('change', onChange)
     return () => mql.removeEventListener('change', onChange)
   }, [px])
@@ -219,6 +226,15 @@ export function JourneyScrollStory() {
           end: '+=180%',
           scrub: 0.8,
           pin: true,
+          // ScrollSmoother puts a transform on #smooth-content, and a transformed
+          // ancestor becomes the containing block for position:fixed descendants.
+          // React runs this child's effect before LandingPage creates the smoother,
+          // so ScrollTrigger would otherwise latch pinType 'fixed' at init and never
+          // recompute it, leaving the pinned stage anchored to the moving content
+          // instead of the viewport. Firefox enforces that containing-block rule
+          // strictly, so the section collapsed there while Chromium tolerated it.
+          // Pinning by transform is what ScrollSmoother expects regardless of order.
+          pinType: 'transform',
           anticipatePin: 1,
         },
       })
@@ -250,6 +266,43 @@ export function JourneyScrollStory() {
       tl.fromTo('.micro-act-2', { opacity: 0 }, { opacity: 0.85, duration: 0.2 }, 0.32)
       tl.fromTo('.micro-act-3', { opacity: 0 }, { opacity: 0.85, duration: 0.2 }, 0.58)
       tl.fromTo('.micro-act-4', { opacity: 0 }, { opacity: 0.9, duration: 0.22 }, 0.86)
+
+      // Re-measure once the page has actually settled.
+      //
+      // ScrollTrigger caches the pin's start and end the moment the trigger is
+      // created, and it reserves the scroll distance from that one measurement.
+      // Anything that changes layout afterwards, a late web font, an image, the
+      // global theme class arriving from /meta/theme, leaves the pin sized for
+      // a page that no longer exists. The section then collapses and the
+      // reserved distance shows up as a large empty gap below it.
+      //
+      // This is a race, so it is intermittent by nature: the same dev server
+      // renders correctly on one boot and wrongly on the next, depending on
+      // whether the API answered before or after this trigger was built. The
+      // only reliable defence is to re-measure at each point where the layout
+      // could still have moved. refresh() is idempotent and cheap, so calling
+      // it a handful of times costs nothing and removes the whole class of bug.
+      const refresh = () => ScrollTrigger.refresh()
+
+      // Fonts change text metrics, which changes the height of everything above
+      // this section, which moves the pin's start.
+      document.fonts?.ready.then(refresh).catch(() => {})
+
+      // Images and stylesheets are only guaranteed done at window load.
+      if (document.readyState !== 'complete') {
+        window.addEventListener('load', refresh, { once: true })
+      }
+
+      // Backstop for anything async that lands after load, such as the theme
+      // fetch flipping the dark class on the html element. gsap.delayedCall is
+      // used rather than setTimeout so useGSAP's context reverts it on unmount
+      // and StrictMode's double mount cannot leave a stray timer behind.
+      gsap.delayedCall(0.4, refresh)
+      gsap.delayedCall(1.5, refresh)
+
+      return () => {
+        window.removeEventListener('load', refresh)
+      }
     },
     { scope: rootRef, dependencies: [isWide] },
   )

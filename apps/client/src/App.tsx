@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { Layout } from './components/Layout'
 import { Toaster } from './components/ui/toast'
+import { ScrollTrigger } from './lib/gsap/ScrollTrigger.js'
 import { AdminPage } from './pages/AdminPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { JourneyPage } from './pages/JourneyPage'
@@ -56,7 +57,16 @@ function App() {
   const fetchGlobalTheme = useThemeStore((s) => s.fetchGlobalTheme)
 
   useEffect(() => {
-    fetchGlobalTheme()
+    // This resolves after first paint and can flip the dark class on the html
+    // element, which restyles the whole page. Any ScrollTrigger created before
+    // it lands is holding measurements taken against the previous layout, so
+    // tell ScrollTrigger to re-measure once the theme has actually applied.
+    // Whether this call succeeds or fails is exactly what differs between a
+    // boot where the API is up and one where it is not, which is why the
+    // landing cinematic looked fine on some dev starts and broken on others.
+    fetchGlobalTheme().finally(() => {
+      requestAnimationFrame(() => ScrollTrigger.refresh())
+    })
   }, [fetchGlobalTheme])
   return (
     <ErrorBoundary>
