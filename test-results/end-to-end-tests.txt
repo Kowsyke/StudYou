@@ -1,0 +1,82 @@
+StudYou end to end test run
+Date: 2026-08-12 10:04 UTC
+Command: pnpm test:e2e
+Browser: Chromium via Playwright 1.61
+
+$ playwright test
+[WebServer] $ bun src/index.ts
+[WebServer] $ vite
+
+Running 8 tests using 4 workers
+
+  ✓  3 e2e/rbac.spec.ts:7:5 › unauthenticated requests receive 401 (492ms)
+  ✓  5 e2e/rbac.spec.ts:18:5 › a student token on an admin route receives 403 (672ms)
+  ✓  6 e2e/rbac.spec.ts:44:5 › a garbled token receives 401 (239ms)
+  ✓  2 e2e/resource-library.spec.ts:23:5 › search narrows the results (29.6s)
+  ✓  7 e2e/resource-library.spec.ts:35:5 › category filter shows only that category (17.4s)
+  ✓  4 e2e/admin-flow.spec.ts:30:5 › admin creates, edits and deletes a knowledge base resource (56.4s)
+  ✓  8 e2e/resource-library.spec.ts:46:5 › sort by cost orders results by price (14.1s)
+  ✘  1 e2e/vertical-slice.spec.ts:7:5 › student logs in, ticks a task and the dashboard updates live (2.0m)
+  ✘  9 e2e/vertical-slice.spec.ts:7:5 › student logs in, ticks a task and the dashboard updates live (retry #1) (2.0m)
+
+
+  1) e2e/vertical-slice.spec.ts:7:5 › student logs in, ticks a task and the dashboard updates live ─
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.getAttribute: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /^Mark .* as done$/ }).first()
+
+
+      18 |
+      19 |   const firstPending = page.getByRole('button', { name: /^Mark .* as done$/ }).first()
+    > 20 |   const pendingLabel = await firstPending.getAttribute('aria-label')
+         |                                           ^
+      21 |   if (!pendingLabel) throw new Error('No pending task found, reseed the database')
+      22 |   const doneLabel = pendingLabel.replace(/ as done$/, ' as pending')
+      23 |
+        at /home/K/Storage/Projects/Full-Stack-dev/e2e/vertical-slice.spec.ts:20:43
+
+    Error Context: .playwright-artifacts/vertical-slice-student-log-5d0a6--the-dashboard-updates-live/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    .playwright-artifacts/vertical-slice-student-log-5d0a6--the-dashboard-updates-live/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace .playwright-artifacts/vertical-slice-student-log-5d0a6--the-dashboard-updates-live/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Retry #1 ───────────────────────────────────────────────────────────────────────────────────────
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.getAttribute: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: /^Mark .* as done$/ }).first()
+
+
+      18 |
+      19 |   const firstPending = page.getByRole('button', { name: /^Mark .* as done$/ }).first()
+    > 20 |   const pendingLabel = await firstPending.getAttribute('aria-label')
+         |                                           ^
+      21 |   if (!pendingLabel) throw new Error('No pending task found, reseed the database')
+      22 |   const doneLabel = pendingLabel.replace(/ as done$/, ' as pending')
+      23 |
+        at /home/K/Storage/Projects/Full-Stack-dev/e2e/vertical-slice.spec.ts:20:43
+
+    Error Context: .playwright-artifacts/vertical-slice-student-log-5d0a6--the-dashboard-updates-live-retry1/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    .playwright-artifacts/vertical-slice-student-log-5d0a6--the-dashboard-updates-live-retry1/trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace .playwright-artifacts/vertical-slice-student-log-5d0a6--the-dashboard-updates-live-retry1/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    e2e/vertical-slice.spec.ts:7:5 › student logs in, ticks a task and the dashboard updates live ──
+  7 passed (4.3m)
+[ELIFECYCLE] Command failed with exit code 1.

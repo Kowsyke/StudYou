@@ -1,0 +1,25 @@
+StudYou unit test run
+Date: 2026-08-12 10:03 UTC
+Command: pnpm test
+Machine: local development, Linux, Node 22, Bun 1.3
+
+$ pnpm --filter @studyou/engine test && pnpm --filter @studyou/server test
+$ vitest run
+
+ RUN  v3.2.7 /home/K/Storage/Projects/Full-Stack-dev/packages/engine
+
+ ✓ src/budget.test.ts (5 tests) 23ms
+ ✓ src/deadline.test.ts (10 tests) 37ms
+
+ Test Files  2 passed (2)
+      Tests  15 passed (15)
+   Start at  11:03:30
+   Duration  1.80s (transform 307ms, setup 0ms, collect 339ms, tests 59ms, environment 2ms, prepare 707ms)
+
+$ bun test src
+bun test v1.3.14 (0d9b296a)
+
+ 12 pass
+ 0 fail
+ 19 expect() calls
+Ran 12 tests across 2 files. [207.00ms]

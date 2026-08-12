@@ -4,6 +4,15 @@ import { defineConfig } from '@playwright/test'
 // minutes to cold start a browser. CI class hardware starts in seconds.
 export default defineConfig({
   testDir: './e2e',
+  // capture-screenshots is a local only helper that drives the app to take
+  // figures for the report. It is gitignored, so it does not exist in a fresh
+  // clone, and it is not a product test. Excluding it keeps the suite result
+  // meaningful rather than failing on a screenshot script.
+  testIgnore: '**/capture-screenshots.spec.ts',
+  // Playwright clears its output directory on every run. That default is
+  // test-results, which is also where the committed test evidence lives, so
+  // point the throwaway artifacts somewhere else to stop it wiping them.
+  outputDir: './.playwright-artifacts',
   timeout: 120_000,
   retries: 1,
   expect: { timeout: 20_000 },
