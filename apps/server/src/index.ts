@@ -22,14 +22,25 @@ const app = new Hono<AppEnv>()
 // macOS and Linux, https://tauri.localhost on Windows). Anything else is
 // refused. Returning the request origin only when it is on the allowlist
 // keeps credentialed CORS safe (never a reflected wildcard).
-const allowedOrigins = new Set([env.clientUrl, 'tauri://localhost', 'https://tauri.localhost'])
+const allowedOrigins = new Set([
+  env.clientUrl,
+  'https://studyou-app.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'tauri://localhost',
+  'https://tauri.localhost',
+])
 
 app.use('*', logger())
 app.use('*', secureHeaders())
 app.use(
   '*',
   cors({
-    origin: (origin) => (allowedOrigins.has(origin) ? origin : null),
+    origin: (origin) => {
+      if (!origin) return '*'
+      if (allowedOrigins.has(origin) || origin.endsWith('.vercel.app')) return origin
+      return null
+    },
     allowHeaders: ['Content-Type', 'Authorization'],
     allowMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,

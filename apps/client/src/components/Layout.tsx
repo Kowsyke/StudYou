@@ -452,6 +452,23 @@ function ProfileBlock({ onSignOut }: { onSignOut: () => void }) {
   const shortlistCount = useProfileStore((s) => s.shortlistIds.length)
   const [open, setOpen] = useState(false)
 
+  if (!user) {
+    return (
+      <div className="p-3 border-t border-hairline flex flex-col gap-2">
+        <Link to="/login" className="w-full">
+          <button className="w-full h-8 px-3 rounded-sm text-caption font-semibold bg-surface border border-hairline-strong text-ink hover:bg-surface-secondary transition-colors">
+            Sign in
+          </button>
+        </Link>
+        <Link to="/register" className="w-full">
+          <button className="w-full h-8 px-3 rounded-sm text-caption font-semibold bg-accent-solid text-white [background-image:var(--accent-gradient)] hover:opacity-95 transition-opacity">
+            Get started
+          </button>
+        </Link>
+      </div>
+    )
+  }
+
   return (
     <div className="relative border-t border-hairline">
       {open && (
@@ -514,6 +531,14 @@ function MobileProfileTrigger({ onSignOut }: { onSignOut: () => void }) {
   const user = useAuthStore((s) => s.user)
   const shortlistCount = useProfileStore((s) => s.shortlistIds.length)
   const [open, setOpen] = useState(false)
+
+  if (!user) {
+    return (
+      <Link to="/login" className="text-caption font-semibold text-accent hover:underline">
+        Sign in
+      </Link>
+    )
+  }
 
   return (
     <div className="relative">

@@ -1,7 +1,8 @@
-import { fileURLToPath } from 'node:url'
 import { config } from 'dotenv'
 
-config({ path: fileURLToPath(new URL('../../../../.env', import.meta.url)) })
+try {
+  config()
+} catch (_) {}
 
 // Anything that is not an explicit development or test run is treated as
 // production, where secrets must be provided and there is no safe default.

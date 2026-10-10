@@ -1,6 +1,5 @@
-import { countries, universities } from '@studyou/db'
-import { UK_REGIONS, type University } from '@studyou/types'
-import { type SQL, and, asc, eq, ilike, inArray, or, sql } from 'drizzle-orm'
+import { type SQL, and, asc, countries, eq, ilike, inArray, or, sql, universities } from '@studyou/db'
+import { UK_REGIONS } from '@studyou/types'
 import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'

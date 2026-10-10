@@ -283,13 +283,11 @@ export function LandingPage() {
         })
     }
 
-    // 3D Scroll Perspective Tilt for Map Holding Box
-    gsap.set('.map-holding-box', { transformPerspective: 1200 })
+    // 2D Scroll Reveal for Map Holding Box
     gsap.fromTo(
       '.map-holding-box',
-      { rotateX: 15, scale: 0.94, opacity: 0.8 },
+      { scale: 0.96, opacity: 0.8 },
       {
-        rotateX: 0,
         scale: 1,
         opacity: 1,
         scrollTrigger: {

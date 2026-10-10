@@ -1,5 +1,4 @@
-import { users } from '@studyou/db'
-import { eq } from 'drizzle-orm'
+import { eq, users } from '@studyou/db'
 import type { Context, Next } from 'hono'
 import { db } from '../lib/db'
 import { verifyToken } from '../lib/jwt'
@@ -49,7 +48,8 @@ export async function authMiddleware(c: Context<AppEnv>, next: Next) {
   // Record activity at most once a minute so a burst of requests is one
   // write, keeping the active user metric honest without write churn.
   const now = Date.now()
-  const stale = !row.lastSeenAt || now - row.lastSeenAt.getTime() > 60_000
+  const lastSeen = row.lastSeenAt ? new Date(row.lastSeenAt as any).getTime() : 0
+  const stale = !lastSeen || now - lastSeen > 60_000
   if (stale) {
     await db
       .update(users)
@@ -57,6 +57,6 @@ export async function authMiddleware(c: Context<AppEnv>, next: Next) {
       .where(eq(users.id, payload.sub))
   }
 
-  c.set('user', { ...payload, role: row.role })
+  c.set('user', { ...payload, role: row.role as 'student' | 'admin' })
   await next()
 }

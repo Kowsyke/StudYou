@@ -21,7 +21,18 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
+    "@hono/node-server": "^2.0.10",
     "@playwright/test": "^1.53.0",
-    "typescript": "^5.8.3"
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.6.1",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.32",
+    "jsonwebtoken": "^9.0.3",
+    "postgres": "^3.4.9",
+    "typescript": "^5.8.3",
+    "zod": "^3.25.76"
+  },
+  "overrides": {
+    "drizzle-orm": "^0.45.2"
   }
 }

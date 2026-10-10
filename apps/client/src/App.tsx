@@ -85,20 +85,42 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route
-                element={
-                  <RequireAuth>
-                    <Layout />
-                  </RequireAuth>
-                }
-              >
+              <Route element={<Layout />}>
                 <Route path="/" element={<HomeRedirect />} />
-                <Route path="/journey" element={<JourneyPage />} />
-                <Route path="/shortlisted" element={<ShortlistedPage />} />
                 <Route path="/resources" element={<ResourcesPage />} />
                 <Route path="/universities" element={<UniversitiesPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
+                <Route
+                  path="/journey"
+                  element={
+                    <RequireAuth>
+                      <JourneyPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/shortlisted"
+                  element={
+                    <RequireAuth>
+                      <ShortlistedPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <RequireAuth>
+                      <SettingsPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <RequireAuth>
+                      <ProfilePage />
+                    </RequireAuth>
+                  }
+                />
                 <Route
                   path="/admin"
                   element={

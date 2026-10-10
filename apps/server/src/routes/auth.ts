@@ -1,18 +1,15 @@
-import { countries, users } from '@studyou/db'
-import type { ApiResponse, AuthPayload, User } from '@studyou/types'
+import { countries, eq, users } from '@studyou/db'
 import bcrypt from 'bcryptjs'
-import { eq } from 'drizzle-orm'
 import { type Context, Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'
+import { env } from '../lib/env'
 import { signToken } from '../lib/jwt'
 import { passwordSchema } from '../lib/password'
 import { validate } from '../lib/validate'
 import { authMiddleware } from '../middleware/auth'
 import { rateLimit } from '../middleware/rateLimit'
 import type { AppEnv } from '../types'
-
-import { env } from '../lib/env'
 
 const registerSchema = z.object({
   email: z.string().email('Enter a valid email address'),

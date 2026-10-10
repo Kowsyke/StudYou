@@ -1,6 +1,4 @@
-import { categories, countries, resources } from '@studyou/db'
-import type { ApiResponse, CategoryKey, Resource } from '@studyou/types'
-import { type SQL, and, eq, ilike, or, sql } from 'drizzle-orm'
+import { type SQL, and, categories, countries, eq, ilike, or, resources, sql } from '@studyou/db'
 import { Hono } from 'hono'
 import { z } from 'zod'
 import { db } from '../lib/db'

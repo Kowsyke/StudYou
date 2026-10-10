@@ -18,7 +18,7 @@ import type {
   StageProgress,
   TaskStatus,
 } from '@studyou/types'
-import { asc, eq } from 'drizzle-orm'
+import { asc, eq } from '@studyou/db'
 import { db } from './db'
 
 export async function buildOverview(userId: string): Promise<JourneyOverview | null> {
